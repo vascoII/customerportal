@@ -1,0 +1,43 @@
+security:
+  password_hashers:
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
+
+  enable_authenticator_manager: true
+  role_hierarchy:
+    ROLE_OCCUPANT: ROLE_USER
+    ROLE_GESTIONNAIRE: ROLE_USER
+    ROLE_ADMIN: [ROLE_GESTIONNAIRE]
+    ROLE_MAISONMERE: [ROLE_ADMIN]
+    ROLE_AGENCE: [ROLE_ADMIN]
+    ROLE_SYNDICAT: [ROLE_ADMIN]
+
+  providers:
+    user_provider:
+      id: App\Security\Authentication\Provider\UserProvider
+
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    front_area:
+      lazy: true
+      provider: user_provider
+      form_login:
+        login_path: /login
+        check_path: /login_check
+      custom_authenticators:
+        - App\Security\AppCustomAuthenticator
+      logout:
+        path: /logout
+
+  access_control:
+        - { path: ^/(login|logout|login_check|reset-password|create|reset-or-create), roles: PUBLIC_ACCESS  }
+        - { path: ^/(en|fr)/(legal-notices|personal-datas), roles: PUBLIC_ACCESS  }
+        - { path: ^/(en|fr)/change/locale/(en|fr), roles: PUBLIC_ACCESS  }
+        - { path: ^/(en|fr)/(update-password|cgu), roles: [ROLE_OCCUPANT, ROLE_GESTIONNAIRE] }
+        - { path: ^/(en|fr)/depannage/.+/releve, roles: [ROLE_OCCUPANT, ROLE_GESTIONNAIRE] }
+        - { path: ^/(en|fr)/occupant/.+/releve, roles: [ROLE_OCCUPANT, ROLE_GESTIONNAIRE] }
+        - { path: ^/(en|fr)/occupant, roles: [ROLE_OCCUPANT] }
+        - { path: ^/(en|fr)/guide, roles: [ROLE_USER, ROLE_GESTIONNAIRE, ROLE_ADMIN] }
+        - { path: ^/.+, roles: [ROLE_GESTIONNAIRE] }
