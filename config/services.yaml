@@ -9,14 +9,14 @@ parameters:
   debug_redirects: false
   use_assetic_controller: true
   # PREVIEW
-  #sopa_url: "http://techn5292.eu.techem.corp:8083/Main.asmx?wsdl"
+  sopa_url: "http://techn5292.eu.techem.corp:8083/Main.asmx?wsdl"
   # DEMO
-  # sopa_url: "http://techn5292.eu.techem.corp:8081/Main.asmx?wsdl"
+  #sopa_url: "http://techn5292.eu.techem.corp:8081/Main.asmx?wsdl"
   # PROD
-  sopa_url: "http://techn5292.eu.techem.corp/Main.asmx?wsdl"
+  #sopa_url: "http://techn5292.eu.techem.corp/Main.asmx?wsdl"
   adminSessionId: 0v728jqy-2cc0-4724-abc5-dbm1zwab9a3d
-  superLoginID: "WEBUI_TCH_USER"
-  superPassword: 0V728JQY-dBM1zWA
+  superLoginID: "JOHN DOE"
+  superPassword: DF93RN9F-SLJ528F
   service_client: App\Service\Client
   security.authentication.provider.soap.class: App\Security\AppCustomAuthenticator
   header.request_listener: App\Listener\HeaderListener
@@ -40,23 +40,10 @@ services:
       $kernel: "@kernel"
       $wsdlUrl: "%sopa_url%"
       $adminSessionId: "%adminSessionId%"
-      $cache: "@cache"
+      $cache: "@cache.app"
+      $cacheNamespace: "%cache_namespace%"
       $superLoginID: "%superLoginID%"
       $superPassword: "%superPassword%"
-
-  cache_adapter_options:
-    class: Zend\Cache\Storage\Adapter\AdapterOptions
-
-  cache:
-    class: Zend\Cache\Storage\Adapter\Filesystem
-    factory: ['Zend\Cache\StorageFactory', "factory"]
-    arguments:
-      - adapter:
-          name: filesystem
-          options:
-            namespace: "%cache_namespace%"
-            ttl: 86400
-            cache_dir: "%cache_dir%"
 
   security.authentication.provider.soap.class:
     class: App\Security\AppCustomAuthenticator

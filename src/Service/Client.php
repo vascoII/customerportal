@@ -22,7 +22,7 @@ class Client extends BaseClient
      * @return array
      */
     public
-    function getImmeubles($pkUser, GetImmeublesParams $params = null, $use_cache = true)
+    function getImmeubles($pkUser, ?GetImmeublesParams $params = null, $use_cache = true)
     {
         if (!$params) {
             $params              = new GetImmeublesParams();
@@ -52,7 +52,7 @@ class Client extends BaseClient
 
 
     public
-    function getImmeubles4gestio($pkUser, GetImmeublesParams $params = null, $use_cache = true)
+    function getImmeubles4gestio($pkUser, ?GetImmeublesParams $params = null, $use_cache = true)
     {
         if (!$params) {
             $params              = new GetImmeublesParams();
@@ -88,7 +88,7 @@ class Client extends BaseClient
      * @return array
      */
     public
-    function getMyImmeubles(GetImmeublesParams $params = null)
+    function getMyImmeubles(?GetImmeublesParams $params = null)
     {
         return $this->getImmeubles(-1, $params);
     }
@@ -101,7 +101,7 @@ class Client extends BaseClient
      * @return array
      */
     public
-    function getMyImmeubles4gestio(GetImmeublesParams $params = null)
+    function getMyImmeubles4gestio(?GetImmeublesParams $params = null)
     {
         return $this->getImmeubles4gestio(-1, $params);
     }
@@ -239,7 +239,7 @@ class Client extends BaseClient
      *
      * @return mixed
      */
-    public function getLogements($pkImmeuble, GetLogementsParams $params = null)
+    public function getLogements($pkImmeuble, ?GetLogementsParams $params = null)
     {
         if (!$params) {
             $params = new GetLogementsParams();
@@ -379,13 +379,13 @@ class Client extends BaseClient
      *
      * @return mixed
      */
-    public function getReportImmeuble($pkImmeuble, $type, $energie, $date, GetReportParams $params = null)
+    public function getReportImmeuble($pkImmeuble, $type, $energie, $pkReleve, ?GetReportParams $params = null)
     {
         if (is_null($params)) {
             $params = new GetReportParams();
         }
-        $params->PKIMMEUBLE = $pkImmeuble;
-        $params->DATE       = $date;
+
+        $params->PKRELEVE   = $pkReleve;
 
         $reportType = !is_null($type) ? $type . '_' : '';
         $reportType .= !is_null($energie) ? $energie . '_' : '';
@@ -410,6 +410,49 @@ class Client extends BaseClient
             'ParamsFiltres' => $params->toParamsFiltresString(),
         ];
         $result = $this->sendRequest('GetReport', $request, false);
+
+        return $result;
+    }
+
+     /**
+     * Récupère les relevés d'un immeuble
+     *
+     * @param                                                       $pkImmeuble
+     * @param null|\App\Service\GetReportParams $params
+     *
+     * @return mixed
+     */
+    public function getReportImmeubleExcel($pkImmeuble, $type, $energie, $pkReleve, ?GetReportParams $params = null)
+    {
+        if (is_null($params)) {
+            $params = new GetReportParams();
+        }
+
+        $params->PKRELEVE   = $pkReleve;
+
+        $reportType = !is_null($type) ? $type . '_' : '';
+        $reportType .= !is_null($energie) ? $energie . '_' : '';
+        $reportType .= 'IMMEUBLE';
+
+        if ($type == 'NOTE') {
+            $reportType = 'NOTE_INFO_MENSUELLE';
+            $params = new GetReportParams();
+            if ($energie == 'EAU') {
+                $params->PKIMMEUBLE = $pkImmeuble;
+            }
+            if ($energie == 'CHAUFFAGE') {
+                $params->PKIMMEUBLE = $pkImmeuble . '|NOTEEC=N';
+            }
+        }
+
+
+        $request = (object) [
+            'SessionID'     => $this->getSessionId(),
+            'PkUser'        => (int) $this->getPkUser(),
+            'ReportType'    => "RELEVE",
+            'ParamsFiltres' => $params->toParamsFiltresString(),
+        ];
+        $result = $this->sendRequest('GetExcel', $request, false);
 
         return $result;
     }
@@ -484,7 +527,7 @@ class Client extends BaseClient
      *
      * @return mixed
      */
-    public function getReportOccupant($pkImmeuble, $pkOccupant, $type, GetReportParams $params = null)
+    public function getReportOccupant($pkImmeuble, $pkOccupant, $type, ?GetReportParams $params = null)
     {
         if (is_null($params)) {
             $params = new GetReportParams();
@@ -515,7 +558,7 @@ class Client extends BaseClient
      *
      * @return mixed
      */
-    public function getReportLogement($pkImmeuble, $pkLogement, $type, GetReportParams $params = null)
+    public function getReportLogement($pkImmeuble, $pkLogement, $type, ?GetReportParams $params = null)
     {
         if (is_null($params)) {
             $params = new GetReportParams();
@@ -543,7 +586,7 @@ class Client extends BaseClient
      *
      * @return mixed
      */
-    public function getReportDepannage($pkDepannage, GetReportParams $params = null)
+    public function getReportDepannage($pkDepannage, ?GetReportParams $params = null)
     {
 
         if (is_null($params)) {
@@ -1432,6 +1475,30 @@ class Client extends BaseClient
         ];
 		
         return $this->sendRequest('GetStatOccupantsGraph', $request, false);
+    }
+	
+	/**
+     * Récupère les relevés par token
+     *
+     * @param $tokenId
+     * @return mixed
+     */
+    public function getReportByToken($tokenId)
+    {
+        $request = (object) [
+            'SessionID' => $this->adminSessionId,
+            'tokenid'   => $tokenId,
+        ];
+
+        return $this->sendRequest('GetReportByToken', $request, false, false);
+
+//        $request = (object) [
+//            'SessionID'     => "54ea1174-b2f9-4472-bfb6-93ebe19d596b",
+//            'PkUser'        => 1043,
+//            'ReportType'    => "RELEVE_EAU_IMMEUBLE",
+//            'ParamsFiltres' => "PKRELEVE=1395235",
+//        ];
+//        return  $this->sendRequest('GetReport', $request, false, false);
     }
     
 

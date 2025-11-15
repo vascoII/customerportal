@@ -7,7 +7,8 @@ use SimpleXMLElement;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class BaseClient
 {
@@ -17,6 +18,7 @@ class BaseClient
     protected $superLoginID;
     protected $superPassword;
     private $cache;
+    private $cacheNamespace;
     private $sessionId;
     private $pkUser;
     private $user;
@@ -24,11 +26,12 @@ class BaseClient
     private $stopwatch;
     protected $wsdlUrl;
 
-    public function __construct(KernelInterface $kernel, $wsdlUrl, $adminSessionId, AbstractAdapter $cache, $superLoginID, $superPassword, Stopwatch $stopwatch = null)
+    public function __construct(KernelInterface $kernel, $wsdlUrl, $adminSessionId, CacheInterface $cache, $cacheNamespace, $superLoginID, $superPassword, ?Stopwatch $stopwatch = null)
     {
         $this->kernel = $kernel;
         $this->adminSessionId = $adminSessionId;
         $this->cache = $cache;
+        $this->cacheNamespace = $cacheNamespace;
         $this->superLoginID = $superLoginID;
         $this->superPassword = $superPassword;
         $this->stopwatch = $stopwatch;
@@ -166,27 +169,25 @@ class BaseClient
         if ($useCache) {
             $requestCache = clone $request;
             unset($requestCache->SessionID);
-            $originalNamespace = $this->cache->getOptions()->getNamespace();
+            
+            // Build cache key with namespace
+            $namespace = $this->cacheNamespace;
             if (isset($request->PkUser)) {
-                $this->cache->getOptions()->setNamespace($originalNamespace . '-' . $request->PkUser);
+                $namespace = $this->cacheNamespace . '-' . $request->PkUser;
             }
-
-            $key = md5($name . json_encode($requestCache));
-            $cacheItem = $this->cache->getItem($key);
-            if ($cacheItem !== null) {
-                if ($cacheItem->isHit()) {
-                    $response = json_decode($cacheItem->get());
-                }
-                if (is_null($response)) {
-                    $response = $this->getClient()->__soapCall($name, $params);
-                    $originalNamespace = $this->cache->getOptions()->getNamespace();
-                    $cacheItem->set(json_encode($response));
-                    $this->cache->setItem($key, json_encode($response));
-                    $this->cache->getOptions()->setNamespace($originalNamespace);
-                }
+            
+            $key = $namespace . ':' . md5($name . json_encode($requestCache));
+            
+            // Use Symfony Cache get() method with callback
+            $response = $this->cache->get($key, function (ItemInterface $item) use ($name, $params) {
+                $item->expiresAfter(86400); // 24 hours TTL
+                $soapResponse = $this->getClient()->__soapCall($name, $params);
+                return json_encode($soapResponse);
+            });
+            
+            if (is_string($response)) {
+                $response = json_decode($response);
             }
-
-            $this->cache->getOptions()->setNamespace($originalNamespace);
         }
 
         if (is_null($response)) {
@@ -334,9 +335,13 @@ class BaseClient
 
     public function clearUserCache($pkUser)
     {
-        $namespace = $this->cache->getOptions()->getNamespace() . '-' . $pkUser;
-        $this->cache->clearByNamespace($namespace);
-        $this->cache->optimize();
+        // Symfony Cache doesn't support namespace clearing directly
+        // We clear the entire cache as a workaround
+        // Note: For better performance, consider using TagAwareCacheAdapter
+        // which allows clearing by tags for more granular cache management
+        if (method_exists($this->cache, 'clear')) {
+            $this->cache->clear();
+        }
     }
 
     public function updateCGUFromPKUser($cgu = '')

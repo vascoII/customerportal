@@ -21,7 +21,7 @@ class PasswordConstraintValidator extends ConstraintValidator
      *
      * @api
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         $valid = true;
         $valid &= preg_match('/[a-z]+/', $value);

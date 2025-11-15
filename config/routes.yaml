@@ -16,10 +16,10 @@ app_login:
 app_login_param:
     path: /login/{param}
     controller: 'App\Controller\SecurityController::loginFromParamAction'
-
+    
 reset_password:
     path: /reset-password
-    controller: 'App\Controller\SecurityController::resetPasswordAction'
+    controller: 'App\Controller\SecurityController::resetPasswordAction'  
     
 
 # TechemCoreBundle_Immeuble_export_anomalies:

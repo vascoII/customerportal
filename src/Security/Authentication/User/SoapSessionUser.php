@@ -241,7 +241,7 @@ class SoapSessionUser implements UserInterface
         return $roles;
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // Otherwise, this method may be left blank
     }
