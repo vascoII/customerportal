@@ -27,7 +27,7 @@ customerportal/
 ### 1. Renommer le dossier
 
 ```bash
-cd /Users/fabriceds/Documents/Professionel/Prestataire/Techem/customerportal
+cd /customerportal
 mv portail-front-template frontend
 ```
 
