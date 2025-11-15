@@ -33,7 +33,7 @@ mv portail-front-template frontend
 
 ### 2. Mettre à jour le package.json
 
-Le nom actuel est `"free-nextjs-admin-dashboard"`. Il faut le changer :
+Le nom actuel est `"nextjs-admin"`. Il faut le changer :
 
 ```json
 {

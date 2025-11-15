@@ -31,3 +31,7 @@ src/Service/.DS_Store
 .idea/customerportal.iml
 .idea/.gitignore
 .env
+deprecations.log
+deprecations.log
+frontend/LICENSE
+frontend/README.md
