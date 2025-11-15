@@ -25,3 +25,9 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+src/Service/.DS_Store
+.idea/vcs.xml
+.idea/modules.xml
+.idea/customerportal.iml
+.idea/.gitignore
+.env
