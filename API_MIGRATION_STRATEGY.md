@@ -77,6 +77,7 @@ L'authentification actuelle via SOAP Session Token est conservée :
 ### Future amélioration
 
 Pour une vraie API stateless, considérer :
+
 - JWT (JSON Web Tokens)
 - API Keys
 - OAuth2
@@ -118,15 +119,15 @@ Pour une vraie API stateless, considérer :
 
 ## 🔄 Mapping Contrôleurs Web → API
 
-| Contrôleur Web | Contrôleur API | Routes principales |
-|---------------|----------------|-------------------|
-| `FactureController` | `FactureApiController` | `/api/factures` |
-| `OccupantController` | `OccupantApiController` | `/api/occupants` |
-| `ImmeubleController` | `ImmeubleApiController` | `/api/immeubles` |
-| `LogementController` | `LogementApiController` | `/api/logements` |
-| `SecurityController` | `SecurityApiController` | `/api/auth` |
-| `TicketingController` | `TicketingApiController` | `/api/tickets` |
-| `OperatorController` | `OperatorApiController` | `/api/operators` |
+| Contrôleur Web        | Contrôleur API           | Routes principales |
+| --------------------- | ------------------------ | ------------------ |
+| `FactureController`   | `FactureApiController`   | `/api/factures`    |
+| `OccupantController`  | `OccupantApiController`  | `/api/occupants`   |
+| `ImmeubleController`  | `ImmeubleApiController`  | `/api/immeubles`   |
+| `LogementController`  | `LogementApiController`  | `/api/logements`   |
+| `SecurityController`  | `SecurityApiController`  | `/api/auth`        |
+| `TicketingController` | `TicketingApiController` | `/api/tickets`     |
+| `OperatorController`  | `OperatorApiController`  | `/api/operators`   |
 
 ## 📊 Exemples de transformation
 
@@ -139,10 +140,10 @@ public function indexAction()
     if (is_null($client)) {
         return $this->redirectToRoute('logout');
     }
-    
+
     $factures = $client->getFactures();
     $locals = ['factures' => json_encode($listFactures)];
-    
+
     return $this->render('Facture/index.html.twig', $locals);
 }
 ```
@@ -160,7 +161,7 @@ class FactureApiController extends AbstractApiController
         if ($client instanceof JsonResponse) {
             return $client;
         }
-        
+
         $factures = $client->getFactures();
         return $this->success(['factures' => $normalizedFactures]);
     }
@@ -224,9 +225,9 @@ public function list(Request $request): JsonResponse
 {
     $page = $request->query->getInt('page', 1);
     $limit = $request->query->getInt('limit', 20);
-    
+
     // ... logique de pagination
-    
+
     return $this->success([
         'items' => $items,
         'pagination' => [
@@ -255,4 +256,3 @@ Voir les fichiers de contrôleurs API individuels pour la documentation détaill
 - [Symfony Serializer Documentation](https://symfony.com/doc/7.3/components/serializer.html)
 - [REST API Best Practices](https://restfulapi.net/)
 - [HTTP Status Codes](https://httpstatuses.com/)
-

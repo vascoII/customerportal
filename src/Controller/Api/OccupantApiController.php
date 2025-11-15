@@ -1,0 +1,708 @@
+<?php
+
+namespace App\Controller\Api;
+
+use App\Service\Anomalie;
+use App\Service\CsvHelper;
+use App\Service\Depannage;
+use App\Service\Dysfonctionnement;
+use App\Service\Fuite;
+use App\Service\GetReportParams;
+use App\Service\Logement;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Attribute\Route;
+
+/**
+ * API Controller for Occupants
+ * 
+ * @Route("/api/occupant", name="api_occupant_")
+ */
+class OccupantApiController extends AbstractApiController
+{
+    /**
+     * Get current occupant's logement details
+     * 
+     * @Route("", name="show", methods={"GET"})
+     */
+    public function show(Logement $logementService): JsonResponse
+    {
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $consoTabs = $logementService->generateTabConsos($logement);
+            $soustraitants = $client->getSousTraitants();
+
+            // Handle repart appareils
+            $repartAppareils = $logement->LogementRepart->ListeInfosAppareils->infosAppareilRepart ?? [];
+            if (count($repartAppareils) > 1) {
+                $allAppareils = new \stdClass();
+                $allAppareils->Appareil = new \stdClass();
+                $allAppareils->Appareil->PkAppareil = "0000000";
+                $allAppareils->Appareil->Numero = "0000000";
+                $allAppareils->Appareil->Emplacement = "Tous les appareils";
+                $allAppareils->SerieConsos = $logement->LogementRepart->SerieConsosDJU ?? null;
+                array_unshift($repartAppareils, $allAppareils);
+                $logement->LogementRepart->ListeInfosAppareils->infosAppareilRepart = $repartAppareils;
+            }
+
+            return $this->success([
+                'logement' => $this->normalize($logement),
+                'consoTabs' => $this->normalize($consoTabs),
+                'soustraitants' => $this->normalize($soustraitants),
+            ]);
+        } catch (\Exception $e) {
+            return $this->error('Error fetching occupant logement: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get simulator data for current occupant
+     * 
+     * @Route("/simulateur", name="simulateur", methods={"GET"})
+     */
+    public function simulateur(Logement $logementService): JsonResponse
+    {
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $consoTabs = $logementService->generateTabConsos($logement);
+
+            // Handle repart appareils
+            $repartAppareils = $logement->LogementRepart->ListeInfosAppareils->infosAppareilRepart ?? [];
+            if (count($repartAppareils) > 1) {
+                $allAppareils = new \stdClass();
+                $allAppareils->Appareil = new \stdClass();
+                $allAppareils->Appareil->PkAppareil = "0000000";
+                $allAppareils->Appareil->Numero = "0000000";
+                $allAppareils->Appareil->Emplacement = "Tous les appareils";
+                $allAppareils->SerieConsos = $logement->LogementRepart->SerieConsosDJU ?? null;
+                array_unshift($repartAppareils, $allAppareils);
+                $logement->LogementRepart->ListeInfosAppareils->infosAppareilRepart = $repartAppareils;
+            }
+
+            return $this->success([
+                'logement' => $this->normalize($logement),
+                'consoTabs' => $this->normalize($consoTabs),
+            ]);
+        } catch (\Exception $e) {
+            return $this->error('Error fetching simulator data: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get intervention details
+     * 
+     * @Route("/interventions/{pkIntervention}", name="show_intervention", methods={"GET"})
+     */
+    public function showIntervention(int $pkIntervention): JsonResponse
+    {
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $depannage = $client->getDetailDepannage($pkIntervention);
+
+            return $this->success([
+                'logement' => $this->normalize($logement),
+                'depannage' => $this->normalize($depannage),
+            ]);
+        } catch (\Exception $e) {
+            return $this->error('Error fetching intervention: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * List interventions for current occupant
+     * 
+     * @Route("/interventions", name="list_interventions", methods={"GET"})
+     */
+    public function listInterventions(Depannage $depannageService): JsonResponse
+    {
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
+
+            if ($pkImmeuble) {
+                $depannages = $client->getInterventionsImmeuble($pkImmeuble, $logement->Logement->PkLogement, $user->FK);
+            } else {
+                $depannages = [];
+            }
+
+            return $this->success([
+                'logement' => $this->normalize($logement),
+                'depannages' => $this->normalize($depannages),
+                'filters' => $depannageService->extractFiltersValues($depannages),
+            ]);
+        } catch (\Exception $e) {
+            return $this->error('Error fetching interventions: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * List leaks for current occupant
+     * 
+     * @Route("/fuites", name="list_leaks", methods={"GET"})
+     */
+    public function listLeaks(Request $request, Fuite $fuiteService): JsonResponse
+    {
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
+            $pkAppareil = $request->query->get('appareil');
+
+            if ($pkImmeuble) {
+                $fuites = $client->getFuitesImmeuble($pkImmeuble, $logement->Logement->PkLogement, $pkAppareil, $user->FK);
+            } else {
+                $fuites = [];
+            }
+
+            return $this->success([
+                'logement' => $this->normalize($logement),
+                'fuites' => $this->normalize($fuites),
+                'filters' => $fuiteService->extractFiltersValues($fuites),
+            ]);
+        } catch (\Exception $e) {
+            return $this->error('Error fetching leaks: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * List dysfunctions for current occupant
+     * 
+     * @Route("/dysfonctionnements", name="list_dysfunctions", methods={"GET"})
+     */
+    public function listDysfunctions(Dysfonctionnement $dysfonctionnementService): JsonResponse
+    {
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
+
+            if ($pkImmeuble) {
+                $dysfonctionnements = $client->getDysfonctionnementsImmeuble($pkImmeuble, $logement->Logement->PkLogement, $user->FK);
+            } else {
+                $dysfonctionnements = [];
+            }
+
+            return $this->success([
+                'logement' => $this->normalize($logement),
+                'dysfonctionnements' => $this->normalize($dysfonctionnements),
+                'filters' => $dysfonctionnementService->extractFiltersValues($dysfonctionnements),
+            ]);
+        } catch (\Exception $e) {
+            return $this->error('Error fetching dysfunctions: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * List anomalies for current occupant
+     * 
+     * @Route("/anomalies", name="list_anomalies", methods={"GET"})
+     */
+    public function listAnomalies(Request $request, Anomalie $anomalieService): JsonResponse
+    {
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
+            $pkAppareil = $request->query->get('appareil');
+
+            if ($pkImmeuble) {
+                $anomalies = $client->getAnomaliesImmeuble($pkImmeuble, $logement->Logement->PkLogement, $pkAppareil, $user->FK);
+            } else {
+                $anomalies = [];
+            }
+
+            return $this->success([
+                'logement' => $this->normalize($logement),
+                'anomalies' => $this->normalize($anomalies),
+                'filters' => $anomalieService->extractFiltersValues($anomalies),
+            ]);
+        } catch (\Exception $e) {
+            return $this->error('Error fetching anomalies: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Export anomalies to CSV
+     * 
+     * @Route("/anomalies/export", name="export_anomalies", methods={"GET"})
+     */
+    public function exportAnomalies(Anomalie $anomalieService, CsvHelper $csvHelper): Response|JsonResponse
+    {
+        ini_set('max_execution_time', 120);
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
+
+            if ($pkImmeuble) {
+                $anomalies = $client->getAnomaliesImmeuble($pkImmeuble, $logement->Logement->PkLogement, null, $user->FK);
+            } else {
+                $anomalies = [];
+            }
+
+            $data = $anomalieService->export($anomalies);
+
+            $response = new StreamedResponse(
+                function () use ($data, $csvHelper) {
+                    $handle = fopen('php://output', 'r+');
+                    $csvHelper->write($handle, $data);
+                    fclose($handle);
+                }
+            );
+            $response->headers->set('Content-Type', 'text/csv');
+            $response->headers->set('Content-Disposition', 'attachment; filename="export-anomalies.csv";');
+
+            return $response;
+        } catch (\Exception $e) {
+            return $this->error('Error exporting anomalies: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Export leaks to CSV
+     * 
+     * @Route("/fuites/export", name="export_leaks", methods={"GET"})
+     */
+    public function exportLeaks(Fuite $fuiteService, CsvHelper $csvHelper): Response|JsonResponse
+    {
+        ini_set('max_execution_time', 120);
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
+
+            if ($pkImmeuble) {
+                $fuites = $client->getFuitesImmeuble($pkImmeuble, $logement->Logement->PkLogement, null, $user->FK);
+            } else {
+                $fuites = [];
+            }
+
+            $data = $fuiteService->export($fuites);
+
+            $response = new StreamedResponse(
+                function () use ($data, $csvHelper) {
+                    $handle = fopen('php://output', 'r+');
+                    $csvHelper->write($handle, $data);
+                    fclose($handle);
+                }
+            );
+            $response->headers->set('Content-Type', 'text/csv');
+            $response->headers->set('Content-Disposition', 'attachment; filename="export-fuites.csv";');
+
+            return $response;
+        } catch (\Exception $e) {
+            return $this->error('Error exporting leaks: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Export interventions to CSV
+     * 
+     * @Route("/interventions/export", name="export_interventions", methods={"GET"})
+     */
+    public function exportInterventions(Depannage $depannageService, CsvHelper $csvHelper): Response|JsonResponse
+    {
+        ini_set('max_execution_time', 120);
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
+
+            if ($pkImmeuble) {
+                $depannages = $client->getInterventionsImmeuble($pkImmeuble, $logement->Logement->PkLogement, $user->FK);
+            } else {
+                $depannages = [];
+            }
+
+            $data = $depannageService->export($depannages);
+
+            $response = new StreamedResponse(
+                function () use ($data, $csvHelper) {
+                    $handle = fopen('php://output', 'r+');
+                    $csvHelper->write($handle, $data);
+                    fclose($handle);
+                }
+            );
+            $response->headers->set('Content-Type', 'text/csv');
+            $response->headers->set('Content-Disposition', 'attachment; filename="export-depannages.csv";');
+
+            return $response;
+        } catch (\Exception $e) {
+            return $this->error('Error exporting interventions: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Export dysfunctions to CSV
+     * 
+     * @Route("/dysfonctionnements/export", name="export_dysfunctions", methods={"GET"})
+     */
+    public function exportDysfunctions(Dysfonctionnement $dysfonctionnementService, CsvHelper $csvHelper): Response|JsonResponse
+    {
+        ini_set('max_execution_time', 120);
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
+
+            if ($pkImmeuble) {
+                $dysfonctionnements = $client->getDysfonctionnementsImmeuble($pkImmeuble, $logement->Logement->PkLogement, $user->FK);
+            } else {
+                $dysfonctionnements = [];
+            }
+
+            $data = $dysfonctionnementService->export($dysfonctionnements);
+
+            $response = new StreamedResponse(
+                function () use ($data, $csvHelper) {
+                    $handle = fopen('php://output', 'r+');
+                    $csvHelper->write($handle, $data);
+                    fclose($handle);
+                }
+            );
+            $response->headers->set('Content-Type', 'text/csv');
+            $response->headers->set('Content-Disposition', 'attachment; filename="export-autres-dysfonctionnemnts.csv";');
+
+            return $response;
+        } catch (\Exception $e) {
+            return $this->error('Error exporting dysfunctions: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get water report PDF
+     * 
+     * @Route("/{pkOccupant}/releve-eau", name="releve_eau", methods={"GET"})
+     */
+    public function showEauReleve(int $pkOccupant): Response|JsonResponse
+    {
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $params = new GetReportParams();
+            $params->PKOCCUPANT = $pkOccupant;
+
+            $report = $client->getReport('RELEVE_EAU_OCCUPANT', $params);
+            if (empty($report)) {
+                return $this->notFound('Report not found');
+            }
+
+            $response = new Response($report);
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response->headers->set('Content-Disposition', 'inline; filename=relevé-' . date('d-m-Y') . '.pdf');
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Expires', 0);
+            $response->headers->set('Cache-Control', 'no-cache');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Content-Length', strlen($report));
+
+            return $response;
+        } catch (\Exception $e) {
+            return $this->error('Error generating report: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get repartition report PDF
+     * 
+     * @Route("/{pkOccupant}/releve-repart/{pkImmeuble}", name="releve_repart", methods={"GET"})
+     */
+    public function showRepartReleve(int $pkImmeuble, int $pkOccupant): Response|JsonResponse
+    {
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $params = new GetReportParams();
+            $params->PKIMMEUBLE = $pkImmeuble;
+            $params->PKOCCUPANT = $pkOccupant;
+
+            $report = $client->getReport('REPART_OCCUPANT', $params);
+            if (empty($report)) {
+                return $this->notFound('Report not found');
+            }
+
+            $response = new Response($report);
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response->headers->set('Content-Disposition', 'inline; filename=relevé-' . date('d-m-Y') . '.pdf');
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Expires', 0);
+            $response->headers->set('Cache-Control', 'no-cache');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Content-Length', strlen($report));
+
+            return $response;
+        } catch (\Exception $e) {
+            return $this->error('Error generating report: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get note report PDF
+     * 
+     * @Route("/{pkOccupant}/releve-note/{pkImmeuble}/{energie}", name="releve_note", methods={"GET"})
+     */
+    public function showNoteReleve(int $pkImmeuble, int $pkOccupant, string $energie): Response|JsonResponse
+    {
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $params = new GetReportParams();
+            if ($energie == 'CHAUFFAGE') {
+                $params->PKOCCUPANT = $pkOccupant . '|TYPEERC=CHAUFFAGE';
+                $params->PKIMMEUBLE = $pkImmeuble;
+            } else {
+                $params->PKOCCUPANT = $pkOccupant . '|TYPEERC=EAU';
+                $params->PKIMMEUBLE = $pkImmeuble;
+            }
+
+            $report = $client->getReport('NOTE_INFO_MENSUELLE', $params);
+            if (empty($report)) {
+                return $this->notFound('Report not found');
+            }
+
+            $response = new Response($report);
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response->headers->set('Content-Disposition', 'inline; filename=relevé-' . date('d-m-Y') . '.pdf');
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Expires', 0);
+            $response->headers->set('Cache-Control', 'no-cache');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Content-Length', strlen($report));
+
+            return $response;
+        } catch (\Exception $e) {
+            return $this->error('Error generating report: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get my account information
+     * 
+     * @Route("/my-account", name="my_account", methods={"GET"})
+     */
+    public function myAccount(Logement $logementService, Request $request): JsonResponse
+    {
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            $data = $request->getContent();
+            $rgpdcheckboxvalue = $data ? 'true' : 'false';
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $consoTabs = $logementService->generateTabConsos($logement);
+
+            // Handle repart appareils
+            $repartAppareils = $logement->LogementRepart->ListeInfosAppareils->infosAppareilRepart ?? [];
+            if (count($repartAppareils) > 1) {
+                $allAppareils = new \stdClass();
+                $allAppareils->Appareil = new \stdClass();
+                $allAppareils->Appareil->PkAppareil = "0000000";
+                $allAppareils->Appareil->Numero = "0000000";
+                $allAppareils->Appareil->Emplacement = "Tous les appareils";
+                $allAppareils->SerieConsos = $logement->LogementRepart->SerieConsosDJU ?? null;
+                array_unshift($repartAppareils, $allAppareils);
+                $logement->LogementRepart->ListeInfosAppareils->infosAppareilRepart = $repartAppareils;
+            }
+
+            return $this->success([
+                'logement' => $this->normalize($logement),
+                'consoTabs' => $this->normalize($consoTabs),
+                'rgpdcheckboxvalue' => $rgpdcheckboxvalue,
+            ]);
+        } catch (\Exception $e) {
+            return $this->error('Error fetching account information: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get or update alerts configuration
+     * 
+     * @Route("/alertes", name="alertes", methods={"GET", "POST"})
+     */
+    public function alertes(Request $request, Logement $logementService): JsonResponse
+    {
+        $client = $this->getAuthenticatedClient();
+        if ($client instanceof JsonResponse) {
+            return $client;
+        }
+
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                return $this->unauthorized('User not found');
+            }
+
+            if ($request->isMethod('POST')) {
+                $data = $request->request->all();
+                if (isset($data['SEUIL_CONSO_ACTIF'])) {
+                    $data['SEUIL_CONSO_ACTIF'] = 'O';
+                } else {
+                    $data['SEUIL_CONSO_ACTIF'] = 'N';
+                }
+                $client->setSeuilConso($data);
+            }
+
+            $logement = $client->getTableauBordOccupant($user->FK);
+            $consoTabs = $logementService->generateTabConsos($logement);
+
+            // Handle repart appareils
+            $repartAppareils = $logement->LogementRepart->ListeInfosAppareils->infosAppareilRepart ?? [];
+            if (count($repartAppareils) > 1) {
+                $allAppareils = new \stdClass();
+                $allAppareils->Appareil = new \stdClass();
+                $allAppareils->Appareil->PkAppareil = "0000000";
+                $allAppareils->Appareil->Numero = "0000000";
+                $allAppareils->Appareil->Emplacement = "Tous les appareils";
+                $allAppareils->SerieConsos = $logement->LogementRepart->SerieConsosDJU ?? null;
+                array_unshift($repartAppareils, $allAppareils);
+                $logement->LogementRepart->ListeInfosAppareils->infosAppareilRepart = $repartAppareils;
+            }
+
+            return $this->success([
+                'logement' => $this->normalize($logement),
+                'consoTabs' => $this->normalize($consoTabs),
+                'user' => $this->normalize($user),
+            ], $request->isMethod('POST') ? 'Alerts updated successfully' : null);
+        } catch (\Exception $e) {
+            return $this->error('Error fetching/updating alerts: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get current user from token storage
+     * 
+     * @return object|null
+     */
+    private function getCurrentUser()
+    {
+        $token = $this->container->get('security.token_storage')->getToken();
+        if (!$token) {
+            return null;
+        }
+        return $token->getAttribute('soap.user');
+    }
+}
+
