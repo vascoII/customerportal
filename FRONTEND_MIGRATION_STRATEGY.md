@@ -11,6 +11,7 @@ Ce document décrit la stratégie de migration du frontend actuel (Twig + Bootst
 ## 🎯 Objectifs de la migration
 
 ### Objectifs techniques
+
 - ✅ Moderniser la stack technologique
 - ✅ Améliorer les performances (SSR, code splitting)
 - ✅ Faciliter la maintenance (composants réutilisables)
@@ -19,6 +20,7 @@ Ce document décrit la stratégie de migration du frontend actuel (Twig + Bootst
 - ✅ Améliorer l'accessibilité
 
 ### Objectifs fonctionnels
+
 - ✅ Conserver toutes les fonctionnalités existantes
 - ✅ Améliorer l'UX (transitions, animations)
 - ✅ Responsive design optimisé
@@ -92,6 +94,7 @@ frontend/
 ## 📦 Dépendances principales
 
 ### Core
+
 ```json
 {
   "dependencies": {
@@ -104,6 +107,7 @@ frontend/
 ```
 
 ### Styling
+
 ```json
 {
   "dependencies": {
@@ -117,6 +121,7 @@ frontend/
 ```
 
 ### State & Data Fetching
+
 ```json
 {
   "dependencies": {
@@ -128,6 +133,7 @@ frontend/
 ```
 
 ### Forms & Validation
+
 ```json
 {
   "dependencies": {
@@ -139,6 +145,7 @@ frontend/
 ```
 
 ### Charts & Visualizations
+
 ```json
 {
   "dependencies": {
@@ -149,6 +156,7 @@ frontend/
 ```
 
 ### Internationalization
+
 ```json
 {
   "dependencies": {
@@ -158,6 +166,7 @@ frontend/
 ```
 
 ### Utilities
+
 ```json
 {
   "dependencies": {
@@ -175,6 +184,7 @@ frontend/
 ### Phase 0 : Préparation (1-2 semaines)
 
 #### 0.1 Setup du projet
+
 - [ ] Initialiser le projet Next.js avec TypeScript
 - [ ] Configurer Tailwind CSS
 - [ ] Configurer ESLint et Prettier
@@ -183,6 +193,7 @@ frontend/
 - [ ] Setup Git et CI/CD
 
 #### 0.2 Infrastructure de base
+
 - [ ] Créer la structure de dossiers
 - [ ] Configurer React Query
 - [ ] Configurer Zustand pour l'état global
@@ -191,6 +202,7 @@ frontend/
 - [ ] Créer les types TypeScript de base
 
 #### 0.3 Design System
+
 - [ ] Définir la palette de couleurs (basée sur le thème actuel)
 - [ ] Créer les composants UI de base (Button, Input, Card, etc.)
 - [ ] Créer le système de thème Tailwind
@@ -201,6 +213,7 @@ frontend/
 ### Phase 1 : Authentification & Layout (2-3 semaines)
 
 #### 1.1 Authentification
+
 - [ ] Page de login (`/login`)
 - [ ] Gestion des sessions (cookies)
 - [ ] Hook `useAuth`
@@ -209,6 +222,7 @@ frontend/
 - [ ] Gestion des erreurs d'authentification
 
 #### 1.2 Layout principal
+
 - [ ] `AppLayout` (layout gestionnaire)
 - [ ] `Header` avec logo, recherche, menu utilisateur
 - [ ] `Sidebar` avec navigation
@@ -217,6 +231,7 @@ frontend/
 - [ ] Layout occupant (simplifié)
 
 #### 1.3 Navigation
+
 - [ ] Menu latéral contextuel
 - [ ] Navigation par rôles
 - [ ] Badges de compteurs dans le menu
@@ -227,6 +242,7 @@ frontend/
 ### Phase 2 : Dashboard & Immeubles (3-4 semaines)
 
 #### 2.1 Dashboard
+
 - [ ] Page dashboard (`/dashboard`)
 - [ ] Cartes statistiques (immeubles, appareils)
 - [ ] Jauges (transfert fichiers, relevés)
@@ -235,6 +251,7 @@ frontend/
 - [ ] Modal "Livret d'intervention"
 
 #### 2.2 Liste d'immeubles
+
 - [ ] Page liste (`/immeubles`)
 - [ ] Composant `BuildingList`
 - [ ] Composant `BuildingCard`
@@ -244,6 +261,7 @@ frontend/
 - [ ] Pagination (si nécessaire)
 
 #### 2.3 Détail immeuble
+
 - [ ] Page détail (`/immeubles/[id]`)
 - [ ] Composant `BuildingDetail`
 - [ ] Panneaux de consommation par énergie
@@ -257,6 +275,7 @@ frontend/
 ### Phase 3 : Logements (2-3 semaines)
 
 #### 3.1 Liste de logements
+
 - [ ] Page liste (`/immeubles/[id]/logements`)
 - [ ] Composant `HousingList`
 - [ ] Composant `HousingCard`
@@ -264,6 +283,7 @@ frontend/
 - [ ] Recherche
 
 #### 3.2 Détail logement
+
 - [ ] Page détail (`/logements/[id]`)
 - [ ] Composant `HousingDetail`
 - [ ] Onglets de consommation
@@ -276,6 +296,7 @@ frontend/
 ### Phase 4 : Interventions & Alertes (2-3 semaines)
 
 #### 4.1 Liste d'interventions
+
 - [ ] Page liste (`/immeubles/[id]/interventions`)
 - [ ] Composant `InterventionList`
 - [ ] Composant `InterventionCard`
@@ -283,11 +304,13 @@ frontend/
 - [ ] Export Excel
 
 #### 4.2 Détail intervention
+
 - [ ] Page détail (`/interventions/[id]`)
 - [ ] Composant `InterventionDetail`
 - [ ] Affichage PDF (si nécessaire)
 
 #### 4.3 Alertes
+
 - [ ] Liste fuites
 - [ ] Liste anomalies
 - [ ] Liste dysfonctionnements
@@ -298,6 +321,7 @@ frontend/
 ### Phase 5 : Tickets & Formulaires (2-3 semaines)
 
 #### 5.1 Gestion des tickets
+
 - [ ] Page liste tickets (`/tickets`)
 - [ ] Composant `TicketList` (table DataTables-like)
 - [ ] Composant `TicketDetail` (modal)
@@ -306,6 +330,7 @@ frontend/
 - [ ] Affichage pièces jointes
 
 #### 5.2 Formulaires
+
 - [ ] Formulaire d'intervention (réutilisable)
 - [ ] Formulaire de recherche avancée
 - [ ] Validation avec Zod
@@ -316,12 +341,14 @@ frontend/
 ### Phase 6 : Espace Occupant (2 semaines)
 
 #### 6.1 Dashboard occupant
+
 - [ ] Page occupant (`/occupant`)
 - [ ] Layout simplifié
 - [ ] Panneaux de consommation
 - [ ] Simulateur de consommation
 
 #### 6.2 Fonctionnalités occupant
+
 - [ ] Mon compte
 - [ ] Gestion des alertes
 - [ ] Relevés (PDF)
@@ -331,6 +358,7 @@ frontend/
 ### Phase 7 : Administration (2 semaines)
 
 #### 7.1 Gestion opérateurs
+
 - [ ] Liste opérateurs (`/operators`)
 - [ ] Création/édition opérateur
 - [ ] Gestion des immeubles assignés
@@ -338,6 +366,7 @@ frontend/
 - [ ] Statistiques
 
 #### 7.2 Autres fonctionnalités admin
+
 - [ ] Gestion des factures (si nécessaire)
 - [ ] Statistiques globales
 
@@ -346,6 +375,7 @@ frontend/
 ### Phase 8 : Optimisations & Finalisation (2-3 semaines)
 
 #### 8.1 Performance
+
 - [ ] Optimisation des images (Next.js Image)
 - [ ] Code splitting
 - [ ] Lazy loading des composants
@@ -353,18 +383,21 @@ frontend/
 - [ ] Cache stratégique
 
 #### 8.2 SEO & Accessibilité
+
 - [ ] Meta tags dynamiques
 - [ ] Sitemap
 - [ ] Accessibilité (ARIA, keyboard navigation)
 - [ ] Tests avec screen readers
 
 #### 8.3 Tests
+
 - [ ] Tests unitaires (Jest + React Testing Library)
 - [ ] Tests d'intégration
 - [ ] Tests E2E (Playwright ou Cypress)
 - [ ] Tests de performance (Lighthouse)
 
 #### 8.4 Documentation
+
 - [ ] Documentation des composants
 - [ ] Guide de contribution
 - [ ] Documentation API (si nécessaire)
@@ -382,17 +415,17 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['votre-domaine.com'],
+    domains: ["votre-domaine.com"],
   },
   i18n: {
-    locales: ['fr', 'en'],
-    defaultLocale: 'fr',
+    locales: ["fr", "en"],
+    defaultLocale: "fr",
   },
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: 'https://api.votre-domaine.com/api/:path*',
+        source: "/api/:path*",
+        destination: "https://api.votre-domaine.com/api/:path*",
       },
     ];
   },
@@ -407,30 +440,24 @@ module.exports = nextConfig;
 // tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './app/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
         primary: {
-          50: '#f0f9ff',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
+          50: "#f0f9ff",
+          500: "#0ea5e9",
+          600: "#0284c7",
+          700: "#0369a1",
         },
         // Couleurs basées sur le thème actuel
       },
       fontFamily: {
-        sans: ['Noto Sans', 'sans-serif'],
+        sans: ["Noto Sans", "sans-serif"],
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-  ],
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
 };
 ```
 
@@ -438,13 +465,13 @@ module.exports = {
 
 ```typescript
 // lib/api/client.ts
-import axios from 'axios';
+import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || '/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "/api",
   withCredentials: true, // Important pour les cookies de session
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -454,7 +481,7 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Rediriger vers la page de login
-      window.location.href = '/login';
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
@@ -467,11 +494,11 @@ export default apiClient;
 
 ```typescript
 // app/providers.tsx
-'use client';
+"use client";
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useState } from "react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -505,29 +532,32 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
 ```typescript
 // components/ui/Button.tsx
-import { ButtonHTMLAttributes, forwardRef } from 'react';
-import { cn } from '@/lib/utils';
+import { ButtonHTMLAttributes, forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary" | "outline" | "ghost";
+  size?: "sm" | "md" | "lg";
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', ...props }, ref) => {
+  ({ className, variant = "primary", size = "md", ...props }, ref) => {
     return (
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center rounded-md font-medium transition-colors',
+          "inline-flex items-center justify-center rounded-md font-medium transition-colors",
           {
-            'bg-primary-600 text-white hover:bg-primary-700': variant === 'primary',
-            'bg-gray-200 text-gray-900 hover:bg-gray-300': variant === 'secondary',
-            'border border-gray-300 bg-transparent hover:bg-gray-50': variant === 'outline',
-            'hover:bg-gray-100': variant === 'ghost',
-            'px-3 py-1.5 text-sm': size === 'sm',
-            'px-4 py-2 text-base': size === 'md',
-            'px-6 py-3 text-lg': size === 'lg',
+            "bg-primary-600 text-white hover:bg-primary-700":
+              variant === "primary",
+            "bg-gray-200 text-gray-900 hover:bg-gray-300":
+              variant === "secondary",
+            "border border-gray-300 bg-transparent hover:bg-gray-50":
+              variant === "outline",
+            "hover:bg-gray-100": variant === "ghost",
+            "px-3 py-1.5 text-sm": size === "sm",
+            "px-4 py-2 text-base": size === "md",
+            "px-6 py-3 text-lg": size === "lg",
           },
           className
         )}
@@ -537,7 +567,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   }
 );
 
-Button.displayName = 'Button';
+Button.displayName = "Button";
 
 export { Button };
 ```
@@ -546,44 +576,48 @@ export { Button };
 
 ```typescript
 // components/ui/Card.tsx
-import { HTMLAttributes, forwardRef } from 'react';
-import { cn } from '@/lib/utils';
+import { HTMLAttributes, forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
 const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
-        'rounded-lg border border-gray-200 bg-white shadow-sm',
+        "rounded-lg border border-gray-200 bg-white shadow-sm",
         className
       )}
       {...props}
     />
   )
 );
-Card.displayName = 'Card';
+Card.displayName = "Card";
 
 const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex flex-col space-y-1.5 p-6', className)}
+      className={cn("flex flex-col space-y-1.5 p-6", className)}
       {...props}
     />
   )
 );
-CardHeader.displayName = 'CardHeader';
+CardHeader.displayName = "CardHeader";
 
-const CardTitle = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLHeadingElement>>(
-  ({ className, ...props }, ref) => (
-    <h3
-      ref={ref}
-      className={cn('text-2xl font-semibold leading-none tracking-tight', className)}
-      {...props}
-    />
-  )
-);
-CardTitle.displayName = 'CardTitle';
+const CardTitle = forwardRef<
+  HTMLParagraphElement,
+  HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h3
+    ref={ref}
+    className={cn(
+      "text-2xl font-semibold leading-none tracking-tight",
+      className
+    )}
+    {...props}
+  />
+));
+CardTitle.displayName = "CardTitle";
 
 export { Card, CardHeader, CardTitle };
 ```
@@ -592,8 +626,8 @@ export { Card, CardHeader, CardTitle };
 
 ```typescript
 // lib/utils.ts
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -625,9 +659,9 @@ export function cn(...inputs: ClassValue[]) {
 
 ```typescript
 // components/building/BuildingCard.tsx
-import Link from 'next/link';
-import { Building } from '@/lib/types';
-import { Badge } from '@/components/ui/Badge';
+import Link from "next/link";
+import { Building } from "@/lib/types";
+import { Badge } from "@/components/ui/Badge";
 
 interface BuildingCardProps {
   building: Building;
@@ -642,7 +676,8 @@ export function BuildingCard({ building }: BuildingCardProps) {
             <div className="text-sm text-gray-500">Référence</div>
             <div className="font-semibold">{building.Immeuble.Ref}</div>
             <div className="text-sm text-gray-600 mt-1">
-              {building.Immeuble.Adresse1}, {building.Immeuble.Cp} {building.Immeuble.Ville}
+              {building.Immeuble.Adresse1}, {building.Immeuble.Cp}{" "}
+              {building.Immeuble.Ville}
             </div>
           </div>
           <div className="flex gap-2">
@@ -664,18 +699,18 @@ export function BuildingCard({ building }: BuildingCardProps) {
 
 ```typescript
 // app/(auth)/dashboard/page.tsx
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
-import { api } from '@/lib/api';
-import { StatCard } from '@/components/dashboard/StatCard';
-import { GaugeChart } from '@/components/dashboard/GaugeChart';
-import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { StatCard } from "@/components/dashboard/StatCard";
+import { GaugeChart } from "@/components/dashboard/GaugeChart";
+import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 
 export default function DashboardPage() {
   const { data, isLoading } = useQuery({
-    queryKey: ['dashboard'],
-    queryFn: () => api.get('/api/dashboard').then(res => res.data.data),
+    queryKey: ["dashboard"],
+    queryFn: () => api.get("/api/dashboard").then((res) => res.data.data),
   });
 
   if (isLoading) {
@@ -685,7 +720,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Aperçu de votre parc</h1>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Immeubles"
@@ -701,13 +736,13 @@ export default function DashboardPage() {
           title="Fuites"
           value={data.board.NbFuites}
           icon="water"
-          variant={data.board.NbFuites > 0 ? 'alert' : 'default'}
+          variant={data.board.NbFuites > 0 ? "alert" : "default"}
         />
         <StatCard
           title="Anomalies"
           value={data.board.NbAnomalies}
           icon="alert"
-          variant={data.board.NbAnomalies > 0 ? 'alert' : 'default'}
+          variant={data.board.NbAnomalies > 0 ? "alert" : "default"}
         />
       </div>
 
@@ -737,18 +772,18 @@ export default function DashboardPage() {
 
 ```typescript
 // lib/hooks/useAuth.ts
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/lib/api';
-import { useRouter } from 'next/navigation';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 export function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const { data: user, isLoading } = useQuery({
-    queryKey: ['auth', 'me'],
+    queryKey: ["auth", "me"],
     queryFn: async () => {
-      const response = await api.get('/api/security/me');
+      const response = await api.get("/api/security/me");
       return response.data.data;
     },
     retry: false,
@@ -756,22 +791,22 @@ export function useAuth() {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: { username: string; password: string }) => {
-      const response = await api.post('/api/security/login', credentials);
+      const response = await api.post("/api/security/login", credentials);
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
-      router.push('/dashboard');
+      queryClient.invalidateQueries({ queryKey: ["auth"] });
+      router.push("/dashboard");
     },
   });
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await api.post('/api/security/logout');
+      await api.post("/api/security/logout");
     },
     onSuccess: () => {
       queryClient.clear();
-      router.push('/login');
+      router.push("/login");
     },
   });
 
@@ -790,29 +825,29 @@ export function useAuth() {
 
 ```typescript
 // middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('PHPSESSID');
-  const isAuthPage = request.nextUrl.pathname.startsWith('/login');
-  const isPublicPage = request.nextUrl.pathname.startsWith('/public');
+  const token = request.cookies.get("PHPSESSID");
+  const isAuthPage = request.nextUrl.pathname.startsWith("/login");
+  const isPublicPage = request.nextUrl.pathname.startsWith("/public");
 
   // Si pas de token et pas sur page publique, rediriger vers login
   if (!token && !isAuthPage && !isPublicPage) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   // Si token et sur page login, rediriger vers dashboard
   if (token && isAuthPage) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
 ```
 
@@ -824,7 +859,7 @@ export const config = {
 
 ```typescript
 // i18n/request.ts
-import { getRequestConfig } from 'next-intl/server';
+import { getRequestConfig } from "next-intl/server";
 
 export default getRequestConfig(async ({ locale }) => ({
   messages: (await import(`../../messages/${locale}.json`)).default,
@@ -835,14 +870,14 @@ export default getRequestConfig(async ({ locale }) => ({
 
 ```typescript
 // components/building/BuildingCard.tsx
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 
 export function BuildingCard({ building }: BuildingCardProps) {
-  const t = useTranslations('Building');
+  const t = useTranslations("Building");
 
   return (
     <div>
-      <div className="text-sm text-gray-500">{t('reference')}</div>
+      <div className="text-sm text-gray-500">{t("reference")}</div>
       <div className="font-semibold">{building.Immeuble.Ref}</div>
     </div>
   );
@@ -857,7 +892,7 @@ export function BuildingCard({ building }: BuildingCardProps) {
 
 ```typescript
 // components/dashboard/GaugeChart.tsx
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 interface GaugeChartProps {
   value: number; // 0-1
@@ -866,8 +901,8 @@ interface GaugeChartProps {
 
 export function GaugeChart({ value, label }: GaugeChartProps) {
   const data = [
-    { name: 'Filled', value: value * 100 },
-    { name: 'Empty', value: (1 - value) * 100 },
+    { name: "Filled", value: value * 100 },
+    { name: "Empty", value: (1 - value) * 100 },
   ];
 
   return (
@@ -908,17 +943,17 @@ export function GaugeChart({ value, label }: GaugeChartProps) {
 
 ```javascript
 // jest.config.js
-const nextJest = require('next/jest');
+const nextJest = require("next/jest");
 
 const createJestConfig = nextJest({
-  dir: './',
+  dir: "./",
 });
 
 const customJestConfig = {
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jest-environment-jsdom',
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  testEnvironment: "jest-environment-jsdom",
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1',
+    "^@/(.*)$": "<rootDir>/$1",
   },
 };
 
@@ -929,32 +964,32 @@ module.exports = createJestConfig(customJestConfig);
 
 ```typescript
 // components/building/__tests__/BuildingCard.test.tsx
-import { render, screen } from '@testing-library/react';
-import { BuildingCard } from '../BuildingCard';
+import { render, screen } from "@testing-library/react";
+import { BuildingCard } from "../BuildingCard";
 
 const mockBuilding = {
   Immeuble: {
-    PkImmeuble: '123',
-    Ref: 'REF001',
-    Adresse1: '123 Rue Test',
-    Cp: '75001',
-    Ville: 'Paris',
+    PkImmeuble: "123",
+    Ref: "REF001",
+    Adresse1: "123 Rue Test",
+    Cp: "75001",
+    Ville: "Paris",
   },
   NbFuites: 2,
   NbAnomalies: 0,
 };
 
-describe('BuildingCard', () => {
-  it('affiche les informations de l\'immeuble', () => {
+describe("BuildingCard", () => {
+  it("affiche les informations de l'immeuble", () => {
     render(<BuildingCard building={mockBuilding} />);
-    
-    expect(screen.getByText('REF001')).toBeInTheDocument();
+
+    expect(screen.getByText("REF001")).toBeInTheDocument();
     expect(screen.getByText(/123 Rue Test/)).toBeInTheDocument();
   });
 
-  it('affiche le badge de fuites si présent', () => {
+  it("affiche le badge de fuites si présent", () => {
     render(<BuildingCard building={mockBuilding} />);
-    
+
     expect(screen.getByText(/2 fuites/)).toBeInTheDocument();
   });
 });
@@ -1012,17 +1047,20 @@ CMD ["node", "server.js"]
 ## 📈 Métriques de succès
 
 ### Performance
+
 - ✅ Lighthouse Score > 90
 - ✅ First Contentful Paint < 1.5s
 - ✅ Time to Interactive < 3s
 - ✅ Bundle size < 200KB (gzipped)
 
 ### Qualité
+
 - ✅ Couverture de tests > 80%
 - ✅ Aucune erreur TypeScript
 - ✅ Accessibilité WCAG 2.1 AA
 
 ### Fonctionnalités
+
 - ✅ 100% des fonctionnalités existantes migrées
 - ✅ Tous les rôles et permissions fonctionnels
 - ✅ Support multilingue complet
@@ -1034,14 +1072,17 @@ CMD ["node", "server.js"]
 ### Risques identifiés
 
 1. **Complexité de migration des graphiques**
+
    - **Mitigation** : Utiliser Recharts (similaire à DevExtreme)
    - **Fallback** : Intégrer DevExtreme si nécessaire
 
 2. **Performance des listes longues**
+
    - **Mitigation** : Virtualisation (react-window)
    - **Optimisation** : Pagination côté serveur
 
 3. **Compatibilité navigateurs**
+
    - **Mitigation** : Polyfills via Next.js
    - **Tests** : Tests sur navigateurs cibles
 
@@ -1053,18 +1094,18 @@ CMD ["node", "server.js"]
 
 ## 📅 Timeline estimée
 
-| Phase | Durée | Équipe |
-|-------|-------|--------|
-| Phase 0 : Préparation | 1-2 semaines | 1-2 devs |
-| Phase 1 : Auth & Layout | 2-3 semaines | 2 devs |
-| Phase 2 : Dashboard & Immeubles | 3-4 semaines | 2-3 devs |
-| Phase 3 : Logements | 2-3 semaines | 2 devs |
-| Phase 4 : Interventions | 2-3 semaines | 2 devs |
-| Phase 5 : Tickets | 2-3 semaines | 2 devs |
-| Phase 6 : Occupant | 2 semaines | 1-2 devs |
-| Phase 7 : Administration | 2 semaines | 1-2 devs |
-| Phase 8 : Optimisations | 2-3 semaines | 2 devs |
-| **TOTAL** | **18-26 semaines** | **2-3 devs** |
+| Phase                           | Durée              | Équipe       |
+| ------------------------------- | ------------------ | ------------ |
+| Phase 0 : Préparation           | 1-2 semaines       | 1-2 devs     |
+| Phase 1 : Auth & Layout         | 2-3 semaines       | 2 devs       |
+| Phase 2 : Dashboard & Immeubles | 3-4 semaines       | 2-3 devs     |
+| Phase 3 : Logements             | 2-3 semaines       | 2 devs       |
+| Phase 4 : Interventions         | 2-3 semaines       | 2 devs       |
+| Phase 5 : Tickets               | 2-3 semaines       | 2 devs       |
+| Phase 6 : Occupant              | 2 semaines         | 1-2 devs     |
+| Phase 7 : Administration        | 2 semaines         | 1-2 devs     |
+| Phase 8 : Optimisations         | 2-3 semaines       | 2 devs       |
+| **TOTAL**                       | **18-26 semaines** | **2-3 devs** |
 
 ---
 
@@ -1079,7 +1120,6 @@ CMD ["node", "server.js"]
 
 ---
 
-**Document créé le** : 2025-01-XX  
+**Document créé le** : 2025-09-15  
 **Version** : 1.0  
 **Auteur** : Équipe de développement
-
