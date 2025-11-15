@@ -11,6 +11,7 @@ Ce guide explique comment renommer le dossier `portail-front-template` en `front
 **Oui, vous pouvez renommer `portail-front-template` en `frontend` et l'utiliser directement.**
 
 C'est même recommandé pour avoir une structure claire :
+
 ```
 customerportal/
 ├── src/              # Backend Symfony
@@ -38,7 +39,7 @@ Le nom actuel est `"free-nextjs-admin-dashboard"`. Il faut le changer :
 {
   "name": "techem-customer-portal-frontend",
   "version": "1.0.0",
-  "private": true,
+  "private": true
   // ... reste identique
 }
 ```
@@ -85,12 +86,14 @@ customerportal/
 ```
 
 **Avantages** :
+
 - ✅ Un seul dépôt Git
 - ✅ Partage de code/types possible
 - ✅ Déploiement coordonné
 - ✅ Historique unifié
 
 **Inconvénients** :
+
 - ⚠️ Taille du dépôt plus importante
 - ⚠️ CI/CD plus complexe
 
@@ -107,11 +110,13 @@ customerportal-frontend/   # Frontend (nouveau dépôt)
 ```
 
 **Avantages** :
+
 - ✅ Séparation claire
 - ✅ CI/CD indépendants
 - ✅ Déploiements indépendants
 
 **Inconvénients** :
+
 - ⚠️ Deux dépôts à gérer
 - ⚠️ Partage de code plus complexe
 
@@ -149,11 +154,13 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"}/:path*`,
+        destination: `${
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
+        }/:path*`,
       },
     ];
   },
-  
+
   // Configuration existante
   webpack(config) {
     config.module.rules.push({
@@ -220,12 +227,12 @@ Si le frontend est sur un port différent (3000) et le backend sur un autre (800
 ```yaml
 # config/packages/nelmio_cors.yaml
 nelmio_cors:
-    defaults:
-        allow_credentials: true
-        allow_origin: ['http://localhost:3000']
-        allow_headers: ['Content-Type', 'Authorization']
-        allow_methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
-        max_age: 3600
+  defaults:
+    allow_credentials: true
+    allow_origin: ["http://localhost:3000"]
+    allow_headers: ["Content-Type", "Authorization"]
+    allow_methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    max_age: 3600
 ```
 
 ### Proxy de développement (Alternative)
@@ -340,6 +347,7 @@ Ne jamais mettre de secrets dans `NEXT_PUBLIC_*` (ils sont exposés au client).
 Le frontend Next.js génère un build dans `frontend/.next/`.
 
 Pour la production :
+
 - Option A : Build statique (SSG)
 - Option B : Serveur Node.js (SSR)
 - Option C : Déploiement sur Vercel/Netlify
@@ -357,6 +365,7 @@ Les assets Symfony restent dans `public/`.
 ### Développement local
 
 1. **Terminal 1** : Backend Symfony
+
    ```bash
    cd /path/to/customerportal
    php -S localhost:8000 -t public
@@ -365,6 +374,7 @@ Les assets Symfony restent dans `public/`.
    ```
 
 2. **Terminal 2** : Frontend Next.js
+
    ```bash
    cd frontend
    npm run dev
@@ -557,6 +567,7 @@ Une fois le renommage effectué :
 **Oui, vous pouvez renommer `portail-front-template` en `frontend`.**
 
 **Actions à faire** :
+
 1. `mv portail-front-template frontend`
 2. Mettre à jour `package.json` (nom du projet)
 3. Créer `.env.local`
@@ -569,4 +580,3 @@ Une fois le renommage effectué :
 
 **Document créé le** : 2025-01-XX  
 **Version** : 1.0
-
