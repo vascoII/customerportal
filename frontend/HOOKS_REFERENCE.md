@@ -36,8 +36,8 @@ Ce document récapitule tous les hooks React créés pour interagir avec l'API S
 ## 📂 Hooks par Catégorie
 
 ### 🔐 Authentification & Sécurité
-- `useAuth` - Authentification principale (login, logout, session)
-- `useSecurity` - Endpoints de sécurité (reset password, update password, etc.)
+- `useAuth` - Authentification principale (login, logout, session) - **Wrapper autour de `useSecurity`**
+- `useSecurity` - Endpoints de sécurité complets (login, logout, reset password, update password, etc.)
 
 ### 🏠 Front & Général
 - `useFront` - Fonctionnalités générales (CGU, mentions légales, données personnelles)
@@ -72,13 +72,19 @@ Ce document récapitule tous les hooks React créés pour interagir avec l'API S
 
 **Fichier** : `src/lib/hooks/useAuth.ts`
 
-**Description** : Hook principal pour l'authentification, intégrant React Query et Zustand.
+**Description** : Hook principal pour l'authentification, intégrant React Query et Zustand. **Ce hook est un wrapper autour de `useSecurity`** qui ajoute :
+- Intégration Zustand pour la persistance
+- Redirection automatique après login/logout
+- Gestion d'état combinée (store + serveur)
+
+**⚠️ Note** : Pour les cas d'usage avancés (reset password, update password, login via paramètre), utilisez `useSecurity` directement.
 
 **Fonctionnalités** :
-- ✅ Connexion (`login`)
-- ✅ Déconnexion (`logout`)
-- ✅ Vérification de session (`checkAuth`)
+- ✅ Connexion (`login`) - avec redirection automatique
+- ✅ Déconnexion (`logout`) - avec nettoyage et redirection
+- ✅ Vérification de session (`checkAuth`) - combinée avec le store
 - ✅ Redirection automatique selon les rôles
+- ✅ Persistance dans localStorage (via Zustand)
 - ✅ Gestion des erreurs
 - ✅ États de chargement
 
@@ -117,7 +123,9 @@ function LoginComponent() {
 
 **Fichier** : `src/lib/hooks/useSecurity.ts`
 
-**Description** : Hook pour tous les endpoints de sécurité (login, logout, reset password, update password, etc.).
+**Description** : Hook complet pour tous les endpoints de sécurité. **Ce hook est utilisé en interne par `useAuth`** pour les appels API. Utilisez `useSecurity` directement pour les cas d'usage avancés (reset password, update password, login via paramètre).
+
+**⚠️ Note** : Pour les cas d'usage courants (login/logout avec redirection), préférez `useAuth` qui ajoute la persistance et la redirection automatique.
 
 **Endpoints** :
 - `POST /api/security/login` - Connexion
@@ -138,28 +146,55 @@ function LoginComponent() {
 ```typescript
 import { useSecurity } from "@/lib/hooks/useSecurity";
 
+// Cas d'usage avancés (reset password, update password, etc.)
 function SecurityComponent() {
   const {
-    login,
-    logout,
     resetPassword,
     updatePassword,
+    loginFromParam,
+    getMe,
     meData,
-    isLoggingIn,
   } = useSecurity();
 
+  // Reset password (non disponible dans useAuth)
   const handleResetPassword = async (email: string) => {
     await resetPassword(email);
+  };
+
+  // Update password (non disponible dans useAuth)
+  const handleUpdatePassword = async (password: string) => {
+    await updatePassword({ password });
+  };
+
+  // Login via paramètre (non disponible dans useAuth)
+  const handleLoginFromParam = async (param: string) => {
+    await loginFromParam(param);
   };
 
   return (
     <div>
       {meData && <p>Logged in as: {meData.user?.Email}</p>}
-      <button onClick={() => logout()}>Logout</button>
+      <button onClick={() => handleResetPassword("user@example.com")}>
+        Reset Password
+      </button>
     </div>
   );
 }
 ```
+
+**Quand utiliser `useSecurity` vs `useAuth`** :
+
+- **Utilisez `useAuth`** pour :
+  - ✅ Login/Logout avec redirection automatique
+  - ✅ Gestion de session avec persistance
+  - ✅ Composants d'authentification courants
+
+- **Utilisez `useSecurity`** pour :
+  - ✅ Reset password
+  - ✅ Update password
+  - ✅ Login via paramètre (liens email)
+  - ✅ Récupération d'informations utilisateur (`getMe`)
+  - ✅ Contrôle manuel de l'authentification
 
 ---
 
