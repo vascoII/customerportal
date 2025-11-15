@@ -20,6 +20,71 @@ use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 class SecurityApiController extends AbstractApiController
 {
     /**
+     * Login via API (returns JSON instead of redirect)
+     * 
+     * @Route("/login", name="login", methods={"POST"})
+     */
+    public function login(Request $request): JsonResponse
+    {
+        $username = $request->request->get('_username') ?? $request->get('username');
+        $password = $request->request->get('_password') ?? $request->get('password');
+
+        if (empty($username) || empty($password)) {
+            return $this->error('Username and password are required', 400);
+        }
+
+        try {
+            $client = $this->client;
+            $success = $client->login($username, $password);
+
+            if (!$success) {
+                return $this->error('Invalid credentials', 401);
+            }
+
+            $roles = ['ROLE_USER'];
+            $currentUser = $client->getCurrentUser();
+            
+            if (isset($currentUser->UserType)) {
+                switch ($currentUser->UserType) {
+                    case 'O':
+                        $roles[] = 'ROLE_OCCUPANT';
+                        break;
+                    case 'M':
+                        $roles[] = 'ROLE_MAISONMERE';
+                        break;
+                    case 'A':
+                        $roles[] = 'ROLE_AGENCE';
+                        break;
+                    case 'S':
+                    case 'C':
+                        $roles[] = 'ROLE_SYNDICAT';
+                        break;
+                    case 'G':
+                    default:
+                        $roles[] = 'ROLE_GESTIONNAIRE';
+                        break;
+                }
+            }
+
+            $newToken = new SoapSessionToken($roles);
+            $user = new SoapSessionUser($client);
+
+            $newToken->setUser($user);
+            $newToken->setAttribute('soap.session_id', $client->getSessionId());
+            $newToken->setAttribute('soap.pk_user', $client->getPkUser());
+            $newToken->setAttribute('soap.user', $currentUser);
+            $this->container->get('security.token_storage')->setToken($newToken);
+
+            return $this->success([
+                'user' => $this->normalize($currentUser),
+                'roles' => $roles,
+                'session_id' => $client->getSessionId(),
+            ], 'Login successful');
+        } catch (\Exception $e) {
+            return $this->error('Login failed: ' . $e->getMessage(), 401);
+        }
+    }
+    /**
      * Login via parameter (for special login links)
      * 
      * @Route("/login/{param}", name="login_from_param", methods={"GET"})
