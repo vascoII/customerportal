@@ -1,5 +1,6 @@
 "use client";
 import React, { useMemo } from "react";
+import Link from "next/link";
 import Badge from "@/components/ui/badge/Badge";
 import { ArrowDownIcon, ArrowUpIcon, BoxIconLine, GroupIcon } from "@/icons";
 import { useParc } from "@/lib/hooks/useParc";
@@ -87,6 +88,7 @@ export const ParcMetrics = () => {
 
   return (
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+      <Link href="/immeuble?fuites=1">
       {/* Fuites - Metric Item Start */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
@@ -102,12 +104,13 @@ export const ParcMetrics = () => {
               {formatNumber(metrics.fuites)}
             </h4>
           </div>
-          
         </div>
-      </div>
+        </div>
+      </Link>
       {/* Fuites - Metric Item End */}
 
       {/* Alarmes (Dysfonctionnements) - Metric Item Start */}
+      <Link href="/immeuble?dysfonctionnements=1">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
           <BoxIconLine className="text-gray-800 size-6 dark:text-white/90" />
@@ -122,10 +125,12 @@ export const ParcMetrics = () => {
             </h4>
           </div>
         </div>
-      </div>
+        </div>
+      </Link>
       {/* Alarmes - Metric Item End */}
 
       {/* Anomalies - Metric Item Start */}
+      <Link href="/immeuble?anomalies=1">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
           <GroupIcon className="text-gray-800 size-6 dark:text-white/90" />
@@ -141,10 +146,12 @@ export const ParcMetrics = () => {
             </h4>
           </div>
         </div>
-      </div>
+        </div>
+      </Link>
       {/* Anomalies - Metric Item End */}
 
       {/* Depannages - Metric Item Start */}
+      <Link href="/immeuble?depannages=1">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
           <BoxIconLine className="text-gray-800 size-6 dark:text-white/90" />
@@ -159,7 +166,8 @@ export const ParcMetrics = () => {
             </h4>
           </div>
         </div>
-      </div>
+        </div>
+        </Link>
       {/* Depannages - Metric Item End */}
     </div>
   );
