@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useSecurity } from "@/lib/hooks/useSecurity";
 import { handleApiError } from "@/lib/api/client";
@@ -45,6 +46,7 @@ export function useAuth() {
     isAuthenticated,
     isLoading: storeLoading,
     error: storeError,
+    _hasHydrated,
     setUser,
     setLoading,
     setError,
@@ -52,6 +54,18 @@ export function useAuth() {
     hasRole,
     hasAnyRole,
   } = useAuthStore();
+
+  // Set hydrated flag after component mounts (client-side only)
+  // This ensures the flag is set even if onRehydrateStorage doesn't work correctly
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !_hasHydrated) {
+      // Small delay to ensure localStorage is read
+      const timer = setTimeout(() => {
+        useAuthStore.setState({ _hasHydrated: true });
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [_hasHydrated]);
 
   /**
    * Login function with Zustand integration and automatic redirection
@@ -71,9 +85,9 @@ export function useAuth() {
       if (data.roles.includes("ROLE_OCCUPANT")) {
         router.push("/occupant");
       } else if (data.roles.includes("ROLE_GESTIONNAIRE")) {
-        router.push("/dashboard");
+        router.push("/parc");
       } else {
-        router.push("/dashboard");
+        router.push("/parc");
       }
 
       return data;
@@ -145,6 +159,7 @@ export function useAuth() {
     pkUser,
     isAuthenticated: isAuthenticatedState,
     isLoading,
+    hasHydrated: _hasHydrated,
     error: error ? handleApiError(error) : null,
 
     // Actions

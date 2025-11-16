@@ -50,32 +50,47 @@ export default function LoginForm() {
     },
   });
 
-  const { login, error: authError, isLoggingIn, isAuthenticated, roles, user, sessionId } = useAuth();
+  const { login, error: authError, isLoggingIn, isAuthenticated, roles, user, sessionId, hasHydrated } = useAuth();
 
-  // Vérifier le store au chargement de la page (stateless - pas d'appel serveur)
+  // TEMPORARILY DISABLED: Vérifier le store au chargement de la page (stateless - pas d'appel serveur)
+  // TODO: Re-enable after fixing the redirect loop issue
+  /*
   useEffect(() => {
+    // Wait for store to be hydrated and not currently logging in
+    if (!hasHydrated || isLoggingIn) {
+      return;
+    }
+
     setIsCheckingSession(true);
     
     // Vérifier uniquement le store local (pas d'appel API)
     // Si l'utilisateur a des données dans le store, il est considéré comme authentifié
     if (isAuthenticated && user && sessionId) {
       // Utilisateur authentifié dans le store, rediriger selon le rôle
-      const redirectPath = redirect || (roles?.includes("ROLE_OCCUPANT") ? "/occupant" : "/dashboard");
-      router.push(redirectPath);
+      // Only redirect if we have a valid redirect path or default path
+      const redirectPath = redirect || (roles?.includes("ROLE_OCCUPANT") ? "/occupant" : "/parc");
+      // Use replace instead of push to avoid adding to history
+      router.replace(redirectPath);
     } else {
       // Pas d'authentification dans le store, afficher le formulaire
       setIsCheckingSession(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Exécuter une seule fois au montage (vérification initiale uniquement)
+  }, [hasHydrated, isAuthenticated, user, sessionId, isLoggingIn, redirect, roles, router]); // Add dependencies to re-check when auth state changes
 
   // Redirection si authentifié après login (fallback)
   useEffect(() => {
     if (isAuthenticated && !isCheckingSession) {
-      const redirectPath = redirect || (roles?.includes("ROLE_OCCUPANT") ? "/occupant" : "/dashboard");
+      const redirectPath = redirect || (roles?.includes("ROLE_OCCUPANT") ? "/occupant" : "/parc");
       router.push(redirectPath);
     }
   }, [isAuthenticated, redirect, roles, isCheckingSession, router]);
+  */
+
+  // Always show the login form for now (temporarily disabled auto-redirect)
+  useEffect(() => {
+    setIsCheckingSession(false);
+  }, []);
 
   /**
    * Gestion de la soumission du formulaire

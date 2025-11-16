@@ -4,6 +4,7 @@ namespace App\Security\Authentication\Provider;
 
 use App\Service\Client;
 use App\Security\Authentication\User\SoapSessionUser;
+use App\Security\Authentication\User\FakerUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -45,6 +46,6 @@ final class UserProvider implements UserProviderInterface
      */
     public function supportsClass($class): bool
     {
-        return SoapSessionUser::class === $class;
+        return SoapSessionUser::class === $class || FakerUser::class === $class;
     }
 }

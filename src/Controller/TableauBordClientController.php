@@ -18,7 +18,7 @@ use App\Service\Client;
 class TableauBordClientController extends  AbstractTechemController
 {
 
-    #[Route('/parc', name: 'TechemCoreBundle_TableauBordClient_index')]
+    #[Route('/parc', name: 'TechemCoreBundle_TableauBordClient_index', requirements: ['_locale' => 'en|fr'])]
     public function indexAction(Request $request)
     {
         $client = $this->getClient();

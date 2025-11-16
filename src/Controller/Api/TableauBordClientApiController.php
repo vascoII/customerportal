@@ -20,9 +20,43 @@ class TableauBordClientApiController extends AbstractApiController
     public function index(Request $request): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.parc');
-        if ($fakeResponse !== null) {
-            return $fakeResponse;
+        if ($this->isFakerMode()) {
+            try {
+                $boardData = $this->fakeDataService->get('api.parc');
+                $normalizedBoard = $this->normalize($boardData);
+                
+                // Calculate installation statistics from fake data
+                $installed = $normalizedBoard['nbCompteursPoses'] ?? $normalizedBoard['NbCompteursPoses'] ?? 0;
+                $total = $normalizedBoard['nbCompteursCommandes'] ?? $normalizedBoard['NbCompteursCommandes'] ?? 0;
+                $remaining = $total - $installed;
+
+                if ($total > 0) {
+                    $installed_percent = (int) (100 * $installed) / $total;
+                    $remaining_percent = (int) (100 * $remaining) / $total;
+                } else {
+                    $installed_percent = 100;
+                    $remaining_percent = 0;
+                }
+
+                $chantier = [
+                    'installed' => $installed,
+                    'installed_percent' => $installed_percent,
+                    'remaining' => $remaining,
+                    'remaining_percent' => $remaining_percent,
+                    'total' => $total,
+                    'date' => null,
+                ];
+
+                // Structure the data the same way as SOAP response
+                $data = [
+                    'board' => $normalizedBoard,
+                    'chantier' => $chantier,
+                ];
+
+                return $this->success($data);
+            } catch (\Exception $e) {
+                return $this->error('Fake data not available: ' . $e->getMessage(), 500);
+            }
         }
 
         $client = $this->getAuthenticatedClientFromHeaders($request);

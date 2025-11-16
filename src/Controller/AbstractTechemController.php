@@ -22,6 +22,11 @@ class AbstractTechemController extends AbstractController
         /** @var SoapSessionToken $token */
         $token = $this->container->get('security.token_storage')->getToken();
 
+        // Check if token is null (e.g., when security is disabled in faker mode)
+        if (!$token) {
+            throw new RuntimeException('WS missing token');
+        }
+
         // if (!$token || !$token instanceof SoapSessionToken) {
         //     throw new RuntimeException('WS missing token');
         // }

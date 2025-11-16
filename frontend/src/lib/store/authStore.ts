@@ -13,6 +13,7 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  _hasHydrated: boolean; // Internal flag to track hydration state
 }
 
 /**
@@ -43,6 +44,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   isLoading: false,
   error: null,
+  _hasHydrated: false,
 };
 
 /**
@@ -71,6 +73,7 @@ export const useAuthStore = create<AuthStore>()(
           pkUser,
           isAuthenticated: !!user,
           error: null,
+          _hasHydrated: true, // Ensure hydrated flag is set
         });
       },
 
@@ -116,6 +119,7 @@ export const useAuthStore = create<AuthStore>()(
     {
       name: "auth-storage", // localStorage key
       // Only persist user data, not loading/error states
+      // Don't persist _hasHydrated as it's an internal flag
       partialize: (state) => ({
         user: state.user,
         roles: state.roles,
@@ -125,6 +129,21 @@ export const useAuthStore = create<AuthStore>()(
       }),
       // Skip hydration errors in Next.js SSR
       skipHydration: false,
+      // Callback when hydration is complete
+      onRehydrateStorage: () => {
+        return (state, error) => {
+          // After rehydration, we need to set the hydrated flag
+          // We'll do this by calling set from the store instance
+          // But since we can't access set here, we'll use a different approach:
+          // The flag will be set via a useEffect in components that need it
+          // For now, we'll ensure the state is properly set
+          if (state) {
+            // State is rehydrated, components will check this
+            return { ...state, _hasHydrated: true };
+          }
+          return state;
+        };
+      },
     }
   )
 );

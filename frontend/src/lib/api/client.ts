@@ -77,13 +77,16 @@ const createApiClient = (): AxiosInstance => {
       if (error.response) {
         const { status, data } = error.response;
 
-        // Handle 401 Unauthorized - Session expired or invalid
+        // TEMPORARILY DISABLED: Handle 401 Unauthorized - Session expired or invalid
+        // TODO: Re-enable after fixing the redirect loop issue
+        /*
         if (status === 401) {
           // Redirect to login page (only on client side)
           if (typeof window !== 'undefined') {
             window.location.href = '/login';
           }
         }
+        */
 
         // Handle 403 Forbidden - Access denied
         if (status === 403) {

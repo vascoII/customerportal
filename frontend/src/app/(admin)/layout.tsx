@@ -4,9 +4,11 @@ import { useSidebar } from "@/context/SidebarContext";
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
 import Backdrop from "@/layout/Backdrop";
-import { useAuth } from "@/lib/hooks/useAuth";
-import { useRouter, usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+// TEMPORARILY DISABLED: Authentication imports
+// import { useAuth } from "@/lib/hooks/useAuth";
+// import { useRouter, usePathname } from "next/navigation";
+import React from "react";
+// import { useEffect, useState } from "react";
 
 export default function AdminLayout({
   children,
@@ -14,54 +16,60 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
-  const { isAuthenticated, user, sessionId, isLoading } = useAuth();
-  const router = useRouter();
-  const pathname = usePathname();
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
+  // TEMPORARILY DISABLED: Authentication check variables
+  // const { isAuthenticated, user, sessionId, isLoading, hasHydrated } = useAuth();
+  // const router = useRouter();
+  // const pathname = usePathname();
+  // const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  // const [isMounted, setIsMounted] = useState(false);
 
-  // Wait for component to mount (client-side only)
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  // TEMPORARILY DISABLED: Wait for component to mount (client-side only)
+  // useEffect(() => {
+  //   setIsMounted(true);
+  // }, []);
 
-  // Check authentication on mount and redirect if not authenticated
+  // TEMPORARILY DISABLED: Check authentication on mount and redirect if not authenticated
+  // TODO: Re-enable after fixing the redirect loop issue
+  /*
   useEffect(() => {
-    // Wait for component to mount and store to be ready
-    if (!isMounted || isLoading) {
+    // Wait for component to mount and store to be fully hydrated
+    if (!isMounted || !hasHydrated) {
       return;
     }
 
-    // Small delay to ensure localStorage is read
-    const timer = setTimeout(() => {
-      // Check if user is authenticated
-      const authenticated = isAuthenticated && user && sessionId;
-      
-      if (!authenticated) {
-        // If not authenticated, redirect to login
+    // Check if user is authenticated
+    const authenticated = isAuthenticated && user && sessionId;
+    
+    if (!authenticated) {
+      // If not authenticated, redirect to login
+      // Only redirect if we're not already on the login page to avoid loops
+      if (!pathname.startsWith('/login')) {
         const loginUrl = `/login?redirect=${encodeURIComponent(pathname)}`;
         router.push(loginUrl);
-      } else {
-        // User is authenticated, stop checking
-        setIsCheckingAuth(false);
       }
-    }, 100);
+    } else {
+      // User is authenticated, stop checking
+      setIsCheckingAuth(false);
+    }
+  }, [isMounted, hasHydrated, isAuthenticated, user, sessionId, router, pathname]);
 
-    return () => clearTimeout(timer);
-  }, [isMounted, isAuthenticated, user, sessionId, isLoading, router, pathname]);
-
-  // Show loading state while checking authentication or if not authenticated
-  if (isCheckingAuth || isLoading || !isAuthenticated || !user || !sessionId) {
+  // Show loading state while checking authentication or waiting for store hydration
+  if (!hasHydrated || isCheckingAuth || (!isAuthenticated || !user || !sessionId)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Vérification de l'authentification...
+            {!hasHydrated 
+              ? "Chargement..." 
+              : (!isAuthenticated || !user || !sessionId)
+              ? "Redirection vers la page de connexion..."
+              : "Vérification de l'authentification..."}
           </p>
         </div>
       </div>
     );
   }
+  */
 
   // Dynamic class for main content margin based on sidebar state
   const mainContentMargin = isMobileOpen

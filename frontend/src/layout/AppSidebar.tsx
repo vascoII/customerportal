@@ -321,8 +321,8 @@ const AppSidebar: React.FC = () => {
                 className="hidden dark:block"
                 src="/images/techem/logo-dark.svg"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={200}
+                height={140}
               />
             </>
           ) : (
