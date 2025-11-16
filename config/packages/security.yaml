@@ -42,6 +42,8 @@ security:
   access_control:
         # Allow OPTIONS requests for CORS preflight (must be first)
         - { path: ^/api, methods: [OPTIONS], roles: PUBLIC_ACCESS }
+        # Allow API security endpoints (login, logout) without authentication
+        - { path: ^/api/security/(login|logout), roles: PUBLIC_ACCESS }
         - { path: ^/(login|logout|login_check|reset-password|create|reset-or-create), roles: PUBLIC_ACCESS  }
         - { path: ^/(reporttoken|document/receive), roles: PUBLIC_ACCESS  }
         - { path: ^/(en|fr)/(legal-notices|personal-datas), roles: PUBLIC_ACCESS  }

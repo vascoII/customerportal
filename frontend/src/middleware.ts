@@ -31,38 +31,23 @@ function isAuthRoute(pathname: string): boolean {
 /**
  * Next.js Middleware for authentication
  * 
- * This middleware runs on the Edge Runtime and checks for the PHPSESSID cookie.
- * If the cookie is missing and the user is trying to access a protected route,
- * they are redirected to the login page.
+ * Note: Since the API is stateless (uses X-Session-ID and X-Pk-User headers),
+ * we cannot check authentication in the Edge Runtime middleware (it can't access localStorage).
+ * Authentication is checked client-side in the layout components.
  * 
- * Note: The actual session validation is done by the Symfony backend API.
- * This middleware only checks for the presence of the cookie.
+ * This middleware only handles basic route protection and allows all routes to pass through.
+ * The actual authentication check happens in client components using the Zustand store.
  */
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const phpsessid = request.cookies.get("PHPSESSID");
 
   // Allow public routes
   if (isPublicRoute(pathname)) {
     return NextResponse.next();
   }
 
-  // If user is on auth page and has a session cookie, redirect to dashboard
-  if (isAuthRoute(pathname) && phpsessid) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
-  }
-
-  // If user doesn't have a session cookie and is trying to access a protected route
-  if (!phpsessid && !isAuthRoute(pathname)) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    // Store the original URL to redirect after login
-    url.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(url);
-  }
-
+  // Allow all other routes to pass through
+  // Authentication will be checked client-side in layout components
   return NextResponse.next();
 }
 

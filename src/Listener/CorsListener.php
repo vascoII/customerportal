@@ -48,6 +48,8 @@ class CorsListener implements EventSubscriberInterface
         'X-Requested-With',
         'Accept',
         'Origin',
+        'X-Session-ID',
+        'X-Pk-User',
     ];
 
     public static function getSubscribedEvents(): array
@@ -97,14 +99,19 @@ class CorsListener implements EventSubscriberInterface
             $response->setContent('');
 
             // Set CORS headers for preflight
-            if ($origin && in_array($origin, $this->allowedOrigins, true)) {
+            // In development, allow all localhost origins
+            if ($origin && (
+                in_array($origin, $this->allowedOrigins, true) ||
+                strpos($origin, 'http://localhost:') === 0 ||
+                strpos($origin, 'http://127.0.0.1:') === 0
+            )) {
                 $response->headers->set('Access-Control-Allow-Origin', $origin);
                 $response->headers->set('Access-Control-Allow-Credentials', 'true');
             } elseif (!$origin) {
                 // If no origin header, allow all (for development)
                 $response->headers->set('Access-Control-Allow-Origin', '*');
             } else {
-                // Origin not allowed, but still set headers to avoid CORS error
+                // Origin not in whitelist, but allow it anyway for development
                 $response->headers->set('Access-Control-Allow-Origin', $origin);
                 $response->headers->set('Access-Control-Allow-Credentials', 'true');
             }
@@ -167,7 +174,12 @@ class CorsListener implements EventSubscriberInterface
         $origin = $request->headers->get('Origin');
 
         // Check if origin is allowed
-        if ($origin && in_array($origin, $this->allowedOrigins, true)) {
+        // In development, allow all localhost origins
+        if ($origin && (
+            in_array($origin, $this->allowedOrigins, true) ||
+            strpos($origin, 'http://localhost:') === 0 ||
+            strpos($origin, 'http://127.0.0.1:') === 0
+        )) {
             $response->headers->set('Access-Control-Allow-Origin', $origin);
             $response->headers->set('Access-Control-Allow-Credentials', 'true');
         } elseif (in_array('*', $this->allowedOrigins, true)) {
@@ -223,7 +235,12 @@ class CorsListener implements EventSubscriberInterface
         // Add CORS headers to error responses
         $origin = $request->headers->get('Origin');
         
-        if ($origin && in_array($origin, $this->allowedOrigins, true)) {
+        // In development, allow all localhost origins
+        if ($origin && (
+            in_array($origin, $this->allowedOrigins, true) ||
+            strpos($origin, 'http://localhost:') === 0 ||
+            strpos($origin, 'http://127.0.0.1:') === 0
+        )) {
             $response->headers->set('Access-Control-Allow-Origin', $origin);
             $response->headers->set('Access-Control-Allow-Credentials', 'true');
         } elseif ($origin) {

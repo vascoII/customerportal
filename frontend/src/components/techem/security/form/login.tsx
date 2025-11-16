@@ -19,7 +19,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 const loginSchema = z.object({
   username: z
     .string()
-    .min(1, "L'email ou le nom d'utilisateur est requis"),
+    .min(1, "L'email ou le login est requis"),
   password: z
     .string()
     .min(1, "Le mot de passe est requis")

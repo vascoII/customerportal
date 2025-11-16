@@ -40,10 +40,8 @@ abstract class AbstractApiController extends AbstractTechemController
             'json_encode_options' => JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
         ]);
 
-        // Add CORS headers to all API responses
-        $headers = array_merge($headers, [
-            'Access-Control-Allow-Credentials' => 'true',
-        ]);
+        // CORS headers are handled by CorsListener
+        // Don't override them here to avoid conflicts
 
         return new JsonResponse($json, $statusCode, $headers, true);
     }
