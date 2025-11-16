@@ -36,6 +36,11 @@ abstract class AbstractApiController extends AbstractTechemController
             'json_encode_options' => JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
         ]);
 
+        // Add CORS headers to all API responses
+        $headers = array_merge($headers, [
+            'Access-Control-Allow-Credentials' => 'true',
+        ]);
+
         return new JsonResponse($json, $statusCode, $headers, true);
     }
 
@@ -163,4 +168,3 @@ abstract class AbstractApiController extends AbstractTechemController
         return $data;
     }
 }
-

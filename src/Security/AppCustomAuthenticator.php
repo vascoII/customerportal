@@ -40,6 +40,11 @@ class AppCustomAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): bool
     {
+        // Don't authenticate OPTIONS requests (CORS preflight)
+        if ($request->getMethod() === 'OPTIONS') {
+            return false;
+        }
+        
         return self::LOGIN_ROUTE === $request->attributes->get('_route')
         && $request->isMethod($request::METHOD_POST);
     }

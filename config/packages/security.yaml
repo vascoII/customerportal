@@ -19,6 +19,15 @@ security:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
 
+    # API firewall - allow OPTIONS requests without authentication
+    api:
+      pattern: ^/api
+      stateless: false
+      lazy: true
+      provider: user_provider
+      custom_authenticators:
+        - App\Security\AppCustomAuthenticator
+
     front_area:
       lazy: true
       provider: user_provider
@@ -31,6 +40,8 @@ security:
         path: /logout
 
   access_control:
+        # Allow OPTIONS requests for CORS preflight (must be first)
+        - { path: ^/api, methods: [OPTIONS], roles: PUBLIC_ACCESS }
         - { path: ^/(login|logout|login_check|reset-password|create|reset-or-create), roles: PUBLIC_ACCESS  }
         - { path: ^/(reporttoken|document/receive), roles: PUBLIC_ACCESS  }
         - { path: ^/(en|fr)/(legal-notices|personal-datas), roles: PUBLIC_ACCESS  }

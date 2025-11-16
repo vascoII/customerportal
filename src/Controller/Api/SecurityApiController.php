@@ -14,16 +14,14 @@ use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 
 /**
  * API Controller for Security (Authentication, Password management)
- * 
- * @Route("/api/security", name="api_security_")
  */
+#[Route("/api/security", name: "api_security_")]
 class SecurityApiController extends AbstractApiController
 {
     /**
      * Login via API (returns JSON instead of redirect)
-     * 
-     * @Route("/login", name="login", methods={"POST"})
      */
+    #[Route("/login", name: "login", methods: ["POST"])]
     public function login(Request $request): JsonResponse
     {
         $username = $request->request->get('_username') ?? $request->get('username');
@@ -86,9 +84,8 @@ class SecurityApiController extends AbstractApiController
     }
     /**
      * Login via parameter (for special login links)
-     * 
-     * @Route("/login/{param}", name="login_from_param", methods={"GET"})
      */
+    #[Route("/login/{param}", name: "login_from_param", methods: ["GET"])]
     public function loginFromParam(string $param, SessionInterface $session): JsonResponse
     {
         try {
@@ -147,9 +144,8 @@ class SecurityApiController extends AbstractApiController
 
     /**
      * Logout current user
-     * 
-     * @Route("/logout", name="logout", methods={"POST"})
      */
+    #[Route("/logout", name: "logout", methods: ["POST"])]
     public function logout(Request $request): JsonResponse
     {
         /** @var SoapSessionToken|null $token */
@@ -180,9 +176,8 @@ class SecurityApiController extends AbstractApiController
 
     /**
      * Reset password from email
-     * 
-     * @Route("/reset-password", name="reset_password", methods={"POST"})
      */
+    #[Route("/reset-password", name: "reset_password", methods: ["POST"])]
     public function resetPassword(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -209,9 +204,8 @@ class SecurityApiController extends AbstractApiController
 
     /**
      * Update password for authenticated user
-     * 
-     * @Route("/update-password", name="update_password", methods={"PUT", "PATCH"})
      */
+    #[Route("/update-password", name: "update_password", methods: ["PUT", "PATCH"])]
     public function updatePassword(Request $request): JsonResponse
     {
         /** @var SoapSessionToken|null $token */
@@ -275,9 +269,8 @@ class SecurityApiController extends AbstractApiController
 
     /**
      * Get current user information
-     * 
-     * @Route("/me", name="me", methods={"GET"})
      */
+    #[Route("/me", name: "me", methods: ["GET"])]
     public function me(): JsonResponse
     {
         /** @var SoapSessionToken|null $token */
@@ -302,9 +295,8 @@ class SecurityApiController extends AbstractApiController
 
     /**
      * Check authentication status
-     * 
-     * @Route("/check", name="check", methods={"GET"})
      */
+    #[Route("/check", name: "check", methods: ["GET"])]
     public function check(): JsonResponse
     {
         /** @var SoapSessionToken|null $token */
