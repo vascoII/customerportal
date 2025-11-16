@@ -1,10 +1,9 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useSecurity } from "@/lib/hooks/useSecurity";
 import { handleApiError } from "@/lib/api/client";
 import type { LoginCredentials } from "@/lib/hooks/useSecurity";
-import type { AuthCheckResponse } from "@/lib/types/api";
 
 /**
  * Custom hook for authentication
@@ -13,7 +12,7 @@ import type { AuthCheckResponse } from "@/lib/types/api";
  * This hook wraps `useSecurity` and adds:
  * - Zustand store integration for persistent state
  * - Automatic redirection after login/logout
- * - Combined state management (store + server check)
+ * - Local state management (stateless - no server check needed)
  * 
  * For advanced use cases (reset password, update password, etc.), use `useSecurity` directly.
  * 
@@ -53,19 +52,6 @@ export function useAuth() {
     hasRole,
     hasAnyRole,
   } = useAuthStore();
-
-  // Use a conditional query for auth check that shares the same query key as useSecurity
-  // This allows us to control when it runs while sharing the cache
-  const { data: authCheck, isLoading: isCheckingAuth } = useQuery<AuthCheckResponse>({
-    queryKey: ["auth", "check"],
-    queryFn: async () => {
-      // Use the checkAuth function from useSecurity
-      return security.checkAuth();
-    },
-    enabled: isAuthenticated, // Only check if we think we're authenticated
-    retry: false,
-    staleTime: 5 * 60 * 1000, // Consider fresh for 5 minutes
-  });
 
   /**
    * Login function with Zustand integration and automatic redirection
@@ -123,42 +109,28 @@ export function useAuth() {
   };
 
   /**
-   * Check session and sync store if authenticated
-   * This function checks the server session and updates the store if a valid session exists
-   * Useful for checking authentication on page load (e.g., login page)
+   * Check if user is authenticated (local check only - stateless)
+   * Verifies that sessionId, pkUser, and user are present in the store
+   * No server call needed - validation happens automatically on API requests
    */
-  const checkAndSyncSession = async (): Promise<boolean> => {
-    try {
-      const authCheck = await security.checkAuth();
-      
-      if (authCheck.authenticated && authCheck.user && authCheck.roles) {
-        // Session exists on server, sync store
-        // Note: For stateless API, we need sessionId and pkUser from login response
-        // This method is kept for backward compatibility but may not work with stateless API
-        setUser(authCheck.user, authCheck.roles, null, null);
-        return true;
-      } else {
-        // No valid session, clear store
-        clearAuth();
-        return false;
-      }
-    } catch (error) {
-      // If check fails, assume not authenticated
-      clearAuth();
-      return false;
-    }
+  const checkAndSyncSession = (): boolean => {
+    // Stateless: check local store only
+    // If sessionId/pkUser are invalid, API requests will return 401
+    // and the interceptor will redirect to /login
+    return isAuthenticated && !!sessionId && !!pkUser && !!user;
   };
 
   /**
    * Check if user is authenticated
-   * Combines store state with server check
+   * Stateless: uses only local store (sessionId, pkUser, user)
+   * No server check needed - validation happens on API requests
    */
-  const isAuthenticatedState = isAuthenticated && authCheck?.authenticated !== false;
+  const isAuthenticatedState = isAuthenticated && !!sessionId && !!pkUser && !!user;
 
   /**
    * Combined loading state
    */
-  const isLoading = storeLoading || security.isLoggingIn || security.isLoggingOut || isCheckingAuth;
+  const isLoading = storeLoading || security.isLoggingIn || security.isLoggingOut;
 
   /**
    * Combined error state

@@ -56,11 +56,6 @@ export interface LoginResponse {
   pk_user: number;
 }
 
-export interface AuthCheckResponse {
-  authenticated: boolean;
-  user?: User;
-  roles?: UserRole[];
-}
 
 /**
  * Building (Immeuble) types

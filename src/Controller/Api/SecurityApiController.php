@@ -288,34 +288,4 @@ class SecurityApiController extends AbstractApiController
         ]);
     }
 
-    /**
-     * Check authentication status
-     */
-    #[Route("/check", name: "check", methods: ["GET"])]
-    public function check(): JsonResponse
-    {
-        /** @var SoapSessionToken|null $token */
-        $token = $this->container->get('security.token_storage')->getToken();
-
-        if (!$token || !$token instanceof SoapSessionToken) {
-            return $this->success([
-                'authenticated' => false,
-            ]);
-        }
-
-        if (!$token->hasAttribute('soap.user')) {
-            return $this->success([
-                'authenticated' => false,
-            ]);
-        }
-
-        $user = $token->getAttribute('soap.user');
-        $roles = $token->getRoleNames();
-
-        return $this->success([
-            'authenticated' => true,
-            'user' => $this->normalize($user),
-            'roles' => $roles,
-        ]);
-    }
 }

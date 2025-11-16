@@ -4,7 +4,6 @@ import type {
   LoginResponse,
   User,
   UserRole,
-  AuthCheckResponse,
 } from "@/lib/types/api";
 
 /**
@@ -61,11 +60,11 @@ export interface MeResponse {
  * - Login (standard and from param)
  * - Logout
  * - Password management (reset, update)
- * - User information (me, check auth)
+ * - User information (me)
  *
  * @example
  * ```tsx
- * const { login, logout, resetPassword, updatePassword, getMe, checkAuth } = useSecurity();
+ * const { login, logout, resetPassword, updatePassword, getMe } = useSecurity();
  *
  * // Login
  * await login({ username: "user@example.com", password: "password123" });
@@ -93,8 +92,7 @@ export function useSecurity() {
       return extractApiData<LoginResponse>(response);
     },
     onSuccess: () => {
-      // Invalidate auth check query to refresh authentication state
-      queryClient.invalidateQueries({ queryKey: ["auth", "check"] });
+      // Invalidate user info query to refresh authentication state
       queryClient.invalidateQueries({ queryKey: ["security", "me"] });
     },
   });
@@ -110,8 +108,7 @@ export function useSecurity() {
       return extractApiData<LoginResponse>(response);
     },
     onSuccess: () => {
-      // Invalidate auth check query to refresh authentication state
-      queryClient.invalidateQueries({ queryKey: ["auth", "check"] });
+      // Invalidate user info query to refresh authentication state
       queryClient.invalidateQueries({ queryKey: ["security", "me"] });
     },
   });
@@ -133,8 +130,7 @@ export function useSecurity() {
     onSuccess: () => {
       // Clear all queries on logout
       queryClient.clear();
-      // Invalidate auth-related queries
-      queryClient.invalidateQueries({ queryKey: ["auth", "check"] });
+      // Invalidate user info query
       queryClient.invalidateQueries({ queryKey: ["security", "me"] });
     },
   });
@@ -192,25 +188,6 @@ export function useSecurity() {
     retry: false,
     staleTime: 5 * 60 * 1000, // Consider fresh for 5 minutes
     enabled: false, // Disabled by default, enable when needed
-  });
-
-  /**
-   * Check authentication status query
-   * GET /api/security/check
-   */
-  const checkAuthQuery = useQuery({
-    queryKey: ["auth", "check"],
-    queryFn: async (): Promise<AuthCheckResponse> => {
-      try {
-        const response = await api.get<AuthCheckResponse>("/security/check");
-        return extractApiData<AuthCheckResponse>(response);
-      } catch (error) {
-        // If check fails, user is not authenticated
-        return { authenticated: false };
-      }
-    },
-    retry: false,
-    staleTime: 5 * 60 * 1000, // Consider fresh for 5 minutes
   });
 
   /**
@@ -279,28 +256,6 @@ export function useSecurity() {
     return result;
   };
 
-  /**
-   * Check authentication status
-   * Refetches the auth check query
-   * @returns Promise with authentication status
-   */
-  const checkAuth = async (): Promise<AuthCheckResponse> => {
-    const result = await queryClient.fetchQuery({
-      queryKey: ["auth", "check"],
-      queryFn: async (): Promise<AuthCheckResponse> => {
-        try {
-          const response = await api.get<AuthCheckResponse>("/security/check");
-          return extractApiData<AuthCheckResponse>(response);
-        } catch (error) {
-          return { authenticated: false };
-        }
-      },
-      retry: false,
-      staleTime: 5 * 60 * 1000,
-    });
-    return result;
-  };
-
   return {
     // Mutations
     login,
@@ -311,7 +266,6 @@ export function useSecurity() {
 
     // Query functions (async functions that refetch)
     getMe,
-    checkAuth,
 
     // Mutation states
     isLoggingIn: loginMutation.isPending,
@@ -341,11 +295,6 @@ export function useSecurity() {
     meData: meQuery.data,
     meIsLoading: meQuery.isLoading,
     meError: meQuery.error ? handleApiError(meQuery.error) : null,
-    checkAuthData: checkAuthQuery.data,
-    checkAuthIsLoading: checkAuthQuery.isLoading,
-    checkAuthError: checkAuthQuery.error
-      ? handleApiError(checkAuthQuery.error)
-      : null,
 
     // Direct access to mutations for advanced usage
     loginMutation,
@@ -356,7 +305,6 @@ export function useSecurity() {
 
     // Direct access to queries for advanced usage
     meQuery,
-    checkAuthQuery,
   };
 }
 
