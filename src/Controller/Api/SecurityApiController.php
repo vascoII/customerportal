@@ -25,6 +25,13 @@ class SecurityApiController extends AbstractApiController
     #[Route("/login", name: "login", methods: ["POST"])]
     public function login(Request $request): JsonResponse
     {
+
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.security.login');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $username = $request->request->get('_username') ?? $request->get('username');
         $password = $request->request->get('_password') ?? $request->get('password');
 
@@ -84,7 +91,7 @@ class SecurityApiController extends AbstractApiController
     public function loginFromParam(string $param, SessionInterface $session): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.security.login.{param}', ['param' => $param]);
+        $fakeResponse = $this->sendFakeData('api.security.login.param');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -299,5 +306,4 @@ class SecurityApiController extends AbstractApiController
             'roles' => $roles,
         ]);
     }
-
 }
