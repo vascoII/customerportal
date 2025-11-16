@@ -45,19 +45,24 @@ class BaseClient
             throw new RuntimeException('Argument 1 must be a URL.');
         }
 
-        $this->stopwatchStart('\App\Service\BaseClient::__construct wsdl');
-        $this->client = new \SoapClient($wsdlUrl, [
-            'trace' => 1,
-            // 'stream_context' => stream_context_create([
-            //     'ssl' => [
-            //         'verify_peer'       => false,
-            //         'verify_peer_name'  => false,
-            //         'allow_self_signed' => true,
-            //     ],
-            // ]),
-            'exception' => true,
-        ]);
-        $this->stopwatchStop('\App\Service\BaseClient::__construct wsdl');
+        // Don't create SoapClient in constructor if faker mode is enabled
+        // It will be created lazily in getClient() if needed
+        $isFakerMode = ($_ENV['API_CALL_FAKER'] ?? getenv('API_CALL_FAKER') ?? 'false') === 'true';
+        if (!$isFakerMode) {
+            $this->stopwatchStart('\App\Service\BaseClient::__construct wsdl');
+            $this->client = new \SoapClient($wsdlUrl, [
+                'trace' => 1,
+                // 'stream_context' => stream_context_create([
+                //     'ssl' => [
+                //         'verify_peer'       => false,
+                //         'verify_peer_name'  => false,
+                //         'allow_self_signed' => true,
+                //     ],
+                // ]),
+                'exception' => true,
+            ]);
+            $this->stopwatchStop('\App\Service\BaseClient::__construct wsdl');
+        }
     }
 
     protected function stopwatchStart($name)
@@ -170,6 +175,22 @@ class BaseClient
 
     protected function getClient()
     {
+        // Check if faker mode is enabled - if so, don't create SoapClient
+        $isFakerMode = ($_ENV['API_CALL_FAKER'] ?? getenv('API_CALL_FAKER') ?? 'false') === 'true';
+        if ($isFakerMode) {
+            throw new RuntimeException('SoapClient cannot be used when API_CALL_FAKER is enabled. Use fake data instead.');
+        }
+
+        // Lazy initialization: create SoapClient if not already created
+        if ($this->client === null) {
+            $this->stopwatchStart('\App\Service\BaseClient::getClient wsdl');
+            $this->client = new \SoapClient($this->wsdlUrl, [
+                'trace' => 1,
+                'exception' => true,
+            ]);
+            $this->stopwatchStop('\App\Service\BaseClient::getClient wsdl');
+        }
+
         return $this->client;
     }
 

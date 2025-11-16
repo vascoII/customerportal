@@ -14,7 +14,7 @@ class FakeDataService
     public function __construct(string $projectDir)
     {
         $this->dataDir = $projectDir . '/public/data/api/';
-        $this->enabled = ($_ENV['API_CALL_FAKER'] ?? 'false') === 'true';
+        $this->enabled = ($_ENV['API_CALL_FAKER'] ?? getenv('API_CALL_FAKER') ?? 'false') === 'true';
     }
     
     /**

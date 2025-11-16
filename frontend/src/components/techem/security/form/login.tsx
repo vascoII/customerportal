@@ -19,8 +19,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 const loginSchema = z.object({
   username: z
     .string()
-    .min(1, "L'email ou le nom d'utilisateur est requis")
-    .email("Veuillez entrer une adresse email valide"),
+    .min(1, "L'email ou le nom d'utilisateur est requis"),
   password: z
     .string()
     .min(1, "Le mot de passe est requis")
@@ -149,8 +148,8 @@ export default function LoginForm() {
                   </Label>
                   <Input
                     id="username"
-                    type="email"
-                    placeholder="exemple@email.com"
+                    type="text"
+                    placeholder="Email ou nom d'utilisateur"
                     {...register("username")}
                     error={!!errors.username}
                     hint={errors.username?.message}

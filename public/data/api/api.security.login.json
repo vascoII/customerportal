@@ -1,0 +1,18 @@
+{
+  "user": {
+    "PKUser": 1043,
+    "LoginID": "demo@techem.fr",
+    "Email": "demo@techem.fr",
+    "UserType": "G",
+    "UserName": "Demo",
+    "FirstName": "Client",
+    "LastName": "Test"
+  },
+  "roles": [
+    "ROLE_USER",
+    "ROLE_GESTIONNAIRE"
+  ],
+  "session_id": "54ea1174-b2f9-4472-bfb6-93ebe19d596b",
+  "pk_user": 1043
+}
+
