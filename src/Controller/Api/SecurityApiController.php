@@ -20,6 +20,7 @@ class SecurityApiController extends AbstractApiController
 {
     /**
      * Login via API (returns JSON instead of redirect)
+     * Stateless: returns session_id and pk_user to be sent in headers for subsequent requests
      */
     #[Route("/login", name: "login", methods: ["POST"])]
     public function login(Request $request): JsonResponse
@@ -33,15 +34,15 @@ class SecurityApiController extends AbstractApiController
 
         try {
             $client = $this->client;
-            $success = $client->login($username, $password);
+            $loginData = $client->loginForApi($username, $password);
 
-            if (!$success) {
+            if (!$loginData) {
                 return $this->error('Invalid credentials', 401);
             }
 
+            $currentUser = $loginData['user'];
             $roles = ['ROLE_USER'];
-            $currentUser = $client->getCurrentUser();
-            
+
             if (isset($currentUser->UserType)) {
                 switch ($currentUser->UserType) {
                     case 'O':
@@ -64,19 +65,13 @@ class SecurityApiController extends AbstractApiController
                 }
             }
 
-            $newToken = new SoapSessionToken($roles);
-            $user = new SoapSessionUser($client);
-
-            $newToken->setUser($user);
-            $newToken->setAttribute('soap.session_id', $client->getSessionId());
-            $newToken->setAttribute('soap.pk_user', $client->getPkUser());
-            $newToken->setAttribute('soap.user', $currentUser);
-            $this->container->get('security.token_storage')->setToken($newToken);
-
+            // Return session_id and pk_user for stateless API
+            // Frontend will send these in headers for subsequent requests
             return $this->success([
                 'user' => $this->normalize($currentUser),
                 'roles' => $roles,
-                'session_id' => $client->getSessionId(),
+                'session_id' => $loginData['session_id'],
+                'pk_user' => $loginData['pk_user'],
             ], 'Login successful');
         } catch (\Exception $e) {
             return $this->error('Login failed: ' . $e->getMessage(), 401);
@@ -98,7 +93,7 @@ class SecurityApiController extends AbstractApiController
 
             $roles = ['ROLE_USER'];
             $currentUser = $client->getCurrentUser();
-            
+
             if (isset($currentUser->UserType)) {
                 switch ($currentUser->UserType) {
                     case 'O':
@@ -324,4 +319,3 @@ class SecurityApiController extends AbstractApiController
         ]);
     }
 }
-

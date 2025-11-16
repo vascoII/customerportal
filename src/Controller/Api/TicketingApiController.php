@@ -16,7 +16,7 @@ class TicketingApiController extends AbstractApiController
     #[Route("", name: "list", methods: ["GET"])]
     public function ticketList(Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -157,7 +157,7 @@ class TicketingApiController extends AbstractApiController
     #[Route("/menu", name: "menu", methods: ["GET"])]
     public function menuTicket(): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -181,7 +181,7 @@ class TicketingApiController extends AbstractApiController
     #[Route("/{pkTicket}/close", name: "close", methods: ["POST", "PUT"])]
     public function closeTicket(string $pkTicket): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -207,7 +207,7 @@ class TicketingApiController extends AbstractApiController
     #[Route("/{pkTicket}/attachment", name: "attachment", methods: ["GET"])]
     public function attachmentTicket(string $pkTicket, LoggerInterface $logger): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -241,7 +241,7 @@ class TicketingApiController extends AbstractApiController
     #[Route("/create/{pkLogement}", name: "create_info", methods: ["GET"])]
     public function createTicketInfo(int $pkLogement): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -266,4 +266,3 @@ class TicketingApiController extends AbstractApiController
         }
     }
 }
-

@@ -27,9 +27,9 @@ class ImmeubleApiController extends AbstractApiController
      * Get dashboard with building list
      */
     #[Route("", name: "index", methods: ["GET"])]
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -52,7 +52,7 @@ class ImmeubleApiController extends AbstractApiController
     #[Route("/filtre", name: "filter", methods: ["GET", "POST"])]
     public function filter(Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -106,9 +106,9 @@ class ImmeubleApiController extends AbstractApiController
      * Get building details
      *     */
     #[Route("/{pkImmeuble}", name: "show", methods: ["GET"])]
-    public function show(int $pkImmeuble, Immeuble $immeubleService): JsonResponse
+    public function show(int $pkImmeuble, Request $request, Immeuble $immeubleService): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -179,9 +179,9 @@ class ImmeubleApiController extends AbstractApiController
      * Get intervention details
      *     */
     #[Route("/{pkImmeuble}/interventions/{pkIntervention}", name: "show_intervention", methods: ["GET"])]
-    public function showIntervention(int $pkImmeuble, int $pkIntervention): JsonResponse
+    public function showIntervention(int $pkImmeuble, int $pkIntervention, Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -207,9 +207,9 @@ class ImmeubleApiController extends AbstractApiController
      * Get interventions list
      *     */
     #[Route("/{pkImmeuble}/interventions", name: "list_interventions", methods: ["GET"])]
-    public function listInterventions(int $pkImmeuble, Depannage $depannageService): JsonResponse
+    public function listInterventions(int $pkImmeuble, Request $request, Depannage $depannageService): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -232,9 +232,9 @@ class ImmeubleApiController extends AbstractApiController
      * Get leaks list
      *     */
     #[Route("/{pkImmeuble}/fuites", name: "list_leaks", methods: ["GET"])]
-    public function listLeaks(int $pkImmeuble, Fuite $fuiteService): JsonResponse
+    public function listLeaks(int $pkImmeuble, Request $request, Fuite $fuiteService): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -257,9 +257,9 @@ class ImmeubleApiController extends AbstractApiController
      * Get anomalies list
      *     */
     #[Route("/{pkImmeuble}/anomalies", name: "list_anomalies", methods: ["GET"])]
-    public function listAnomalies(int $pkImmeuble, Anomalie $anomalieService): JsonResponse
+    public function listAnomalies(int $pkImmeuble, Request $request, Anomalie $anomalieService): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -282,9 +282,9 @@ class ImmeubleApiController extends AbstractApiController
      * Get dysfunctions list
      *     */
     #[Route("/{pkImmeuble}/dysfonctionnements", name: "list_dysfunctions", methods: ["GET"])]
-    public function listDysfunctions(int $pkImmeuble, Dysfonctionnement $dysfonctionnementService): JsonResponse
+    public function listDysfunctions(int $pkImmeuble, Request $request, Dysfonctionnement $dysfonctionnementService): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -309,7 +309,7 @@ class ImmeubleApiController extends AbstractApiController
     #[Route("/{pkImmeuble}/releve/{type}/{energie}", name: "report", methods: ["GET", "POST"])]
     public function report(Request $request, int $pkImmeuble, string $type, string $energie): Response|JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -347,11 +347,11 @@ class ImmeubleApiController extends AbstractApiController
      * Export anomalies to Excel
      *     */
     #[Route("/{pkImmeuble}/anomalies/export", name: "export_anomalies", methods: ["GET"])]
-    public function exportAnomalies(int $pkImmeuble, Anomalie $anomalieService, ExcelHelper $excelHelper): StreamedResponse|JsonResponse
+    public function exportAnomalies(int $pkImmeuble, Request $request, Anomalie $anomalieService, ExcelHelper $excelHelper): StreamedResponse|JsonResponse
     {
         ini_set('max_execution_time', 120);
 
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -380,11 +380,11 @@ class ImmeubleApiController extends AbstractApiController
      * Export leaks to Excel
      *     */
     #[Route("/{pkImmeuble}/fuites/export", name: "export_leaks", methods: ["GET"])]
-    public function exportLeaks(int $pkImmeuble, Fuite $fuiteService, ExcelHelper $excelHelper): StreamedResponse|JsonResponse
+    public function exportLeaks(int $pkImmeuble, Request $request, Fuite $fuiteService, ExcelHelper $excelHelper): StreamedResponse|JsonResponse
     {
         ini_set('max_execution_time', 120);
 
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -413,11 +413,11 @@ class ImmeubleApiController extends AbstractApiController
      * Export interventions to Excel
      *     */
     #[Route("/{pkImmeuble}/interventions/export", name: "export_interventions", methods: ["GET"])]
-    public function exportInterventions(int $pkImmeuble, Depannage $depannageService, ExcelHelper $excelHelper): StreamedResponse|JsonResponse
+    public function exportInterventions(int $pkImmeuble, Request $request, Depannage $depannageService, ExcelHelper $excelHelper): StreamedResponse|JsonResponse
     {
         ini_set('max_execution_time', 120);
 
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -446,11 +446,11 @@ class ImmeubleApiController extends AbstractApiController
      * Export dysfunctions to Excel
      *     */
     #[Route("/{pkImmeuble}/dysfonctionnements/export", name: "export_dysfunctions", methods: ["GET"])]
-    public function exportDysfunctions(int $pkImmeuble, Dysfonctionnement $dysfonctionnementService, ExcelHelper $excelHelper): StreamedResponse|JsonResponse
+    public function exportDysfunctions(int $pkImmeuble, Request $request, Dysfonctionnement $dysfonctionnementService, ExcelHelper $excelHelper): StreamedResponse|JsonResponse
     {
         ini_set('max_execution_time', 120);
 
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -481,7 +481,7 @@ class ImmeubleApiController extends AbstractApiController
     #[Route("/{pkImmeuble}/intervention", name: "intervention_report", methods: ["GET"])]
     public function intervention(Request $request, int $pkImmeuble): Response|JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }

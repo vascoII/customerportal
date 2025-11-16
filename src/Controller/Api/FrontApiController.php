@@ -27,9 +27,9 @@ class FrontApiController extends AbstractApiController
    * Get current user information and dashboard URL
    */
   #[Route("/me", name: "me", methods: ["GET"])]
-  public function me(): JsonResponse
+  public function me(Request $request): JsonResponse
   {
-    $client = $this->getAuthenticatedClient();
+    $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;
     }
@@ -93,9 +93,9 @@ class FrontApiController extends AbstractApiController
    * Get personal data (subcontractors)
    */
   #[Route("/personal-datas", name: "personal_datas", methods: ["GET"])]
-  public function personalDatas(): JsonResponse
+  public function personalDatas(Request $request): JsonResponse
   {
-    $client = $this->getAuthenticatedClient();
+    $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;
     }
@@ -125,9 +125,9 @@ class FrontApiController extends AbstractApiController
    * Get CGU (Terms and Conditions) status
    */
   #[Route("/cgu/status", name: "cgu_status", methods: ["GET"])]
-  public function cguStatus(): JsonResponse
+  public function cguStatus(Request $request): JsonResponse
   {
-    $client = $this->getAuthenticatedClient();
+    $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;
     }
@@ -174,7 +174,7 @@ class FrontApiController extends AbstractApiController
   #[Route("/cgu/accept", name: "cgu_accept", methods: ["POST"])]
   public function acceptCgu(Request $request): JsonResponse
   {
-    $client = $this->getAuthenticatedClient();
+    $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;
     }
@@ -242,9 +242,9 @@ class FrontApiController extends AbstractApiController
    * Get dashboard information
    */
   #[Route("/dashboard", name: "dashboard", methods: ["GET"])]
-  public function dashboard(): JsonResponse
+  public function dashboard(Request $request): JsonResponse
   {
-    $client = $this->getAuthenticatedClient();
+    $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;
     }

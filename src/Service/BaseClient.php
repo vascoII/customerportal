@@ -97,6 +97,38 @@ class BaseClient
         return true;
     }
 
+    /**
+     * Login for API (stateless) - returns data instead of storing in instance
+     * Used for stateless API authentication where sessionId and pkUser are sent via headers
+     *
+     * @param string $username
+     * @param string $password
+     * @return array|null Returns array with session_id, pk_user, and user, or null on failure
+     * @throws RuntimeException
+     */
+    public function loginForApi($username, $password)
+    {
+        $result = $this->sendRequest('Login', (object) [
+            'LoginID' => $username,
+            'Password' => $password,
+        ], false);
+
+        if (isset($result->Erreur) && !empty($result->Erreur)) {
+            throw new RuntimeException($result->Erreur);
+        }
+
+        if (empty($result->SessionID)) {
+            return null;
+        }
+
+        // Return data instead of storing in instance
+        return [
+            'session_id' => $result->SessionID,
+            'pk_user' => $result->User->PKUser,
+            'user' => $result->User,
+        ];
+    }
+
     public function loginFromParam($param)
     {
         $result = $this->sendRequest('LoginFromParam', (object) [

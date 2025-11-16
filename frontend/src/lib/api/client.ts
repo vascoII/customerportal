@@ -37,10 +37,28 @@ const createApiClient = (): AxiosInstance => {
     timeout: 30000, // 30 seconds timeout
   });
 
-  // Request interceptor
+  // Request interceptor - Add authentication headers for stateless API
   client.interceptors.request.use(
     (config) => {
-      // You can add auth tokens or other headers here if needed
+      // Add sessionId and pkUser from localStorage (via Zustand store)
+      // These are set after login and persist across page refreshes
+      if (typeof window !== 'undefined') {
+        try {
+          const authStorage = localStorage.getItem('auth-storage');
+          if (authStorage) {
+            const authData = JSON.parse(authStorage);
+            const state = authData?.state;
+            
+            if (state?.sessionId && state?.pkUser) {
+              config.headers['X-Session-ID'] = state.sessionId;
+              config.headers['X-Pk-User'] = String(state.pkUser);
+            }
+          }
+        } catch (error) {
+          // Silently fail if localStorage is not available or data is invalid
+          console.warn('Failed to read auth data from localStorage:', error);
+        }
+      }
       return config;
     },
     (error) => {

@@ -21,9 +21,9 @@ class OperatorApiController extends AbstractApiController
      * Get list of all operators (gestionnaires)
      */
     #[Route("", name: "index", methods: ["GET"])]
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -44,7 +44,7 @@ class OperatorApiController extends AbstractApiController
     #[Route("", name: "create", methods: ["POST"])]
     public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -106,9 +106,9 @@ class OperatorApiController extends AbstractApiController
      * Get operator statistics
      */
     #[Route("/statistiques", name: "stats_occupants", methods: ["GET"])]
-    public function statsOccupants(): JsonResponse
+    public function statsOccupants(Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -127,9 +127,9 @@ class OperatorApiController extends AbstractApiController
      * Get operator details
      */
     #[Route("/{id}", name: "view", methods: ["GET"])]
-    public function view(int $id): JsonResponse
+    public function view(int $id, Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -169,7 +169,7 @@ class OperatorApiController extends AbstractApiController
     #[Route("/{id}", name: "edit", methods: ["PUT", "PATCH"])]
     public function edit(int $id, Request $request, ValidatorInterface $validator): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -190,7 +190,7 @@ class OperatorApiController extends AbstractApiController
             $account->lastname = $data['lastname'] ?? $user->UserName ?? null;
             $account->firstname = $data['firstname'] ?? $user->FirstName ?? null;
             $account->phone = $data['phone'] ?? $user->PhoneNumber ?? null;
-            
+
             // Handle email (can be string or array with first/second)
             if (isset($data['email'])) {
                 if (is_array($data['email'])) {
@@ -231,7 +231,7 @@ class OperatorApiController extends AbstractApiController
     #[Route("/{id}/password", name: "password", methods: ["PUT", "PATCH"])]
     public function editPassword(int $id, Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -288,7 +288,7 @@ class OperatorApiController extends AbstractApiController
     #[Route("/{id}/immeubles", name: "add_buildings", methods: ["POST"])]
     public function addBuildings(int $id, Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -347,7 +347,7 @@ class OperatorApiController extends AbstractApiController
     #[Route("/{id}/immeubles", name: "remove_buildings", methods: ["DELETE"])]
     public function removeBuildings(int $id, Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -410,9 +410,9 @@ class OperatorApiController extends AbstractApiController
      * Delete operator
      */
     #[Route("/{id}", name: "delete", methods: ["DELETE"])]
-    public function delete(int $id): JsonResponse
+    public function delete(int $id, Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -430,4 +430,3 @@ class OperatorApiController extends AbstractApiController
         }
     }
 }
-

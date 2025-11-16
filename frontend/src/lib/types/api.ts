@@ -53,6 +53,7 @@ export interface LoginResponse {
   user: User;
   roles: UserRole[];
   session_id: string;
+  pk_user: number;
 }
 
 export interface AuthCheckResponse {

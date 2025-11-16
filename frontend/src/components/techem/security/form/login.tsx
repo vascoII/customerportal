@@ -4,14 +4,14 @@ import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import Alert from "@/components/ui/alert/Alert";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
+import { EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/lib/hooks/useAuth";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 /**
  * Schéma de validation pour le formulaire de connexion
@@ -32,8 +32,10 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
   const searchParams = useSearchParams();
   const redirect = searchParams?.get("redirect") || null;
+  const router = useRouter();
 
   const {
     register,
@@ -49,15 +51,32 @@ export default function LoginForm() {
     },
   });
 
-  const { login, error: authError, isLoggingIn, isAuthenticated } = useAuth();
+  const { login, error: authError, isLoggingIn, isAuthenticated, roles, user, sessionId } = useAuth();
 
-  // Redirection si déjà authentifié
+  // Vérifier le store au chargement de la page (stateless - pas d'appel serveur)
   useEffect(() => {
-    if (isAuthenticated) {
-      const redirectPath = redirect || "/dashboard";
-      window.location.href = redirectPath;
+    setIsCheckingSession(true);
+    
+    // Vérifier uniquement le store local (pas d'appel API)
+    // Si l'utilisateur a des données dans le store, il est considéré comme authentifié
+    if (isAuthenticated && user && sessionId) {
+      // Utilisateur authentifié dans le store, rediriger selon le rôle
+      const redirectPath = redirect || (roles?.includes("ROLE_OCCUPANT") ? "/occupant" : "/dashboard");
+      router.push(redirectPath);
+    } else {
+      // Pas d'authentification dans le store, afficher le formulaire
+      setIsCheckingSession(false);
     }
-  }, [isAuthenticated, redirect]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Exécuter une seule fois au montage (vérification initiale uniquement)
+
+  // Redirection si authentifié après login (fallback)
+  useEffect(() => {
+    if (isAuthenticated && !isCheckingSession) {
+      const redirectPath = redirect || (roles?.includes("ROLE_OCCUPANT") ? "/occupant" : "/dashboard");
+      router.push(redirectPath);
+    }
+  }, [isAuthenticated, redirect, roles, isCheckingSession, router]);
 
   /**
    * Gestion de la soumission du formulaire
@@ -69,7 +88,7 @@ export default function LoginForm() {
         password: data.password,
       });
       // La redirection est gérée par le hook useAuth
-    } catch (error) {
+    } catch {
       // L'erreur est déjà gérée par le hook useAuth
       // Mais on peut définir une erreur au niveau du formulaire si nécessaire
       setError("root", {
@@ -81,6 +100,21 @@ export default function LoginForm() {
 
   // Afficher le message d'erreur du hook auth ou de la validation du formulaire
   const displayError = authError || errors.root?.message;
+
+  // Afficher un loader pendant la vérification de session
+  if (isCheckingSession) {
+    return (
+      <div className="flex flex-col flex-1 lg:w-1/2 w-full">
+        <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
+          <div className="text-center">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Vérification de la session...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">

@@ -42,6 +42,7 @@ export function useAuth() {
     user,
     roles,
     sessionId,
+    pkUser,
     isAuthenticated,
     isLoading: storeLoading,
     error: storeError,
@@ -77,8 +78,8 @@ export function useAuth() {
       // Use security.login for the API call
       const data = await security.login(credentials);
 
-      // Update store with user data
-      setUser(data.user, data.roles, data.session_id);
+      // Update store with user data (including pk_user for stateless API)
+      setUser(data.user, data.roles, data.session_id, data.pk_user);
 
       // Redirect based on role
       if (data.roles.includes("ROLE_OCCUPANT")) {
@@ -122,6 +123,33 @@ export function useAuth() {
   };
 
   /**
+   * Check session and sync store if authenticated
+   * This function checks the server session and updates the store if a valid session exists
+   * Useful for checking authentication on page load (e.g., login page)
+   */
+  const checkAndSyncSession = async (): Promise<boolean> => {
+    try {
+      const authCheck = await security.checkAuth();
+      
+      if (authCheck.authenticated && authCheck.user && authCheck.roles) {
+        // Session exists on server, sync store
+        // Note: For stateless API, we need sessionId and pkUser from login response
+        // This method is kept for backward compatibility but may not work with stateless API
+        setUser(authCheck.user, authCheck.roles, null, null);
+        return true;
+      } else {
+        // No valid session, clear store
+        clearAuth();
+        return false;
+      }
+    } catch (error) {
+      // If check fails, assume not authenticated
+      clearAuth();
+      return false;
+    }
+  };
+
+  /**
    * Check if user is authenticated
    * Combines store state with server check
    */
@@ -142,6 +170,7 @@ export function useAuth() {
     user,
     roles,
     sessionId,
+    pkUser,
     isAuthenticated: isAuthenticatedState,
     isLoading,
     error: error ? handleApiError(error) : null,
@@ -149,6 +178,7 @@ export function useAuth() {
     // Actions
     login,
     logout,
+    checkAndSyncSession,
 
     // Role checks
     hasRole,

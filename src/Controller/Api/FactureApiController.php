@@ -20,7 +20,7 @@ class FactureApiController extends AbstractApiController
   #[Route("", name: "list", methods: ["GET"])]
   public function list(Request $request): JsonResponse
   {
-    $client = $this->getAuthenticatedClient();
+    $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;
     }
@@ -77,9 +77,9 @@ class FactureApiController extends AbstractApiController
    * Get invoice details
    */
   #[Route("/{pkFacture}", name: "show", methods: ["GET"])]
-  public function show(int $pkFacture): JsonResponse
+  public function show(int $pkFacture, Request $request): JsonResponse
   {
-    $client = $this->getAuthenticatedClient();
+    $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;
     }
@@ -142,9 +142,9 @@ class FactureApiController extends AbstractApiController
    * Download invoice PDF
    */
   #[Route("/{pkFacture}/download", name: "download", methods: ["GET"])]
-  public function download(int $pkFacture): Response|JsonResponse
+  public function download(int $pkFacture, Request $request): Response|JsonResponse
   {
-    $client = $this->getAuthenticatedClient();
+    $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;
     }

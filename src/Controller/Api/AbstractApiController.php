@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Controller\AbstractTechemController;
 use App\Service\Client;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -127,7 +128,34 @@ abstract class AbstractApiController extends AbstractTechemController
     }
 
     /**
+     * Get authenticated client from headers (stateless API)
+     * Reads X-Session-ID and X-Pk-User from request headers
+     *
+     * @param Request $request
+     * @return Client|JsonResponse
+     */
+    protected function getAuthenticatedClientFromHeaders(Request $request)
+    {
+        // Read sessionId and pkUser from headers
+        $sessionId = $request->headers->get('X-Session-ID');
+        $pkUser = $request->headers->get('X-Pk-User');
+
+        if (!$sessionId || !$pkUser) {
+            return $this->unauthorized('Missing authentication headers (X-Session-ID and X-Pk-User required)');
+        }
+
+        try {
+            // Use retrieveSession() to set sessionId and pkUser in the client
+            $this->client->retrieveSession($sessionId, (int)$pkUser);
+            return $this->client;
+        } catch (\Exception $e) {
+            return $this->unauthorized('Invalid session: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Get authenticated client or return error
+     * Legacy method using Symfony token storage (for backward compatibility)
      *
      * @param Client|null $client
      * @return Client|JsonResponse

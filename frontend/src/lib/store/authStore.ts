@@ -9,6 +9,7 @@ interface AuthState {
   user: User | null;
   roles: UserRole[];
   sessionId: string | null;
+  pkUser: number | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
@@ -18,7 +19,7 @@ interface AuthState {
  * Authentication actions interface
  */
 interface AuthActions {
-  setUser: (user: User | null, roles: UserRole[], sessionId: string | null) => void;
+  setUser: (user: User | null, roles: UserRole[], sessionId: string | null, pkUser: number | null) => void;
   setLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
   clearAuth: () => void;
@@ -38,6 +39,7 @@ const initialState: AuthState = {
   user: null,
   roles: [],
   sessionId: null,
+  pkUser: null,
   isAuthenticated: false,
   isLoading: false,
   error: null,
@@ -61,11 +63,12 @@ export const useAuthStore = create<AuthStore>()(
       /**
        * Set user authentication data
        */
-      setUser: (user, roles, sessionId) => {
+      setUser: (user, roles, sessionId, pkUser) => {
         set({
           user,
           roles,
           sessionId,
+          pkUser,
           isAuthenticated: !!user,
           error: null,
         });
@@ -117,6 +120,7 @@ export const useAuthStore = create<AuthStore>()(
         user: state.user,
         roles: state.roles,
         sessionId: state.sessionId,
+        pkUser: state.pkUser,
         isAuthenticated: state.isAuthenticated,
       }),
       // Skip hydration errors in Next.js SSR

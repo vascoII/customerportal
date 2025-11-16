@@ -26,9 +26,9 @@ class OccupantApiController extends AbstractApiController
      * Get current occupant's logement details
      */
     #[Route("", name: "show", methods: ["GET"])]
-    public function show(Logement $logementService): JsonResponse
+    public function show(Request $request, Logement $logementService): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -70,9 +70,9 @@ class OccupantApiController extends AbstractApiController
      * Get simulator data for current occupant
      */
     #[Route("/simulateur", name: "simulateur", methods: ["GET"])]
-    public function simulateur(Logement $logementService): JsonResponse
+    public function simulateur(Request $request, Logement $logementService): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -112,9 +112,9 @@ class OccupantApiController extends AbstractApiController
      * Get intervention details
      */
     #[Route("/interventions/{pkIntervention]", name: "show_intervention", methods: ["GET"])]
-    public function showIntervention(int $pkIntervention): JsonResponse
+    public function showIntervention(int $pkIntervention, Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -141,9 +141,9 @@ class OccupantApiController extends AbstractApiController
      * List interventions for current occupant
      */
     #[Route("/interventions", name: "list_interventions", methods: ["GET"])]
-    public function listInterventions(Depannage $depannageService): JsonResponse
+    public function listInterventions(Request $request, Depannage $depannageService): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -179,7 +179,7 @@ class OccupantApiController extends AbstractApiController
     #[Route("/fuites", name: "list_leaks", methods: ["GET"])]
     public function listLeaks(Request $request, Fuite $fuiteService): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -214,9 +214,9 @@ class OccupantApiController extends AbstractApiController
      * List dysfunctions for current occupant
      */
     #[Route("/dysfonctionnements", name: "list_dysfunctions", methods: ["GET"])]
-    public function listDysfunctions(Dysfonctionnement $dysfonctionnementService): JsonResponse
+    public function listDysfunctions(Request $request, Dysfonctionnement $dysfonctionnementService): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -252,7 +252,7 @@ class OccupantApiController extends AbstractApiController
     #[Route("/anomalies", name: "list_anomalies", methods: ["GET"])]
     public function listAnomalies(Request $request, Anomalie $anomalieService): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -287,10 +287,10 @@ class OccupantApiController extends AbstractApiController
      * Export anomalies to CSV
      */
     #[Route("/anomalies/export", name: "export_anomalies", methods: ["GET"])]
-    public function exportAnomalies(Anomalie $anomalieService, CsvHelper $csvHelper): Response|JsonResponse
+    public function exportAnomalies(Request $request, Anomalie $anomalieService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -332,10 +332,10 @@ class OccupantApiController extends AbstractApiController
      * Export leaks to CSV
      */
     #[Route("/fuites/export", name: "export_leaks", methods: ["GET"])]
-    public function exportLeaks(Fuite $fuiteService, CsvHelper $csvHelper): Response|JsonResponse
+    public function exportLeaks(Request $request, Fuite $fuiteService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -377,10 +377,10 @@ class OccupantApiController extends AbstractApiController
      * Export interventions to CSV
      */
     #[Route("/interventions/export", name: "export_interventions", methods: ["GET"])]
-    public function exportInterventions(Depannage $depannageService, CsvHelper $csvHelper): Response|JsonResponse
+    public function exportInterventions(Request $request, Depannage $depannageService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -422,10 +422,10 @@ class OccupantApiController extends AbstractApiController
      * Export dysfunctions to CSV
      */
     #[Route("/dysfonctionnements/export", name: "export_dysfunctions", methods: ["GET"])]
-    public function exportDysfunctions(Dysfonctionnement $dysfonctionnementService, CsvHelper $csvHelper): Response|JsonResponse
+    public function exportDysfunctions(Request $request, Dysfonctionnement $dysfonctionnementService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -467,9 +467,9 @@ class OccupantApiController extends AbstractApiController
      * Get water report PDF
      */
     #[Route("/{pkOccupant]/releve-eau", name: "releve_eau", methods: ["GET"])]
-    public function showEauReleve(int $pkOccupant): Response|JsonResponse
+    public function showEauReleve(int $pkOccupant, Request $request): Response|JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -502,9 +502,9 @@ class OccupantApiController extends AbstractApiController
      * Get repartition report PDF
      */
     #[Route("/{pkOccupant]/releve-repart/{pkImmeuble]", name: "releve_repart", methods: ["GET"])]
-    public function showRepartReleve(int $pkImmeuble, int $pkOccupant): Response|JsonResponse
+    public function showRepartReleve(int $pkImmeuble, int $pkOccupant, Request $request): Response|JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -538,9 +538,9 @@ class OccupantApiController extends AbstractApiController
      * Get note report PDF
      */
     #[Route("/{pkOccupant]/releve-note/{pkImmeuble]/{energie]", name: "releve_note", methods: ["GET"])]
-    public function showNoteReleve(int $pkImmeuble, int $pkOccupant, string $energie): Response|JsonResponse
+    public function showNoteReleve(int $pkImmeuble, int $pkOccupant, string $energie, Request $request): Response|JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -581,7 +581,7 @@ class OccupantApiController extends AbstractApiController
     #[Route("/my-account", name: "my_account", methods: ["GET", "POST"])]
     public function myAccount(Logement $logementService, Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -634,7 +634,7 @@ class OccupantApiController extends AbstractApiController
     #[Route("/alertes", name: "alertes", methods: ["GET", "POST"])]
     public function alertes(Request $request, Logement $logementService): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }

@@ -17,9 +17,9 @@ class TableauBordClientApiController extends AbstractApiController
 {
 
     #[Route("", name: "index", methods: ["GET"])]
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -74,7 +74,7 @@ class TableauBordClientApiController extends AbstractApiController
     #[Route("/intervention", name: "intervention", methods: ["GET"])]
     public function intervention(Request $request): Response|JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }

@@ -16,9 +16,9 @@ class InterventionApiController extends AbstractApiController
      * Download intervention report PDF
      */
     #[Route("/{pkDepannage}/report", name: "report", methods: ["GET"])]
-    public function report(int $pkDepannage): Response|JsonResponse
+    public function report(int $pkDepannage, Request $request): Response|JsonResponse
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
@@ -45,4 +45,3 @@ class InterventionApiController extends AbstractApiController
         }
     }
 }
-

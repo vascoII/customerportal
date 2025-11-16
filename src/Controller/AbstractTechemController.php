@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 
 class AbstractTechemController extends AbstractController
 {
-    private $client;
+    protected $client;
 
     public function __construct(Client $client)
     {
