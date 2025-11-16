@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 /**
  * API Controller for Client Dashboard (Tableau de bord client)
  */
-#[Route("/api/dashboard", name: "api_dashboard_")]
+#[Route("/api/parc", name: "api_dashboard_")]
 class TableauBordClientApiController extends AbstractApiController
 {
 
