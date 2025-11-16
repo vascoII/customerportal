@@ -31,7 +31,7 @@ class LogementApiController extends AbstractApiController
     public function index(int $pkImmeuble, Request $request): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.immeuble.{pkImmeuble}', ['pkImmeuble' => $pkImmeuble]);
+        $fakeResponse = $this->sendFakeData('api.logements.immeuble.pkImmeuble');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -108,7 +108,7 @@ class LogementApiController extends AbstractApiController
     {
         // Check if faker mode is enabled and return fake data (only for GET)
         if ($request->isMethod('GET')) {
-            $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.ticket-owner', ['pkLogement' => $pkLogement]);
+            $fakeResponse = $this->sendFakeData('api.logements.pkLogement.ticket-owner');
             if ($fakeResponse !== null) {
                 return $fakeResponse;
             }
@@ -162,7 +162,7 @@ class LogementApiController extends AbstractApiController
     public function getInfosAppareil(int $pkLogement, string $type, Request $request): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.appareils.{type}', ['pkLogement' => $pkLogement, 'type' => $type]);
+        $fakeResponse = $this->sendFakeData('api.logements.pkLogement.appareils.type');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -206,7 +206,7 @@ class LogementApiController extends AbstractApiController
     public function show(int $pkLogement, Request $request, Logement $logementService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}', ['pkLogement' => $pkLogement]);
+        $fakeResponse = $this->sendFakeData('api.logements.pkLogement');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -286,7 +286,7 @@ class LogementApiController extends AbstractApiController
     {
         // Check if faker mode is enabled and return fake data (only for GET)
         if ($request->isMethod('GET')) {
-            $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.releve-repart', ['pkLogement' => $pkLogement]);
+            $fakeResponse = $this->sendFakeData('api.logements.pkLogement.releve-repart');
             if ($fakeResponse !== null) {
                 return $fakeResponse;
             }
@@ -336,7 +336,7 @@ class LogementApiController extends AbstractApiController
     public function showIntervention(int $pkLogement, int $pkIntervention, Request $request): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.interventions.{pkIntervention}', ['pkLogement' => $pkLogement, 'pkIntervention' => $pkIntervention]);
+        $fakeResponse = $this->sendFakeData('api.logements.pkLogement.interventions.pkIntervention');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -366,7 +366,7 @@ class LogementApiController extends AbstractApiController
     public function listInterventions(int $pkLogement, Request $request, Depannage $depannageService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.interventions', ['pkLogement' => $pkLogement]);
+        $fakeResponse = $this->sendFakeData('api.logements.pkLogement.interventions');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -484,7 +484,7 @@ class LogementApiController extends AbstractApiController
     public function listLeaks(int $pkLogement, Request $request, Fuite $fuiteService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.fuites', ['pkLogement' => $pkLogement]);
+        $fakeResponse = $this->sendFakeData('api.logements.pkLogement.fuites');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -522,7 +522,7 @@ class LogementApiController extends AbstractApiController
     public function listDysfunctions(int $pkLogement, Request $request, Dysfonctionnement $dysfonctionnementService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.dysfonctionnements', ['pkLogement' => $pkLogement]);
+        $fakeResponse = $this->sendFakeData('api.logements.pkLogement.dysfonctionnements');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -559,7 +559,7 @@ class LogementApiController extends AbstractApiController
     public function listAnomalies(int $pkLogement, Request $request, Anomalie $anomalieService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.anomalies', ['pkLogement' => $pkLogement]);
+        $fakeResponse = $this->sendFakeData('api.logements.pkLogement.anomalies');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -599,7 +599,7 @@ class LogementApiController extends AbstractApiController
         ini_set('max_execution_time', 120);
 
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.immeuble.{pkImmeuble}.export', ['pkImmeuble' => $pkImmeuble]);
+        $fakeResponse = $this->sendFakeData('api.logements.immeuble.pkImmeuble.export');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -722,7 +722,7 @@ class LogementApiController extends AbstractApiController
         ini_set('max_execution_time', 120);
 
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.anomalies.export', ['pkLogement' => $pkLogement]);
+        $fakeResponse = $this->sendFakeData('api.logements.pkLogement.anomalies.export');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -772,7 +772,7 @@ class LogementApiController extends AbstractApiController
         ini_set('max_execution_time', 120);
 
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.fuites.export', ['pkLogement' => $pkLogement]);
+        $fakeResponse = $this->sendFakeData('api.logements.pkLogement.fuites.export');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -822,7 +822,7 @@ class LogementApiController extends AbstractApiController
         ini_set('max_execution_time', 120);
 
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.interventions.export', ['pkLogement' => $pkLogement]);
+        $fakeResponse = $this->sendFakeData('api.logements.pkLogement.interventions.export');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -872,7 +872,7 @@ class LogementApiController extends AbstractApiController
         ini_set('max_execution_time', 120);
 
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.dysfonctionnements.export', ['pkLogement' => $pkLogement]);
+        $fakeResponse = $this->sendFakeData('api.logements.pkLogement.dysfonctionnements.export');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }

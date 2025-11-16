@@ -127,7 +127,7 @@ class OccupantApiController extends AbstractApiController
     public function showIntervention(int $pkIntervention, Request $request): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.occupant.interventions.{pkIntervention}', ['pkIntervention' => $pkIntervention]);
+        $fakeResponse = $this->sendFakeData('api.occupant.interventions.pkIntervention');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }

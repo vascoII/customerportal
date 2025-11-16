@@ -142,7 +142,7 @@ class OperatorApiController extends AbstractApiController
     public function view(int $id, Request $request): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.operators.{id}', ['id' => $id]);
+        $fakeResponse = $this->sendFakeData('api.operators.id');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }

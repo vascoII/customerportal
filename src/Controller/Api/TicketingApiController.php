@@ -191,7 +191,7 @@ class TicketingApiController extends AbstractApiController
      * Close a ticket
      */
     #[Route("/{pkTicket}/close", name: "close", methods: ["POST", "PUT"])]
-    public function closeTicket(string $pkTicket): JsonResponse
+    public function closeTicket(string $pkTicket, Request $request): JsonResponse
     {
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
@@ -220,7 +220,7 @@ class TicketingApiController extends AbstractApiController
     public function attachmentTicket(string $pkTicket, Request $request, LoggerInterface $logger): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.tickets.{pkTicket}.attachment', ['pkTicket' => $pkTicket]);
+        $fakeResponse = $this->sendFakeData('api.tickets.pkTicket.attachment');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
@@ -260,7 +260,7 @@ class TicketingApiController extends AbstractApiController
     public function createTicketInfo(int $pkLogement, Request $request): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.tickets.create.{pkLogement}', ['pkLogement' => $pkLogement]);
+        $fakeResponse = $this->sendFakeData('api.tickets.create.pkLogement');
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
