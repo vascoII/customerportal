@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Controller\AbstractTechemController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * @package App\Controller

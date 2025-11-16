@@ -19,7 +19,7 @@ use App\Service\Dysfonctionnement;
 use App\Service\Fuite;
 use App\Service\Logement;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 
 /**

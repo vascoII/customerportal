@@ -8,16 +8,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * API Controller for Interventions (Depannages)
- * 
- * @Route("/api/interventions", name="api_intervention_")
  */
+#[Route("/api/interventions", name: "api_intervention_")]
 class InterventionApiController extends AbstractApiController
 {
     /**
      * Download intervention report PDF
-     * 
-     * @Route("/{pkDepannage}/report", name="report", methods={"GET"})
      */
+    #[Route("/{pkDepannage}/report", name: "report", methods: ["GET"])]
     public function report(int $pkDepannage): Response|JsonResponse
     {
         $client = $this->getAuthenticatedClient();

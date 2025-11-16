@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Service\GetImmeublesParams;
 use App\Service\GetReportParams;
 use App\Service\Immeuble;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Class ImmeubleController

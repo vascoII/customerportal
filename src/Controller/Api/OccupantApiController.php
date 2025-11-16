@@ -18,16 +18,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * API Controller for Occupants
- * 
- * @Route("/api/occupant", name="api_occupant_")
  */
+#[Route("/api/occupant", name: "api_occupant_")]
 class OccupantApiController extends AbstractApiController
 {
     /**
      * Get current occupant's logement details
-     * 
-     * @Route("", name="show", methods={"GET"})
      */
+    #[Route("", name: "show", methods: ["GET"])]
     public function show(Logement $logementService): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -70,9 +68,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * Get simulator data for current occupant
-     * 
-     * @Route("/simulateur", name="simulateur", methods={"GET"})
      */
+    #[Route("/simulateur", name: "simulateur", methods: ["GET"])]
     public function simulateur(Logement $logementService): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -113,9 +110,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * Get intervention details
-     * 
-     * @Route("/interventions/{pkIntervention}", name="show_intervention", methods={"GET"})
      */
+    #[Route("/interventions/{pkIntervention]", name: "show_intervention", methods: ["GET"])]
     public function showIntervention(int $pkIntervention): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -143,9 +139,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * List interventions for current occupant
-     * 
-     * @Route("/interventions", name="list_interventions", methods={"GET"})
      */
+    #[Route("/interventions", name: "list_interventions", methods: ["GET"])]
     public function listInterventions(Depannage $depannageService): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -180,9 +175,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * List leaks for current occupant
-     * 
-     * @Route("/fuites", name="list_leaks", methods={"GET"})
      */
+    #[Route("/fuites", name: "list_leaks", methods: ["GET"])]
     public function listLeaks(Request $request, Fuite $fuiteService): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -218,9 +212,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * List dysfunctions for current occupant
-     * 
-     * @Route("/dysfonctionnements", name="list_dysfunctions", methods={"GET"})
      */
+    #[Route("/dysfonctionnements", name: "list_dysfunctions", methods: ["GET"])]
     public function listDysfunctions(Dysfonctionnement $dysfonctionnementService): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -255,9 +248,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * List anomalies for current occupant
-     * 
-     * @Route("/anomalies", name="list_anomalies", methods={"GET"})
      */
+    #[Route("/anomalies", name: "list_anomalies", methods: ["GET"])]
     public function listAnomalies(Request $request, Anomalie $anomalieService): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -293,9 +285,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * Export anomalies to CSV
-     * 
-     * @Route("/anomalies/export", name="export_anomalies", methods={"GET"})
      */
+    #[Route("/anomalies/export", name: "export_anomalies", methods: ["GET"])]
     public function exportAnomalies(Anomalie $anomalieService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
@@ -339,9 +330,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * Export leaks to CSV
-     * 
-     * @Route("/fuites/export", name="export_leaks", methods={"GET"})
      */
+    #[Route("/fuites/export", name: "export_leaks", methods: ["GET"])]
     public function exportLeaks(Fuite $fuiteService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
@@ -385,9 +375,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * Export interventions to CSV
-     * 
-     * @Route("/interventions/export", name="export_interventions", methods={"GET"})
      */
+    #[Route("/interventions/export", name: "export_interventions", methods: ["GET"])]
     public function exportInterventions(Depannage $depannageService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
@@ -431,9 +420,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * Export dysfunctions to CSV
-     * 
-     * @Route("/dysfonctionnements/export", name="export_dysfunctions", methods={"GET"})
      */
+    #[Route("/dysfonctionnements/export", name: "export_dysfunctions", methods: ["GET"])]
     public function exportDysfunctions(Dysfonctionnement $dysfonctionnementService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
@@ -477,9 +465,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * Get water report PDF
-     * 
-     * @Route("/{pkOccupant}/releve-eau", name="releve_eau", methods={"GET"})
      */
+    #[Route("/{pkOccupant]/releve-eau", name: "releve_eau", methods: ["GET"])]
     public function showEauReleve(int $pkOccupant): Response|JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -513,9 +500,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * Get repartition report PDF
-     * 
-     * @Route("/{pkOccupant}/releve-repart/{pkImmeuble}", name="releve_repart", methods={"GET"})
      */
+    #[Route("/{pkOccupant]/releve-repart/{pkImmeuble]", name: "releve_repart", methods: ["GET"])]
     public function showRepartReleve(int $pkImmeuble, int $pkOccupant): Response|JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -550,9 +536,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * Get note report PDF
-     * 
-     * @Route("/{pkOccupant}/releve-note/{pkImmeuble}/{energie}", name="releve_note", methods={"GET"})
      */
+    #[Route("/{pkOccupant]/releve-note/{pkImmeuble]/{energie]", name: "releve_note", methods: ["GET"])]
     public function showNoteReleve(int $pkImmeuble, int $pkOccupant, string $energie): Response|JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -592,9 +577,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * Get my account information
-     * 
-     * @Route("/my-account", name="my_account", methods={"GET"})
      */
+    #[Route("/my-account", name: "my_account", methods: ["GET"])]
     public function myAccount(Logement $logementService, Request $request): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -639,9 +623,8 @@ class OccupantApiController extends AbstractApiController
 
     /**
      * Get or update alerts configuration
-     * 
-     * @Route("/alertes", name="alertes", methods={"GET", "POST"})
      */
+    #[Route("/alertes", name: "alertes", methods: ["GET", "POST"])]
     public function alertes(Request $request, Logement $logementService): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -691,11 +674,7 @@ class OccupantApiController extends AbstractApiController
         }
     }
 
-    /**
-     * Get current user from token storage
-     * 
-     * @return object|null
-     */
+
     private function getCurrentUser()
     {
         $token = $this->container->get('security.token_storage')->getToken();
@@ -705,4 +684,3 @@ class OccupantApiController extends AbstractApiController
         return $token->getAttribute('soap.user');
     }
 }
-

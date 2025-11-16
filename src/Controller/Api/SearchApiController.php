@@ -10,16 +10,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * API Controller for Search
- * 
- * @Route("/api/search", name="api_search_")
  */
+#[Route("/api/search", name: "api_search_")]
 class SearchApiController extends AbstractApiController
 {
     /**
      * Search for immeubles or occupants
-     * 
-     * @Route("", name="index", methods={"GET"})
      */
+    #[Route("", name: "index", methods: ["GET"])]
     public function index(Request $request): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -47,9 +45,7 @@ class SearchApiController extends AbstractApiController
         }
     }
 
-    /**
-     * Search for immeubles
-     */
+
     private function searchImmeubles(Request $request, $client): JsonResponse
     {
         $filtersMin3 = $this->getValidFilters($request, ['nom', 'tout', 'adresse'], 3);
@@ -97,9 +93,7 @@ class SearchApiController extends AbstractApiController
         ]);
     }
 
-    /**
-     * Search for occupants (logements)
-     */
+
     private function searchOccupants(Request $request, $client): JsonResponse
     {
         $filtersMin3 = $this->getValidFilters($request, ['nom', 'tout', 'adresse'], 3);
@@ -150,14 +144,7 @@ class SearchApiController extends AbstractApiController
         ]);
     }
 
-    /**
-     * Get valid filters from request
-     * 
-     * @param Request $request
-     * @param array $filters
-     * @param int $minLength
-     * @return array
-     */
+
     private function getValidFilters(Request $request, array $filters, int $minLength): array
     {
         $validFilters = [];
@@ -172,4 +159,3 @@ class SearchApiController extends AbstractApiController
         return $validFilters;
     }
 }
-

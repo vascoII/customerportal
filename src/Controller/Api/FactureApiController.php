@@ -10,16 +10,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * API Controller for Factures (Invoices)
- * 
- * @Route("/api/factures", name="api_facture_")
  */
+#[Route("/api/factures", name: "api_facture_")]
 class FactureApiController extends AbstractApiController
 {
   /**
    * Get list of invoices
-   * 
-   * @Route("", name="list", methods={"GET"})
    */
+  #[Route("", name: "list", methods: ["GET"])]
   public function list(Request $request): JsonResponse
   {
     $client = $this->getAuthenticatedClient();
@@ -77,9 +75,8 @@ class FactureApiController extends AbstractApiController
 
   /**
    * Get invoice details
-   * 
-   * @Route("/{pkFacture}", name="show", methods={"GET"})
    */
+  #[Route("/{pkFacture}", name: "show", methods: ["GET"])]
   public function show(int $pkFacture): JsonResponse
   {
     $client = $this->getAuthenticatedClient();
@@ -143,9 +140,8 @@ class FactureApiController extends AbstractApiController
 
   /**
    * Download invoice PDF
-   * 
-   * @Route("/{pkFacture}/download", name="download", methods={"GET"})
    */
+  #[Route("/{pkFacture}/download", name: "download", methods: ["GET"])]
   public function download(int $pkFacture): Response|JsonResponse
   {
     $client = $this->getAuthenticatedClient();

@@ -19,16 +19,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * API Controller for Immeubles (Buildings)
- * 
- * @Route("/api/immeubles", name="api_immeuble_")
  */
+#[Route("/api/immeubles", name: "api_immeuble_")]
 class ImmeubleApiController extends AbstractApiController
 {
     /**
      * Get dashboard with building list
-     * 
-     * @Route("", name="index", methods={"GET"})
      */
+    #[Route("", name: "index", methods: ["GET"])]
     public function index(): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -50,9 +48,8 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Filter buildings
-     * 
-     * @Route("/filtre", name="filter", methods={"GET", "POST"})
-     */
+     *     */
+    #[Route("/filtre", name: "filter", methods: ["GET", "POST"])]
     public function filter(Request $request): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -107,9 +104,8 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Get building details
-     * 
-     * @Route("/{pkImmeuble}", name="show", methods={"GET"})
-     */
+     *     */
+    #[Route("/{pkImmeuble}", name: "show", methods: ["GET"])]
     public function show(int $pkImmeuble, Immeuble $immeubleService): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -133,7 +129,7 @@ class ImmeubleApiController extends AbstractApiController
             $installed = $immeuble->ImmeubleEC->Chantier->NbCompteursPoses ?? 0;
             $total = $immeuble->ImmeubleEC->Chantier->NbCompteursCommandes ?? 0;
             $remaining = $total - $installed;
-            
+
             if ($total !== 0) {
                 $installed_percent = (int) (100 * $installed) / $total;
                 $remaining_percent = (int) (100 * $remaining) / $total;
@@ -165,9 +161,9 @@ class ImmeubleApiController extends AbstractApiController
 
             // GPS coordinates for preview/demo mode
             if (file_exists('./../preview.txt') || file_exists('./../demo.txt')) {
-                $add = ($immeuble->Immeuble->Adresse1 ?? '') . ' ' . 
-                       ($immeuble->Immeuble->Cp ?? '') . ' ' . 
-                       ($immeuble->Immeuble->Ville ?? '');
+                $add = ($immeuble->Immeuble->Adresse1 ?? '') . ' ' .
+                    ($immeuble->Immeuble->Cp ?? '') . ' ' .
+                    ($immeuble->Immeuble->Ville ?? '');
                 $responseData['GPS'] = $immeubleService->getGPSCoordinates($add);
                 $responseData['preview'] = file_exists('./../preview.txt') ? 'preview' : null;
                 $responseData['demo'] = file_exists('./../demo.txt') ? 'demo' : null;
@@ -181,9 +177,8 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Get intervention details
-     * 
-     * @Route("/{pkImmeuble}/interventions/{pkIntervention}", name="show_intervention", methods={"GET"})
-     */
+     *     */
+    #[Route("/{pkImmeuble}/interventions/{pkIntervention}", name: "show_intervention", methods: ["GET"])]
     public function showIntervention(int $pkImmeuble, int $pkIntervention): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -210,9 +205,8 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Get interventions list
-     * 
-     * @Route("/{pkImmeuble}/interventions", name="list_interventions", methods={"GET"})
-     */
+     *     */
+    #[Route("/{pkImmeuble}/interventions", name: "list_interventions", methods: ["GET"])]
     public function listInterventions(int $pkImmeuble, Depannage $depannageService): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -236,9 +230,8 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Get leaks list
-     * 
-     * @Route("/{pkImmeuble}/fuites", name="list_leaks", methods={"GET"})
-     */
+     *     */
+    #[Route("/{pkImmeuble}/fuites", name: "list_leaks", methods: ["GET"])]
     public function listLeaks(int $pkImmeuble, Fuite $fuiteService): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -262,9 +255,8 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Get anomalies list
-     * 
-     * @Route("/{pkImmeuble}/anomalies", name="list_anomalies", methods={"GET"})
-     */
+     *     */
+    #[Route("/{pkImmeuble}/anomalies", name: "list_anomalies", methods: ["GET"])]
     public function listAnomalies(int $pkImmeuble, Anomalie $anomalieService): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -288,9 +280,8 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Get dysfunctions list
-     * 
-     * @Route("/{pkImmeuble}/dysfonctionnements", name="list_dysfunctions", methods={"GET"})
-     */
+     *     */
+    #[Route("/{pkImmeuble}/dysfonctionnements", name: "list_dysfunctions", methods: ["GET"])]
     public function listDysfunctions(int $pkImmeuble, Dysfonctionnement $dysfonctionnementService): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -314,9 +305,8 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Download report PDF
-     * 
-     * @Route("/{pkImmeuble}/releve/{type}/{energie}", name="report", methods={"GET", "POST"})
-     */
+     *     */
+    #[Route("/{pkImmeuble}/releve/{type}/{energie}", name: "report", methods: ["GET", "POST"])]
     public function report(Request $request, int $pkImmeuble, string $type, string $energie): Response|JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -326,12 +316,12 @@ class ImmeubleApiController extends AbstractApiController
 
         try {
             $date = $request->query->get('date') ?? $request->request->get('date');
-            
+
             // Handle 'repartition' type
             if ($type == 'repartition') {
                 $type = null;
             }
-            
+
             $report = $client->getReportImmeuble($pkImmeuble, $type, $energie, $date);
 
             if (empty($report)) {
@@ -355,13 +345,12 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Export anomalies to Excel
-     * 
-     * @Route("/{pkImmeuble}/anomalies/export", name="export_anomalies", methods={"GET"})
-     */
+     *     */
+    #[Route("/{pkImmeuble}/anomalies/export", name: "export_anomalies", methods: ["GET"])]
     public function exportAnomalies(int $pkImmeuble, Anomalie $anomalieService, ExcelHelper $excelHelper): StreamedResponse|JsonResponse
     {
         ini_set('max_execution_time', 120);
-        
+
         $client = $this->getAuthenticatedClient();
         if ($client instanceof JsonResponse) {
             return $client;
@@ -389,13 +378,12 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Export leaks to Excel
-     * 
-     * @Route("/{pkImmeuble}/fuites/export", name="export_leaks", methods={"GET"})
-     */
+     *     */
+    #[Route("/{pkImmeuble}/fuites/export", name: "export_leaks", methods: ["GET"])]
     public function exportLeaks(int $pkImmeuble, Fuite $fuiteService, ExcelHelper $excelHelper): StreamedResponse|JsonResponse
     {
         ini_set('max_execution_time', 120);
-        
+
         $client = $this->getAuthenticatedClient();
         if ($client instanceof JsonResponse) {
             return $client;
@@ -423,13 +411,12 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Export interventions to Excel
-     * 
-     * @Route("/{pkImmeuble}/interventions/export", name="export_interventions", methods={"GET"})
-     */
+     *     */
+    #[Route("/{pkImmeuble}/interventions/export", name: "export_interventions", methods: ["GET"])]
     public function exportInterventions(int $pkImmeuble, Depannage $depannageService, ExcelHelper $excelHelper): StreamedResponse|JsonResponse
     {
         ini_set('max_execution_time', 120);
-        
+
         $client = $this->getAuthenticatedClient();
         if ($client instanceof JsonResponse) {
             return $client;
@@ -457,13 +444,12 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Export dysfunctions to Excel
-     * 
-     * @Route("/{pkImmeuble}/dysfonctionnements/export", name="export_dysfunctions", methods={"GET"})
-     */
+     *     */
+    #[Route("/{pkImmeuble}/dysfonctionnements/export", name: "export_dysfunctions", methods: ["GET"])]
     public function exportDysfunctions(int $pkImmeuble, Dysfonctionnement $dysfonctionnementService, ExcelHelper $excelHelper): StreamedResponse|JsonResponse
     {
         ini_set('max_execution_time', 120);
-        
+
         $client = $this->getAuthenticatedClient();
         if ($client instanceof JsonResponse) {
             return $client;
@@ -491,9 +477,8 @@ class ImmeubleApiController extends AbstractApiController
 
     /**
      * Generate intervention report (PDF or Excel)
-     * 
-     * @Route("/{pkImmeuble}/intervention", name="intervention_report", methods={"GET"})
-     */
+     *     */
+    #[Route("/{pkImmeuble}/intervention", name: "intervention_report", methods: ["GET"])]
     public function intervention(Request $request, int $pkImmeuble): Response|JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -552,13 +537,10 @@ class ImmeubleApiController extends AbstractApiController
         }
     }
 
-    /**
-     * Validate date format
-     */
+
     private function validateDate(string $date, string $format = 'Y-m-d H:i:s'): bool
     {
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
     }
 }
-

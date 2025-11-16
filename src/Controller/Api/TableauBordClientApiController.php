@@ -11,16 +11,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * API Controller for Client Dashboard (Tableau de bord client)
- * 
- * @Route("/api/dashboard", name="api_dashboard_")
  */
+#[Route("/api/dashboard", name: "api_dashboard_")]
 class TableauBordClientApiController extends AbstractApiController
 {
-    /**
-     * Get client dashboard data
-     * 
-     * @Route("", name="index", methods={"GET"})
-     */
+
+    #[Route("", name: "index", methods: ["GET"])]
     public function index(): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -74,9 +70,8 @@ class TableauBordClientApiController extends AbstractApiController
 
     /**
      * Get intervention report (PDF or Excel)
-     * 
-     * @Route("/intervention", name="intervention", methods={"GET"})
      */
+    #[Route("/intervention", name: "intervention", methods: ["GET"])]
     public function intervention(Request $request): Response|JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -117,7 +112,7 @@ class TableauBordClientApiController extends AbstractApiController
             }
 
             $response = new Response($report);
-            
+
             if ($isExcel) {
                 $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                 $response->headers->set(
@@ -144,13 +139,7 @@ class TableauBordClientApiController extends AbstractApiController
         }
     }
 
-    /**
-     * Validate date format
-     * 
-     * @param string|null $date
-     * @param string $format
-     * @return bool
-     */
+
     private function validateDate(?string $date, string $format = 'Y-m-d H:i:s'): bool
     {
         if (empty($date)) {
@@ -160,4 +149,3 @@ class TableauBordClientApiController extends AbstractApiController
         return $d && $d->format($format) == $date;
     }
 }
-

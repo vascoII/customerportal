@@ -9,16 +9,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * API Controller for Ticketing
- * 
- * @Route("/api/tickets", name="api_ticket_")
  */
+#[Route("/api/tickets", name: "api_ticket_")]
 class TicketingApiController extends AbstractApiController
 {
-    /**
-     * Get list of tickets
-     * 
-     * @Route("", name="list", methods={"GET"})
-     */
+    #[Route("", name: "list", methods: ["GET"])]
     public function ticketList(Request $request): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -158,11 +153,8 @@ class TicketingApiController extends AbstractApiController
         }
     }
 
-    /**
-     * Get ticket statistics and menu information
-     * 
-     * @Route("/menu", name="menu", methods={"GET"})
-     */
+
+    #[Route("/menu", name: "menu", methods: ["GET"])]
     public function menuTicket(): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -185,9 +177,8 @@ class TicketingApiController extends AbstractApiController
 
     /**
      * Close a ticket
-     * 
-     * @Route("/{pkTicket}/close", name="close", methods={"POST", "PUT"})
      */
+    #[Route("/{pkTicket}/close", name: "close", methods: ["POST", "PUT"])]
     public function closeTicket(string $pkTicket): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -212,9 +203,8 @@ class TicketingApiController extends AbstractApiController
 
     /**
      * Get ticket attachment
-     * 
-     * @Route("/{pkTicket}/attachment", name="attachment", methods={"GET"})
      */
+    #[Route("/{pkTicket}/attachment", name: "attachment", methods: ["GET"])]
     public function attachmentTicket(string $pkTicket, LoggerInterface $logger): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -247,9 +237,8 @@ class TicketingApiController extends AbstractApiController
 
     /**
      * Get ticket owner information for creating a ticket
-     * 
-     * @Route("/create/{pkLogement}", name="create_info", methods={"GET"})
      */
+    #[Route("/create/{pkLogement}", name: "create_info", methods: ["GET"])]
     public function createTicketInfo(int $pkLogement): JsonResponse
     {
         $client = $this->getAuthenticatedClient();

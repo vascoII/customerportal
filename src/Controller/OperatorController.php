@@ -11,7 +11,7 @@ use App\Form\AccountType;
 use App\Form\PasswordType;
 use App\Model\Account;
 use App\Service\GetImmeublesParams;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class OperatorController extends  AbstractTechemController
 {

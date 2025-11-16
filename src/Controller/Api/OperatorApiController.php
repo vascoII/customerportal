@@ -13,16 +13,14 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * API Controller for Operators (Gestionnaires)
- * 
- * @Route("/api/operators", name="api_operator_")
  */
+#[Route("/api/operators", name: "api_operator_")]
 class OperatorApiController extends AbstractApiController
 {
     /**
      * Get list of all operators (gestionnaires)
-     * 
-     * @Route("", name="index", methods={"GET"})
      */
+    #[Route("", name: "index", methods: ["GET"])]
     public function index(): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -42,9 +40,8 @@ class OperatorApiController extends AbstractApiController
 
     /**
      * Create a new operator
-     * 
-     * @Route("", name="create", methods={"POST"})
      */
+    #[Route("", name: "create", methods: ["POST"])]
     public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -107,9 +104,8 @@ class OperatorApiController extends AbstractApiController
 
     /**
      * Get operator statistics
-     * 
-     * @Route("/statistiques", name="stats_occupants", methods={"GET"})
      */
+    #[Route("/statistiques", name: "stats_occupants", methods: ["GET"])]
     public function statsOccupants(): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -129,9 +125,8 @@ class OperatorApiController extends AbstractApiController
 
     /**
      * Get operator details
-     * 
-     * @Route("/{id}", name="view", methods={"GET"})
      */
+    #[Route("/{id}", name: "view", methods: ["GET"])]
     public function view(int $id): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -170,9 +165,8 @@ class OperatorApiController extends AbstractApiController
 
     /**
      * Update operator
-     * 
-     * @Route("/{id}", name="edit", methods={"PUT", "PATCH"})
      */
+    #[Route("/{id}", name: "edit", methods: ["PUT", "PATCH"])]
     public function edit(int $id, Request $request, ValidatorInterface $validator): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -233,9 +227,8 @@ class OperatorApiController extends AbstractApiController
 
     /**
      * Update operator password
-     * 
-     * @Route("/{id}/password", name="password", methods={"PUT", "PATCH"})
      */
+    #[Route("/{id}/password", name: "password", methods: ["PUT", "PATCH"])]
     public function editPassword(int $id, Request $request): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -291,9 +284,8 @@ class OperatorApiController extends AbstractApiController
 
     /**
      * Add buildings to operator
-     * 
-     * @Route("/{id}/immeubles", name="add_buildings", methods={"POST"})
      */
+    #[Route("/{id}/immeubles", name: "add_buildings", methods: ["POST"])]
     public function addBuildings(int $id, Request $request): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -351,9 +343,8 @@ class OperatorApiController extends AbstractApiController
 
     /**
      * Remove buildings from operator
-     * 
-     * @Route("/{id}/immeubles", name="remove_buildings", methods={"DELETE"})
      */
+    #[Route("/{id}/immeubles", name: "remove_buildings", methods: ["DELETE"])]
     public function removeBuildings(int $id, Request $request): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -417,9 +408,8 @@ class OperatorApiController extends AbstractApiController
 
     /**
      * Delete operator
-     * 
-     * @Route("/{id}", name="delete", methods={"DELETE"})
      */
+    #[Route("/{id}", name: "delete", methods: ["DELETE"])]
     public function delete(int $id): JsonResponse
     {
         $client = $this->getAuthenticatedClient();

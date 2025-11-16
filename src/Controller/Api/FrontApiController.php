@@ -11,9 +11,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * API Controller for Front/General endpoints
- * 
- * @Route("/api", name="api_front_")
  */
+#[Route("/api", name: "api_front_")]
 class FrontApiController extends AbstractApiController
 {
   private ValidatorInterface $validator;
@@ -26,9 +25,8 @@ class FrontApiController extends AbstractApiController
 
   /**
    * Get current user information and dashboard URL
-   * 
-   * @Route("/me", name="me", methods={"GET"})
    */
+  #[Route("/me", name: "me", methods: ["GET"])]
   public function me(): JsonResponse
   {
     $client = $this->getAuthenticatedClient();
@@ -74,9 +72,8 @@ class FrontApiController extends AbstractApiController
 
   /**
    * Get legal notices
-   * 
-   * @Route("/legal-notices", name="legal_notices", methods={"GET"})
    */
+  #[Route("/legal-notices", name: "legal_notices", methods: ["GET"])]
   public function legalNotices(): JsonResponse
   {
     // Legal notices are typically static content
@@ -94,9 +91,8 @@ class FrontApiController extends AbstractApiController
 
   /**
    * Get personal data (subcontractors)
-   * 
-   * @Route("/personal-datas", name="personal_datas", methods={"GET"})
    */
+  #[Route("/personal-datas", name: "personal_datas", methods: ["GET"])]
   public function personalDatas(): JsonResponse
   {
     $client = $this->getAuthenticatedClient();
@@ -127,9 +123,8 @@ class FrontApiController extends AbstractApiController
 
   /**
    * Get CGU (Terms and Conditions) status
-   * 
-   * @Route("/cgu/status", name="cgu_status", methods={"GET"})
    */
+  #[Route("/cgu/status", name: "cgu_status", methods: ["GET"])]
   public function cguStatus(): JsonResponse
   {
     $client = $this->getAuthenticatedClient();
@@ -175,9 +170,8 @@ class FrontApiController extends AbstractApiController
 
   /**
    * Accept CGU and update email
-   * 
-   * @Route("/cgu/accept", name="cgu_accept", methods={"POST"})
    */
+  #[Route("/cgu/accept", name: "cgu_accept", methods: ["POST"])]
   public function acceptCgu(Request $request): JsonResponse
   {
     $client = $this->getAuthenticatedClient();
@@ -246,9 +240,8 @@ class FrontApiController extends AbstractApiController
 
   /**
    * Get dashboard information
-   * 
-   * @Route("/dashboard", name="dashboard", methods={"GET"})
    */
+  #[Route("/dashboard", name: "dashboard", methods: ["GET"])]
   public function dashboard(): JsonResponse
   {
     $client = $this->getAuthenticatedClient();

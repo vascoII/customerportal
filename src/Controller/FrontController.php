@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Controller\AbstractTechemController;
 use App\Service\Client;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
