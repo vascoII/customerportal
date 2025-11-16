@@ -1,11 +1,11 @@
-import SignInForm from "@/components/auth/SignInForm";
+import LoginForm from "@/components/techem/security/form/login";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sign In | Techem Customer Portal",
-  description: "Sign in to your Techem customer portal account",
+  title: "Connexion | Techem Customer Portal",
+  description: "Connectez-vous à votre compte Techem",
 };
 
-export default function SignIn() {
-  return <SignInForm />;
+export default function Login() {
+  return <LoginForm />;
 }
