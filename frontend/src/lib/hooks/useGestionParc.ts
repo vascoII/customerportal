@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, extractApiData, handleApiError } from "@/lib/api/client";
+import { getStaleTimeUntilMidnight } from "@/lib/utils/cache";
 import type {
   Building,
   BuildingDetailsResponse,
@@ -89,7 +90,7 @@ export function useGestionParc() {
       );
       return extractApiData<GestionParcIndexResponse>(response);
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     retry: false,
   });
 
@@ -107,7 +108,7 @@ export function useGestionParc() {
         return extractApiData<GestionParcBuildingDetailsResponse>(response);
       },
       enabled: !!pkImmeuble,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
       retry: false,
     });
 
@@ -135,7 +136,7 @@ export function useGestionParc() {
         return data.depannage;
       },
       enabled: !!pkImmeuble && !!pkIntervention,
-      staleTime: 5 * 60 * 1000,
+      staleTime: 5 * 60 * 1000, // Interventions: updates are asynchronous, keep short cache
       retry: false,
     });
 
@@ -158,7 +159,7 @@ export function useGestionParc() {
         >(response);
       },
       enabled: !!pkImmeuble,
-      staleTime: 5 * 60 * 1000,
+      staleTime: 5 * 60 * 1000, // Interventions: updates are asynchronous, keep short cache
       retry: false,
     });
 
@@ -176,7 +177,7 @@ export function useGestionParc() {
         return extractApiData<LeakListResponse>(response);
       },
       enabled: !!pkImmeuble,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
       retry: false,
     });
 
@@ -194,7 +195,7 @@ export function useGestionParc() {
         return extractApiData<AnomalyListResponse>(response);
       },
       enabled: !!pkImmeuble,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
       retry: false,
     });
 
@@ -212,7 +213,7 @@ export function useGestionParc() {
         return extractApiData<DysfunctionListResponse>(response);
       },
       enabled: !!pkImmeuble,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
       retry: false,
     });
 

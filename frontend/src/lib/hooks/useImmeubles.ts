@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { api, extractApiData, handleApiError } from "@/lib/api/client";
+import { getStaleTimeUntilMidnight } from "@/lib/utils/cache";
 import type {
   BuildingListResponse,
   BuildingDetailsResponse,
@@ -122,7 +123,7 @@ export function useImmeubles() {
       return extractApiData<ImmeublesIndexResponse>(response);
     },
     retry: false,
-    staleTime: 2 * 60 * 1000, // Consider fresh for 2 minutes
+    staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
   });
 
   /**
@@ -138,7 +139,7 @@ export function useImmeubles() {
         return extractApiData<ImmeublesIndexResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -188,7 +189,7 @@ export function useImmeubles() {
       },
       enabled: !!pkImmeuble,
       retry: false,
-      staleTime: 5 * 60 * 1000, // Consider fresh for 5 minutes
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -209,7 +210,7 @@ export function useImmeubles() {
         return extractApiData<BuildingDetailsResponse>(response);
       },
       retry: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -320,7 +321,7 @@ export function useImmeubles() {
       },
       enabled: !!pkImmeuble,
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -341,7 +342,7 @@ export function useImmeubles() {
         return extractApiData<LeakListResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -362,7 +363,7 @@ export function useImmeubles() {
       },
       enabled: !!pkImmeuble,
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -383,7 +384,7 @@ export function useImmeubles() {
         return extractApiData<AnomalyListResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -404,7 +405,7 @@ export function useImmeubles() {
       },
       enabled: !!pkImmeuble,
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -425,7 +426,7 @@ export function useImmeubles() {
         return extractApiData<DysfunctionListResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };

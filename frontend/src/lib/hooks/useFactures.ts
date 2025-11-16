@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, extractApiData, handleApiError } from "@/lib/api/client";
+import { getStaleTimeUntilMidnight } from "@/lib/utils/cache";
 import type { Invoice, InvoiceListResponse } from "@/lib/types/api";
 
 /**
@@ -51,7 +52,7 @@ export function useFactures() {
       return extractApiData<FacturesListResponse>(response);
     },
     retry: false,
-    staleTime: 5 * 60 * 1000, // Consider fresh for 5 minutes
+    staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
   });
 
   /**
@@ -66,7 +67,7 @@ export function useFactures() {
         return extractApiData<FacturesListResponse>(response);
       },
       retry: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -87,7 +88,7 @@ export function useFactures() {
       },
       enabled: !!pkFacture,
       retry: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -108,7 +109,7 @@ export function useFactures() {
         return extractApiData<FactureDetailsResponse>(response);
       },
       retry: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };

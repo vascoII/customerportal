@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, extractApiData, handleApiError } from "@/lib/api/client";
+import { getStaleTimeUntilMidnight } from "@/lib/utils/cache";
 import type {
   UserInfo,
   LegalNotices,
@@ -159,7 +160,7 @@ export function useFront() {
       };
     },
     retry: false,
-    staleTime: 2 * 60 * 1000, // Consider fresh for 2 minutes
+    staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
   });
 
   /**
@@ -281,7 +282,7 @@ export function useFront() {
         };
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
     return result;
   };

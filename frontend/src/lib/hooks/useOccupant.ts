@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { api, extractApiData, handleApiError } from "@/lib/api/client";
+import { getStaleTimeUntilMidnight } from "@/lib/utils/cache";
 import type {
   Housing,
   InterventionDetails,
@@ -130,7 +131,7 @@ export function useOccupant() {
       return extractApiData<OccupantLogementResponse>(response);
     },
     retry: false,
-    staleTime: 5 * 60 * 1000, // Consider fresh for 5 minutes
+    staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
   });
 
   /**
@@ -145,7 +146,7 @@ export function useOccupant() {
         return extractApiData<OccupantLogementResponse>(response);
       },
       retry: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -163,7 +164,7 @@ export function useOccupant() {
       return extractApiData<OccupantSimulatorResponse>(response);
     },
     retry: false,
-    staleTime: 5 * 60 * 1000,
+    staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     enabled: false, // Disabled by default
   });
 
@@ -181,7 +182,7 @@ export function useOccupant() {
         return extractApiData<OccupantSimulatorResponse>(response);
       },
       retry: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -279,7 +280,7 @@ export function useOccupant() {
         return extractApiData<LeakListResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -299,7 +300,7 @@ export function useOccupant() {
         return extractApiData<LeakListResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -317,7 +318,7 @@ export function useOccupant() {
       return extractApiData<DysfunctionListResponse>(response);
     },
     retry: false,
-    staleTime: 2 * 60 * 1000,
+    staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
   });
 
   /**
@@ -334,7 +335,7 @@ export function useOccupant() {
         return extractApiData<DysfunctionListResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -356,7 +357,7 @@ export function useOccupant() {
         return extractApiData<AnomalyListResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -379,7 +380,7 @@ export function useOccupant() {
         return extractApiData<AnomalyListResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };

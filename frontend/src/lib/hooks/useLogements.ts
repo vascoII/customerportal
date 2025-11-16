@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { api, extractApiData, handleApiError } from "@/lib/api/client";
+import { getStaleTimeUntilMidnight } from "@/lib/utils/cache";
 import type {
   Building,
   Housing,
@@ -165,7 +166,7 @@ export function useLogements() {
       },
       enabled: !!pkImmeuble,
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -186,7 +187,7 @@ export function useLogements() {
         return extractApiData<LogementsByImmeubleResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -315,8 +316,8 @@ export function useLogements() {
       );
       return extractApiData<LogementsSearchResponse>(response);
     },
-    retry: false,
-    staleTime: 2 * 60 * 1000,
+      retry: false,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     enabled: false, // Disabled by default
   });
 
@@ -334,7 +335,7 @@ export function useLogements() {
         return extractApiData<LogementsSearchResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -359,7 +360,7 @@ export function useLogements() {
       },
       enabled: !!pkLogement && !!type,
       retry: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -382,7 +383,7 @@ export function useLogements() {
         return extractApiData<InfosAppareilsResponse>(response);
       },
       retry: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -403,7 +404,7 @@ export function useLogements() {
       },
       enabled: !!pkLogement,
       retry: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -424,7 +425,7 @@ export function useLogements() {
         return extractApiData<HousingDetailsResponse>(response);
       },
       retry: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -649,7 +650,7 @@ export function useLogements() {
       },
       enabled: !!pkLogement,
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -674,7 +675,7 @@ export function useLogements() {
         return extractApiData<LeakListResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -695,7 +696,7 @@ export function useLogements() {
       },
       enabled: !!pkLogement,
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -716,7 +717,7 @@ export function useLogements() {
         return extractApiData<DysfunctionListResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
@@ -743,7 +744,7 @@ export function useLogements() {
       },
       enabled: !!pkLogement,
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
     });
   };
 
@@ -768,7 +769,7 @@ export function useLogements() {
         return extractApiData<AnomalyListResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: getStaleTimeUntilMidnight(),
     });
     return result;
   };
