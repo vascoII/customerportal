@@ -214,6 +214,7 @@ export function useLogements() {
       formData.append("intervention[pkLogement]", String(pkLogement));
       formData.append("intervention[name]", data.name);
       formData.append("intervention[email]", data.email);
+      formData.append("intervention[objet]", data.objet);
       formData.append("intervention[message]", data.message);
       
       if (data.phone) {

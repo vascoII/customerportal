@@ -269,6 +269,7 @@ export interface CreateTicketRequest {
   email: string;
   phone?: string;
   mobile?: string;
+  objet: string;
   message: string;
   attachment?: File;
 }

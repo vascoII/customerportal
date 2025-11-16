@@ -578,7 +578,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * Get my account information
      */
-    #[Route("/my-account", name: "my_account", methods: ["GET"])]
+    #[Route("/my-account", name: "my_account", methods: ["GET", "POST"])]
     public function myAccount(Logement $logementService, Request $request): JsonResponse
     {
         $client = $this->getAuthenticatedClient();
@@ -592,8 +592,15 @@ class OccupantApiController extends AbstractApiController
                 return $this->unauthorized('User not found');
             }
 
-            $data = $request->getContent();
-            $rgpdcheckboxvalue = $data ? 'true' : 'false';
+            // Handle POST request for RGPD consent update
+            if ($request->isMethod('POST')) {
+                $requestData = json_decode($request->getContent(), true);
+                $rgpdcheckboxvalue = (isset($requestData['rgpd_checkbox']) && $requestData['rgpd_checkbox']) ? 'true' : 'false';
+            } else {
+                // GET request - get current RGPD value from user
+                $data = $request->getContent();
+                $rgpdcheckboxvalue = $data ? 'true' : 'false';
+            }
 
             $logement = $client->getTableauBordOccupant($user->FK);
             $consoTabs = $logementService->generateTabConsos($logement);
