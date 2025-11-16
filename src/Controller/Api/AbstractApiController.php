@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Controller\AbstractTechemController;
 use App\Service\Client;
+use App\Service\FakeDataService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
@@ -16,11 +17,13 @@ use Symfony\Component\Serializer\SerializerInterface;
 abstract class AbstractApiController extends AbstractTechemController
 {
     protected SerializerInterface $serializer;
+    protected ?FakeDataService $fakeDataService;
 
-    public function __construct(Client $client, SerializerInterface $serializer)
+    public function __construct(Client $client, SerializerInterface $serializer, ?FakeDataService $fakeDataService = null)
     {
         parent::__construct($client);
         $this->serializer = $serializer;
+        $this->fakeDataService = $fakeDataService;
     }
 
     /**
@@ -194,5 +197,46 @@ abstract class AbstractApiController extends AbstractTechemController
         }
 
         return $data;
+    }
+
+    /**
+     * Check if faker mode is enabled
+     * 
+     * @return bool
+     */
+    protected function isFakerMode(): bool
+    {
+        return $this->fakeDataService !== null && $this->fakeDataService->isEnabled();
+    }
+
+    /**
+     * Send fake data response for an endpoint
+     * 
+     * This method should be called at the beginning of each endpoint method
+     * if you want to use fake data instead of SOAP calls.
+     * 
+     * @param string $endpoint Endpoint identifier (e.g., 'dashboard', 'factures-list')
+     * @param array $params Optional parameters for dynamic endpoints (e.g., ['pkImmeuble' => 12345])
+     * @param string|null $message Optional success message
+     * @return JsonResponse|null Returns JsonResponse if faker mode is enabled, null otherwise
+     */
+    protected function sendFakeData(string $endpoint, array $params = [], ?string $message = null): ?JsonResponse
+    {
+        if (!$this->isFakerMode()) {
+            return null;
+        }
+
+        try {
+            $data = $this->fakeDataService->get($endpoint, $params);
+            
+            // Normalize the data to match API response format
+            $normalizedData = $this->normalize($data);
+            
+            return $this->success($normalizedData, $message);
+        } catch (\Exception $e) {
+            // If fake data file doesn't exist, return error or continue with SOAP
+            // You can choose to throw an exception or return null to continue with SOAP
+            return $this->error('Fake data not available: ' . $e->getMessage(), 500);
+        }
     }
 }

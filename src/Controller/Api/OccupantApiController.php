@@ -28,6 +28,12 @@ class OccupantApiController extends AbstractApiController
     #[Route("", name: "show", methods: ["GET"])]
     public function show(Request $request, Logement $logementService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.occupant');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -72,6 +78,12 @@ class OccupantApiController extends AbstractApiController
     #[Route("/simulateur", name: "simulateur", methods: ["GET"])]
     public function simulateur(Request $request, Logement $logementService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.occupant.simulateur');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -114,6 +126,12 @@ class OccupantApiController extends AbstractApiController
     #[Route("/interventions/{pkIntervention]", name: "show_intervention", methods: ["GET"])]
     public function showIntervention(int $pkIntervention, Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.occupant.interventions.{pkIntervention}', ['pkIntervention' => $pkIntervention]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -143,6 +161,12 @@ class OccupantApiController extends AbstractApiController
     #[Route("/interventions", name: "list_interventions", methods: ["GET"])]
     public function listInterventions(Request $request, Depannage $depannageService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.occupant.interventions');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -179,6 +203,12 @@ class OccupantApiController extends AbstractApiController
     #[Route("/fuites", name: "list_leaks", methods: ["GET"])]
     public function listLeaks(Request $request, Fuite $fuiteService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.occupant.fuites');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -216,6 +246,12 @@ class OccupantApiController extends AbstractApiController
     #[Route("/dysfonctionnements", name: "list_dysfunctions", methods: ["GET"])]
     public function listDysfunctions(Request $request, Dysfonctionnement $dysfonctionnementService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.occupant.dysfonctionnements');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -252,6 +288,12 @@ class OccupantApiController extends AbstractApiController
     #[Route("/anomalies", name: "list_anomalies", methods: ["GET"])]
     public function listAnomalies(Request $request, Anomalie $anomalieService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.occupant.anomalies');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -290,6 +332,13 @@ class OccupantApiController extends AbstractApiController
     public function exportAnomalies(Request $request, Anomalie $anomalieService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
+
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.occupant.anomalies.export');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -335,6 +384,13 @@ class OccupantApiController extends AbstractApiController
     public function exportLeaks(Request $request, Fuite $fuiteService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
+
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.occupant.fuites.export');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -380,6 +436,13 @@ class OccupantApiController extends AbstractApiController
     public function exportInterventions(Request $request, Depannage $depannageService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
+
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.occupant.interventions.export');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -425,6 +488,13 @@ class OccupantApiController extends AbstractApiController
     public function exportDysfunctions(Request $request, Dysfonctionnement $dysfonctionnementService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
+
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.occupant.dysfonctionnements.export');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -581,6 +651,14 @@ class OccupantApiController extends AbstractApiController
     #[Route("/my-account", name: "my_account", methods: ["GET", "POST"])]
     public function myAccount(Logement $logementService, Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data (only for GET)
+        if ($request->isMethod('GET')) {
+            $fakeResponse = $this->sendFakeData('api.occupant.my-account');
+            if ($fakeResponse !== null) {
+                return $fakeResponse;
+            }
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -634,6 +712,14 @@ class OccupantApiController extends AbstractApiController
     #[Route("/alertes", name: "alertes", methods: ["GET", "POST"])]
     public function alertes(Request $request, Logement $logementService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data (only for GET)
+        if ($request->isMethod('GET')) {
+            $fakeResponse = $this->sendFakeData('api.occupant.alertes');
+            if ($fakeResponse !== null) {
+                return $fakeResponse;
+            }
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;

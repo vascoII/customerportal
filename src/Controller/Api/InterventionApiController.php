@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * API Controller for Interventions (Depannages)
@@ -18,6 +19,7 @@ class InterventionApiController extends AbstractApiController
     #[Route("/{pkDepannage}/report", name: "report", methods: ["GET"])]
     public function report(int $pkDepannage, Request $request): Response|JsonResponse
     {
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;

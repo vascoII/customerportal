@@ -29,6 +29,12 @@ class FrontApiController extends AbstractApiController
   #[Route("/me", name: "me", methods: ["GET"])]
   public function me(Request $request): JsonResponse
   {
+    // Check if faker mode is enabled and return fake data
+    $fakeResponse = $this->sendFakeData('api.me');
+    if ($fakeResponse !== null) {
+      return $fakeResponse;
+    }
+
     $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;
@@ -76,6 +82,12 @@ class FrontApiController extends AbstractApiController
   #[Route("/legal-notices", name: "legal_notices", methods: ["GET"])]
   public function legalNotices(): JsonResponse
   {
+    // Check if faker mode is enabled and return fake data
+    $fakeResponse = $this->sendFakeData('api.legal-notices');
+    if ($fakeResponse !== null) {
+      return $fakeResponse;
+    }
+
     // Legal notices are typically static content
     // You can store this in a file, database, or return static content
     $legalNotices = [
@@ -95,6 +107,12 @@ class FrontApiController extends AbstractApiController
   #[Route("/personal-datas", name: "personal_datas", methods: ["GET"])]
   public function personalDatas(Request $request): JsonResponse
   {
+    // Check if faker mode is enabled and return fake data
+    $fakeResponse = $this->sendFakeData('api.personal-datas');
+    if ($fakeResponse !== null) {
+      return $fakeResponse;
+    }
+
     $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;
@@ -127,6 +145,12 @@ class FrontApiController extends AbstractApiController
   #[Route("/cgu/status", name: "cgu_status", methods: ["GET"])]
   public function cguStatus(Request $request): JsonResponse
   {
+    // Check if faker mode is enabled and return fake data
+    $fakeResponse = $this->sendFakeData('api.cgu.status');
+    if ($fakeResponse !== null) {
+      return $fakeResponse;
+    }
+
     $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;
@@ -244,6 +268,12 @@ class FrontApiController extends AbstractApiController
   #[Route("/dashboard", name: "dashboard", methods: ["GET"])]
   public function dashboard(Request $request): JsonResponse
   {
+    // Check if faker mode is enabled and return fake data
+    $fakeResponse = $this->sendFakeData('api.dashboard');
+    if ($fakeResponse !== null) {
+      return $fakeResponse;
+    }
+
     $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;

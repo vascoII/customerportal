@@ -20,6 +20,12 @@ class SearchApiController extends AbstractApiController
     #[Route("", name: "index", methods: ["GET"])]
     public function index(Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.search');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;

@@ -30,6 +30,12 @@ class LogementApiController extends AbstractApiController
     #[Route("/immeuble/{pkImmeuble}", name: "index", methods: ["GET"])]
     public function index(int $pkImmeuble, Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.immeuble.{pkImmeuble}', ['pkImmeuble' => $pkImmeuble]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -100,6 +106,14 @@ class LogementApiController extends AbstractApiController
     #[Route("/{pkLogement]/ticket-owner", name: "ticket_owner", methods: ["GET", "POST"])]
     public function getTicketOwner(int $pkLogement, Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data (only for GET)
+        if ($request->isMethod('GET')) {
+            $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.ticket-owner', ['pkLogement' => $pkLogement]);
+            if ($fakeResponse !== null) {
+                return $fakeResponse;
+            }
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -122,6 +136,12 @@ class LogementApiController extends AbstractApiController
     #[Route("/search", name: "search", methods: ["GET"])]
     public function search(Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.search');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -141,6 +161,12 @@ class LogementApiController extends AbstractApiController
     #[Route("/{pkLogement]/appareils/{type]", name: "infos_appareils", methods: ["GET"])]
     public function getInfosAppareil(int $pkLogement, string $type, Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.appareils.{type}', ['pkLogement' => $pkLogement, 'type' => $type]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -179,6 +205,12 @@ class LogementApiController extends AbstractApiController
     #[Route("/{pkLogement]", name: "show", methods: ["GET"])]
     public function show(int $pkLogement, Request $request, Logement $logementService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}', ['pkLogement' => $pkLogement]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -252,6 +284,14 @@ class LogementApiController extends AbstractApiController
     #[Route("/{pkLogement]/releve-repart", name: "releve_repart", methods: ["GET", "POST"])]
     public function showRepartReleve(int $pkLogement, Request $request): Response|JsonResponse
     {
+        // Check if faker mode is enabled and return fake data (only for GET)
+        if ($request->isMethod('GET')) {
+            $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.releve-repart', ['pkLogement' => $pkLogement]);
+            if ($fakeResponse !== null) {
+                return $fakeResponse;
+            }
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -295,6 +335,12 @@ class LogementApiController extends AbstractApiController
     #[Route("/{pkLogement]/interventions/{pkIntervention]", name: "show_intervention", methods: ["GET"])]
     public function showIntervention(int $pkLogement, int $pkIntervention, Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.interventions.{pkIntervention}', ['pkLogement' => $pkLogement, 'pkIntervention' => $pkIntervention]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -319,6 +365,12 @@ class LogementApiController extends AbstractApiController
     #[Route("/{pkLogement]/interventions", name: "list_interventions", methods: ["GET"])]
     public function listInterventions(int $pkLogement, Request $request, Depannage $depannageService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.interventions', ['pkLogement' => $pkLogement]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -350,6 +402,14 @@ class LogementApiController extends AbstractApiController
     #[Route("/filter", name: "filter", methods: ["GET", "POST"])]
     public function filterResult(Request $request, Logement $logementService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data (only for GET)
+        if ($request->isMethod('GET')) {
+            $fakeResponse = $this->sendFakeData('api.logements.filter');
+            if ($fakeResponse !== null) {
+                return $fakeResponse;
+            }
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -423,6 +483,12 @@ class LogementApiController extends AbstractApiController
     #[Route("/{pkLogement]/fuites", name: "list_leaks", methods: ["GET"])]
     public function listLeaks(int $pkLogement, Request $request, Fuite $fuiteService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.fuites', ['pkLogement' => $pkLogement]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -455,6 +521,12 @@ class LogementApiController extends AbstractApiController
     #[Route("/{pkLogement]/dysfonctionnements", name: "list_dysfunctions", methods: ["GET"])]
     public function listDysfunctions(int $pkLogement, Request $request, Dysfonctionnement $dysfonctionnementService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.dysfonctionnements', ['pkLogement' => $pkLogement]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -486,6 +558,12 @@ class LogementApiController extends AbstractApiController
     #[Route("/{pkLogement]/anomalies", name: "list_anomalies", methods: ["GET"])]
     public function listAnomalies(int $pkLogement, Request $request, Anomalie $anomalieService): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.anomalies', ['pkLogement' => $pkLogement]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -519,6 +597,13 @@ class LogementApiController extends AbstractApiController
     public function export(int $pkImmeuble, Request $request, ExcelHelper $excelHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
+
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.immeuble.{pkImmeuble}.export', ['pkImmeuble' => $pkImmeuble]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -635,6 +720,13 @@ class LogementApiController extends AbstractApiController
     public function exportAnomalies(int $pkLogement, Request $request, Anomalie $anomalieService, ExcelHelper $excelHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
+
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.anomalies.export', ['pkLogement' => $pkLogement]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -678,6 +770,13 @@ class LogementApiController extends AbstractApiController
     public function exportLeaks(int $pkLogement, Request $request, Fuite $fuiteService, ExcelHelper $excelHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
+
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.fuites.export', ['pkLogement' => $pkLogement]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -721,6 +820,13 @@ class LogementApiController extends AbstractApiController
     public function exportInterventions(int $pkLogement, Request $request, Depannage $depannageService, ExcelHelper $excelHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
+
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.interventions.export', ['pkLogement' => $pkLogement]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -764,6 +870,13 @@ class LogementApiController extends AbstractApiController
     public function exportDysfunctions(int $pkLogement, Request $request, Dysfonctionnement $dysfonctionnementService, ExcelHelper $excelHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
+
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.logements.{pkLogement}.dysfonctionnements.export', ['pkLogement' => $pkLogement]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;

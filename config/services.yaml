@@ -35,6 +35,10 @@ services:
       - "../src/Entity/"
       - "../src/Kernel.php"
 
+  App\Service\FakeDataService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
   App\Service\Client:
     arguments:
       $kernel: "@kernel"

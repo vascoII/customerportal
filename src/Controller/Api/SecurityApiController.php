@@ -83,6 +83,12 @@ class SecurityApiController extends AbstractApiController
     #[Route("/login/{param}", name: "login_from_param", methods: ["GET"])]
     public function loginFromParam(string $param, SessionInterface $session): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.security.login.{param}', ['param' => $param]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         try {
             $client = $this->client;
             $success = $client->loginFromParam($param);
@@ -268,6 +274,12 @@ class SecurityApiController extends AbstractApiController
     #[Route("/me", name: "me", methods: ["GET"])]
     public function me(): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.security.me');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         /** @var SoapSessionToken|null $token */
         $token = $this->container->get('security.token_storage')->getToken();
 

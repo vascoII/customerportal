@@ -20,6 +20,12 @@ class FactureApiController extends AbstractApiController
   #[Route("", name: "list", methods: ["GET"])]
   public function list(Request $request): JsonResponse
   {
+    // Check if faker mode is enabled and return fake data
+    $fakeResponse = $this->sendFakeData('api.factures');
+    if ($fakeResponse !== null) {
+      return $fakeResponse;
+    }
+
     $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;
@@ -79,6 +85,12 @@ class FactureApiController extends AbstractApiController
   #[Route("/{pkFacture}", name: "show", methods: ["GET"])]
   public function show(int $pkFacture, Request $request): JsonResponse
   {
+    // Check if faker mode is enabled and return fake data
+    $fakeResponse = $this->sendFakeData('api.factures.pkFacture');
+    if ($fakeResponse !== null) {
+      return $fakeResponse;
+    }
+
     $client = $this->getAuthenticatedClientFromHeaders($request);
     if ($client instanceof JsonResponse) {
       return $client;

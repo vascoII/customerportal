@@ -16,6 +16,12 @@ class TicketingApiController extends AbstractApiController
     #[Route("", name: "list", methods: ["GET"])]
     public function ticketList(Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.tickets');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -155,8 +161,14 @@ class TicketingApiController extends AbstractApiController
 
 
     #[Route("/menu", name: "menu", methods: ["GET"])]
-    public function menuTicket(): JsonResponse
+    public function menuTicket(Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.tickets.menu');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -205,8 +217,14 @@ class TicketingApiController extends AbstractApiController
      * Get ticket attachment
      */
     #[Route("/{pkTicket}/attachment", name: "attachment", methods: ["GET"])]
-    public function attachmentTicket(string $pkTicket, LoggerInterface $logger): JsonResponse
+    public function attachmentTicket(string $pkTicket, Request $request, LoggerInterface $logger): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.tickets.{pkTicket}.attachment', ['pkTicket' => $pkTicket]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -239,8 +257,14 @@ class TicketingApiController extends AbstractApiController
      * Get ticket owner information for creating a ticket
      */
     #[Route("/create/{pkLogement}", name: "create_info", methods: ["GET"])]
-    public function createTicketInfo(int $pkLogement): JsonResponse
+    public function createTicketInfo(int $pkLogement, Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.tickets.create.{pkLogement}', ['pkLogement' => $pkLogement]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;

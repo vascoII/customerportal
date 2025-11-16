@@ -23,6 +23,12 @@ class OperatorApiController extends AbstractApiController
     #[Route("", name: "index", methods: ["GET"])]
     public function index(Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.operators');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -108,6 +114,12 @@ class OperatorApiController extends AbstractApiController
     #[Route("/statistiques", name: "stats_occupants", methods: ["GET"])]
     public function statsOccupants(Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.operators.statistiques');
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
@@ -129,6 +141,12 @@ class OperatorApiController extends AbstractApiController
     #[Route("/{id}", name: "view", methods: ["GET"])]
     public function view(int $id, Request $request): JsonResponse
     {
+        // Check if faker mode is enabled and return fake data
+        $fakeResponse = $this->sendFakeData('api.operators.{id}', ['id' => $id]);
+        if ($fakeResponse !== null) {
+            return $fakeResponse;
+        }
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
