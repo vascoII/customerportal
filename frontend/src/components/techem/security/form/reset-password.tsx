@@ -67,7 +67,7 @@ export default function ResetPasswordForm() {
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
       <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
         <Link
-          href="/signin"
+          href="/login"
           className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
         >
           <ChevronLeftIcon />
@@ -145,7 +145,7 @@ export default function ResetPasswordForm() {
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
                 Vous vous souvenez de votre mot de passe ? {""}
                 <Link
-                  href="/signin"
+                  href="/login"
                   className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
                 >
                   Se connecter

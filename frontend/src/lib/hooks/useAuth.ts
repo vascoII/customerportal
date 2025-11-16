@@ -27,7 +27,7 @@ import type { AuthCheckResponse } from "@/lib/types/api";
  * 
  * // Logout with automatic cleanup and redirection
  * await logout();
- * // → Clears store, queries, and redirects to /signin
+ * // → Clears store, queries, and redirects to /login
  * ```
  */
 export function useAuth() {
@@ -117,7 +117,7 @@ export function useAuth() {
       queryClient.clear();
 
       // Redirect to login
-      router.push("/signin");
+      router.push("/login");
     }
   };
 

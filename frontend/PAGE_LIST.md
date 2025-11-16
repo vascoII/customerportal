@@ -32,15 +32,16 @@
 - **Route Symfony** : `/` → `FrontController::indexAction`
 - **Route Next.js** : `/`
 - **Fichier** : `app/page.tsx`
-- **Description** : Redirige vers `/signin`, `/dashboard` ou `/occupant` selon l'état d'authentification
+- **Description** : Redirige vers `/login`, `/dashboard` ou `/occupant` selon l'état d'authentification
 - **Statut** : ❌ À créer
 
 ### 1.2. Connexion
 - **Route Symfony** : `/login` → `SecurityController::loginAction`
-- **Route Next.js** : `/signin`
-- **Fichier** : `app/(full-width-pages)/(auth)/signin/page.tsx`
+- **Route Next.js** : `/login` ⚠️ **À migrer depuis `/signin`**
+- **Fichier** : `app/(full-width-pages)/(auth)/login/page.tsx` (après renommage)
 - **Composant** : `components/techem/security/form/login.tsx`
-- **Statut** : ✅ Créée
+- **Statut** : ✅ Créée (nécessite renommage du dossier `signin/` → `login/`)
+- **Note** : Voir `SIGNIN_TO_LOGIN_MIGRATION.md` pour les détails de migration
 
 ### 1.3. Connexion via Paramètre
 - **Route Symfony** : `/login/{param}` → `SecurityController::loginFromParamAction`
@@ -482,8 +483,8 @@ app/
 ├── page.tsx                                    ❌ À créer (redirection)
 ├── (full-width-pages)/
 │   ├── (auth)/
-│   │   ├── signin/
-│   │   │   ├── page.tsx                       ✅ Créée
+│   │   ├── login/
+│   │   │   ├── page.tsx                       ✅ Créée (à renommer depuis signin)
 │   │   │   └── [param]/
 │   │   │       └── page.tsx                   ❌ À créer
 │   │   ├── reset-password/
@@ -588,8 +589,8 @@ app/
 | Route Symfony | Route Next.js | Fichier | Statut |
 |---------------|---------------|---------|--------|
 | `/` | `/` | `app/page.tsx` | ❌ |
-| `/login` | `/signin` | `app/(full-width-pages)/(auth)/signin/page.tsx` | ✅ |
-| `/login/{param}` | `/signin/[param]` | `app/(full-width-pages)/(auth)/signin/[param]/page.tsx` | ❌ |
+| `/login` | `/login` | `app/(full-width-pages)/(auth)/login/page.tsx` | ✅ (à renommer) |
+| `/login/{param}` | `/login/[param]` | `app/(full-width-pages)/(auth)/login/[param]/page.tsx` | ❌ |
 | `/reset-password` | `/reset-password` | `app/(full-width-pages)/(auth)/reset-password/page.tsx` | ✅ |
 | `/update-password` | `/update-password` | `app/(full-width-pages)/(auth)/update-password/page.tsx` | ✅ |
 | `/parc` | `/dashboard` | `app/(admin)/dashboard/page.tsx` | ✅ |

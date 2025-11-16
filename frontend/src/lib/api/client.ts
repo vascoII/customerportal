@@ -63,7 +63,7 @@ const createApiClient = (): AxiosInstance => {
         if (status === 401) {
           // Redirect to login page (only on client side)
           if (typeof window !== 'undefined') {
-            window.location.href = '/signin';
+            window.location.href = '/login';
           }
         }
 

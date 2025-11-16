@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
  * Public routes that don't require authentication
  */
 const publicRoutes = [
-  "/signin",
+  "/login",
   "/signup",
   "/reset-password",
   "/api", // API routes are handled by the backend
@@ -25,7 +25,7 @@ function isPublicRoute(pathname: string): boolean {
  * Check if a path is an auth route (login/signup)
  */
 function isAuthRoute(pathname: string): boolean {
-  return pathname.startsWith("/signin") || pathname.startsWith("/signup");
+  return pathname.startsWith("/login") || pathname.startsWith("/signup");
 }
 
 /**
@@ -33,7 +33,7 @@ function isAuthRoute(pathname: string): boolean {
  * 
  * This middleware runs on the Edge Runtime and checks for the PHPSESSID cookie.
  * If the cookie is missing and the user is trying to access a protected route,
- * they are redirected to the signin page.
+ * they are redirected to the login page.
  * 
  * Note: The actual session validation is done by the Symfony backend API.
  * This middleware only checks for the presence of the cookie.
@@ -57,7 +57,7 @@ export function middleware(request: NextRequest) {
   // If user doesn't have a session cookie and is trying to access a protected route
   if (!phpsessid && !isAuthRoute(pathname)) {
     const url = request.nextUrl.clone();
-    url.pathname = "/signin";
+    url.pathname = "/login";
     // Store the original URL to redirect after login
     url.searchParams.set("redirect", pathname);
     return NextResponse.redirect(url);
