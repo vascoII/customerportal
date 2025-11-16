@@ -84,15 +84,6 @@ export default function LoginForm() {
 
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
-      <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
-        <Link
-          href="/"
-          className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-        >
-          <ChevronLeftIcon />
-          Retour au tableau de bord
-        </Link>
-      </div>
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div>
           <div className="mb-5 sm:mb-8">
@@ -100,7 +91,7 @@ export default function LoginForm() {
               Connexion
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Entrez votre email et votre mot de passe pour vous connecter !
+              Entrez votre email ou login et votre mot de passe pour vous connecter !
             </p>
           </div>
           <div>
@@ -120,7 +111,7 @@ export default function LoginForm() {
                 {/* Champ Email/Nom d'utilisateur */}
                 <div>
                   <Label htmlFor="username">
-                    Email <span className="text-error-500">*</span>
+                    Email ou Login <span className="text-error-500">*</span>
                   </Label>
                   <Input
                     id="username"
