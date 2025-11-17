@@ -1,0 +1,382 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import Badge from "@/components/ui/badge/Badge";
+import { useImmeubles } from "@/lib/hooks/useImmeubles";
+import type { Building } from "@/lib/types/api";
+import { AlertIcon } from "@/icons";
+
+export default function ListImmeubles() {
+  const router = useRouter();
+  const { filterImmeubles, isFiltering } = useImmeubles();
+  const [immeubles, setImmeubles] = useState<Building[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Load all buildings on component mount
+    let isMounted = true;
+    
+    const loadImmeubles = async () => {
+      try {
+        setIsLoading(true);
+        const response = await filterImmeubles({});
+        if (isMounted) {
+          setImmeubles(response.immeubles || []);
+        }
+      } catch (error) {
+        console.error("Error loading immeubles:", error);
+        if (isMounted) {
+          setImmeubles([]);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadImmeubles();
+
+    // Cleanup function to prevent state updates after unmount
+    return () => {
+      isMounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array - only run on mount
+
+  // Format number with thousands separator
+  const formatNumber = (num: number | undefined): string => {
+    if (num === undefined || num === null) return "0";
+    return num.toLocaleString('fr-FR');
+  };
+
+  // Get building issues values
+  const getBuildingIssues = (building: Building) => {
+    return {
+      nbAnomalies: building.NbAnomalies ?? building.nbAnomalies ?? 0,
+      nbFuites: building.NbFuites ?? building.nbFuites ?? 0,
+      nbDepannages: building.NbDepannages ?? building.nbDepannages ?? 0,
+      nbDysfonctionnements: building.NbDysfonctionnements ?? building.nbDysfonctionnements ?? 0,
+    };
+  };
+
+  // Check if building has any issues
+  const hasIssues = (building: Building): boolean => {
+    const issues = getBuildingIssues(building);
+    return issues.nbAnomalies > 0 || issues.nbFuites > 0 || 
+           issues.nbDepannages > 0 || issues.nbDysfonctionnements > 0;
+  };
+
+  // Get building reference
+  const getBuildingRef = (building: Building): string => {
+    return building.ref ?? building.Ref ?? "";
+  };
+
+  // Get building numero
+  const getBuildingNumero = (building: Building): string => {
+    return building.numero ?? building.Numero ?? "";
+  };
+
+  // Get building address parts
+  const getBuildingAddress1 = (building: Building): string => {
+    return building.adresse1 ?? building.Adresse1 ?? "";
+  };
+
+  const getBuildingCp = (building: Building): string => {
+    return building.cp ?? building.Cp ?? "";
+  };
+
+  const getBuildingVille = (building: Building): string => {
+    return building.ville ?? building.Ville ?? "";
+  };
+
+  // Get number of cold water counters
+  const getNbCompteursEF = (building: Building): number => {
+    return building.nbCompteursEF ?? building.NbCompteursEF ?? 0;
+  };
+
+  // Get number of hot water counters
+  const getNbCompteursEC = (building: Building): number => {
+    return building.nbCompteursEC ?? building.NbCompteursEC ?? 0;
+  };
+
+  // Get number of repartiteurs
+  const getNbCompteursRepart = (building: Building): number => {
+    return building.nbCompteursRepart ?? building.NbCompteursRepart ?? 0;
+  };
+
+  // Get number of energy counters
+  const getNbCompteursCET = (building: Building): number => {
+    return building.nbCompteursCET ?? building.NbCompteursCET ?? 0;
+  };
+  // Show loading state
+  if (isLoading || isFiltering) {
+    return (
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Chargement des immeubles...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
+      <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+            Liste des Immeubles
+          </h3>
+          {immeubles.length > 0 && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              {immeubles.length} immeuble{immeubles.length > 1 ? 's' : ''}
+            </p>
+          )}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+            <svg
+              className="stroke-current fill-white dark:fill-gray-800"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M2.29004 5.90393H17.7067"
+                stroke=""
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M17.7075 14.0961H2.29085"
+                stroke=""
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M12.0826 3.33331C13.5024 3.33331 14.6534 4.48431 14.6534 5.90414C14.6534 7.32398 13.5024 8.47498 12.0826 8.47498C10.6627 8.47498 9.51172 7.32398 9.51172 5.90415C9.51172 4.48432 10.6627 3.33331 12.0826 3.33331Z"
+                fill=""
+                stroke=""
+                strokeWidth="1.5"
+              />
+              <path
+                d="M7.91745 11.525C6.49762 11.525 5.34662 12.676 5.34662 14.0959C5.34661 15.5157 6.49762 16.6667 7.91745 16.6667C9.33728 16.6667 10.4883 15.5157 10.4883 14.0959C10.4883 12.676 9.33728 11.525 7.91745 11.525Z"
+                fill=""
+                stroke=""
+                strokeWidth="1.5"
+              />
+            </svg>
+            Filtrer
+          </button>
+        </div>
+      </div>
+      <div className="max-w-full overflow-x-auto">
+        {immeubles.length === 0 ? (
+          <div className="flex items-center justify-center min-h-[200px]">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Aucun immeuble trouvé
+            </p>
+          </div>
+        ) : (
+          <Table>
+            {/* Table Header */}
+            <TableHeader className="border-gray-100 dark:border-gray-800 border-y">
+              <TableRow>
+              <TableCell
+                isHeader
+                className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Immeuble
+              </TableCell>
+              <TableCell
+                isHeader
+                className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Eau froide
+              </TableCell>
+              <TableCell
+                isHeader
+                className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Eau chaude
+              </TableCell>
+              <TableCell
+                isHeader
+                className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Répartiteurs
+              </TableCell>
+              <TableCell
+                isHeader
+                className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Compteurs d&apos;énergie
+              </TableCell>
+              <TableCell
+                isHeader
+                className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Statut
+              </TableCell>
+              </TableRow>
+            </TableHeader>
+
+            {/* Table Body */}
+            <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
+              {immeubles.map((immeuble) => {
+                const pkImmeuble = immeuble.PkImmeuble ?? immeuble.pkImmeuble ?? "";
+                const buildingRef = getBuildingRef(immeuble);
+                const buildingNumero = getBuildingNumero(immeuble);
+                const buildingAddress1 = getBuildingAddress1(immeuble);
+                const buildingCp = getBuildingCp(immeuble);
+                const buildingVille = getBuildingVille(immeuble);
+                const nbCompteursEF = getNbCompteursEF(immeuble);
+                const nbCompteursEC = getNbCompteursEC(immeuble);
+                const nbCompteursRepart = getNbCompteursRepart(immeuble);
+                const nbCompteursCET = getNbCompteursCET(immeuble);
+                const issues = getBuildingIssues(immeuble);
+                const hasAnyIssues = hasIssues(immeuble);
+
+                const handleRowClick = (e: React.MouseEvent) => {
+                  // Don't navigate if clicking on a link or button
+                  const target = e.target as HTMLElement;
+                  if (target.closest('a') || target.closest('button')) {
+                    return;
+                  }
+                  if (buildingNumero) {
+                    router.push(`/immeuble/${buildingNumero}`);
+                  }
+                };
+
+                return (
+                  <TableRow 
+                    key={pkImmeuble} 
+                    className="hover:bg-gray-50 dark:hover:bg-white/[0.02] cursor-pointer"
+                    onClick={handleRowClick}
+                  >
+                    <TableCell className="py-3">
+                      <div className="flex items-start gap-3">
+                        <div className="h-[50px] w-[50px] overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                          <svg
+                            className="w-6 h-6 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                            />
+                          </svg>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="space-y-1">
+                            {buildingRef && (
+                              <p className="text-gray-800 text-theme-sm font-medium dark:text-white/90">
+                                Référence: <span className="font-normal">{buildingRef}</span>
+                              </p>
+                            )}
+                            {buildingNumero && (
+                              <p className="text-gray-800 text-theme-sm font-medium dark:text-white/90">
+                                N° d&apos;immeuble: <span className="font-normal">{buildingNumero}</span>
+                              </p>
+                            )}
+                            {buildingAddress1 && (
+                              <p className="text-gray-600 text-theme-sm dark:text-gray-400">
+                                {buildingAddress1}
+                              </p>
+                            )}
+                            {(buildingCp || buildingVille) && (
+                              <p className="text-gray-600 text-theme-sm dark:text-gray-400">
+                                {[buildingCp, buildingVille].filter(Boolean).join(" ")}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                      {formatNumber(nbCompteursEF)}
+                    </TableCell>
+                    <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                      {formatNumber(nbCompteursEC)}
+                    </TableCell>
+                    <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                      {formatNumber(nbCompteursRepart)}
+                    </TableCell>
+                    <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                      {formatNumber(nbCompteursCET)}
+                    </TableCell>
+                    <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                      {!hasAnyIssues ? (
+                        <Badge size="sm" color="success">
+                          OK
+                        </Badge>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          {issues.nbFuites > 0 && (
+                            <Link 
+                              href={`/immeuble/${buildingNumero}/fuites`}
+                              className="text-error-500 hover:text-error-600 dark:text-error-400 dark:hover:text-error-300 transition-colors"
+                              title={`${issues.nbFuites} fuite${issues.nbFuites > 1 ? 's' : ''}`}
+                            >
+                              <AlertIcon className="w-5 h-5" />
+                            </Link>
+                          )}
+                          {issues.nbAnomalies > 0 && (
+                            <Link 
+                              href={`/immeuble/${buildingNumero}/anomalies`}
+                              className="text-warning-500 hover:text-warning-600 dark:text-warning-400 dark:hover:text-warning-300 transition-colors"
+                              title={`${issues.nbAnomalies} anomalie${issues.nbAnomalies > 1 ? 's' : ''}`}
+                            >
+                              <AlertIcon className="w-5 h-5" />
+                            </Link>
+                          )}
+                          {issues.nbDysfonctionnements > 0 && (
+                            <Link 
+                              href={`/immeuble/${buildingNumero}/dysfonctionnements`}
+                              className="text-error-500 hover:text-error-600 dark:text-error-400 dark:hover:text-error-300 transition-colors"
+                              title={`${issues.nbDysfonctionnements} dysfonctionnement${issues.nbDysfonctionnements > 1 ? 's' : ''}`}
+                            >
+                              <AlertIcon className="w-5 h-5" />
+                            </Link>
+                          )}
+                          {issues.nbDepannages > 0 && (
+                            <Link 
+                              href={`/immeuble/${buildingNumero}/depannages`}
+                              className="text-warning-500 hover:text-warning-600 dark:text-warning-400 dark:hover:text-warning-300 transition-colors"
+                              title={`${issues.nbDepannages} dépannage${issues.nbDepannages > 1 ? 's' : ''}`}
+                            >
+                              <AlertIcon className="w-5 h-5" />
+                            </Link>
+                          )}
+                        </div>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        )}
+      </div>
+    </div>
+  );
+}
