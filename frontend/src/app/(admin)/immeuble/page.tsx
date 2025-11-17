@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import ListImmeubles from "@/components/techem/immeuble/ListImmeubles";
 
 export const metadata: Metadata = {
-  title: "Immeubles | Techem Customer Portal",
+  title: "Immeubles | TECHEM - Espace client",
   description: "List of buildings",
 };
 

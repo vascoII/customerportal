@@ -29,7 +29,19 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+    subItems: [
+      { name: "Parc", path: "/parc", pro: false },
+      { name: "Immeubles", path: "/immeuble", pro: false }
+    ],
+    
+  },
+  {
+    icon: <GridIcon />,
+    name: "Template",
+    subItems: [
+      { name: "Ecommerce", path: "/", pro: false }
+    ],
+    
   },
   {
     icon: <CalenderIcon />,
@@ -327,7 +339,7 @@ const AppSidebar: React.FC = () => {
             </>
           ) : (
             <Image
-              src="/images/logo/logo-icon.svg"
+              src="/images/techem/logo-icon.svg"
               alt="Logo"
               width={32}
               height={32}

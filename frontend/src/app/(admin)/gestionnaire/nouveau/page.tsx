@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "New Gestionnaire | Techem Customer Portal",
+  title: "New Gestionnaire | TECHEM - Espace client",
   description: "Create new manager",
 };
 
