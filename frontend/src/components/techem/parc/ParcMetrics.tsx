@@ -57,13 +57,19 @@ export const ParcMetrics = () => {
     );
   }
 
+  // Determine icon colors based on values
+  const fuitesColor = metrics.fuites > 0 ? "text-blue-500 dark:text-blue-400" : "text-gray-400 dark:text-gray-500";
+  const dysfonctionnementsColor = metrics.alarmes > 0 ? "text-orange-500 dark:text-orange-400" : "text-gray-400 dark:text-gray-500";
+  const anomaliesColor = metrics.anomalies > 0 ? "text-red-500 dark:text-red-400" : "text-gray-400 dark:text-gray-500";
+  const depannagesColor = metrics.depannages > 0 ? "text-red-500 dark:text-red-400" : "text-gray-400 dark:text-gray-500";
+
   return (
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
       <Link href="/immeuble?fuites=1">
       {/* Fuites - Metric Item Start */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-          <StatusIconsFuite size={24} className="text-gray-800 dark:text-white/90" />
+          <StatusIconsFuite size={24} className={fuitesColor} color="currentColor" />
         </div>
 
         <div className="flex items-end justify-between mt-5">
@@ -84,7 +90,7 @@ export const ParcMetrics = () => {
       <Link href="/immeuble?dysfonctionnements=1">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-          <StatusIconsDysfonctionnement size={24} className="text-gray-800 dark:text-white/90" />
+          <StatusIconsDysfonctionnement size={24} className={dysfonctionnementsColor} color="currentColor" />
         </div>
         <div className="flex items-end justify-between mt-5">
           <div>
@@ -104,7 +110,7 @@ export const ParcMetrics = () => {
       <Link href="/immeuble?anomalies=1">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-          <StatusIconsAnomalie size={24} className="text-gray-800 dark:text-white/90" />
+          <StatusIconsAnomalie size={24} className={anomaliesColor} color="currentColor" />
         </div>
 
         <div className="flex items-end justify-between mt-5">
@@ -125,7 +131,7 @@ export const ParcMetrics = () => {
       <Link href="/immeuble?depannages=1">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-          <StatusIconsAlerte size={24} className="text-gray-800 dark:text-white/90" />
+          <StatusIconsAlerte size={24} className={depannagesColor} color="currentColor" />
         </div>
         <div className="flex items-end justify-between mt-5">
           <div>
