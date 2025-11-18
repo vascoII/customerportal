@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import ImmeubleMainCard from "@/components/techem/immeuble/ImmeubleMainCard";
 import ImmeubleCard from "@/components/techem/immeuble/ImmeubleCard";
+import ImmeubleRelevesCard from "@/components/techem/immeuble/ImmeubleRelevesCard";
 
 export const metadata: Metadata = {
   title: "Immeuble Details | TECHEM - Espace client",
@@ -22,8 +23,8 @@ export default function ImmeubleDetailsPage({
         <ImmeubleCard pkImmeuble={params.pkImmeuble} />
       </div>
 
-      <div className="col-span-12">
-        
+      <div className="col-span-12 space-y-6 xl:col-span-7">
+        <ImmeubleRelevesCard pkImmeuble={params.pkImmeuble} />
       </div>
 
       <div className="col-span-12 xl:col-span-5">
