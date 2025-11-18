@@ -15,7 +15,7 @@ export default function ImmeubleDysfonctionnementsPage({
   return (
     <div className="grid grid-cols-12 gap-4 md:gap-6">
       <div className="col-span-12">
-        <ListDysfonctionnements />
+        <ListDysfonctionnements pkImmeuble={params.pkImmeuble} />
       </div>
     </div>
   );

@@ -374,11 +374,23 @@ export interface Leak {
   [key: string]: any;
 }
 
+export interface DysfunctionDetails {
+  Type?: string;
+  TypeAbrege?: string;
+  NbJours?: number;
+  Duree?: number;
+  [key: string]: any;
+}
+
 export interface Dysfunction {
   PkDysfonctionnement?: string;
   DateDysfonctionnement?: string;
   TypeDysfonctionnement?: string;
   Description?: string;
+  Logement?: DepannageLogement;
+  Occupant?: DepannageOccupant;
+  Appareil?: Device;
+  Dysfonctionnement?: DysfunctionDetails;
   [key: string]: any;
 }
 
