@@ -342,11 +342,24 @@ export interface Anomaly {
   [key: string]: any;
 }
 
+export interface LeakDetails {
+  Duree?: number;
+  NbFuites?: number;
+  Nombre?: number;
+  NbDepassements?: number;
+  NbJours?: number;
+  [key: string]: any;
+}
+
 export interface Leak {
   PkFuite?: string;
   DateFuite?: string;
   TypeFuite?: string;
   Description?: string;
+  Logement?: DepannageLogement;
+  Occupant?: DepannageOccupant;
+  Appareil?: Device;
+  Fuite?: LeakDetails;
   [key: string]: any;
 }
 
