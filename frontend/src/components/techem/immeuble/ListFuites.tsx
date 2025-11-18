@@ -162,7 +162,13 @@ export default function ListFuites({ pkImmeuble }: ListFuitesProps) {
               const key = fuite.PkFuite ?? fuite.Appareil?.Numero ?? `fuite-${index}`;
               const compteur = fuite.Appareil?.Numero ?? "—";
               const emplacement = fuite.Appareil?.Emplacement ?? "—";
-              const fluide = fuite.Appareil?.Fluide ?? "—";
+              const rawFluide = fuite.Appareil?.Fluide ?? "";
+              const fluide =
+                rawFluide === "EC"
+                  ? "Eau chaude"
+                  : rawFluide === "EF"
+                  ? "Eau froide"
+                  : rawFluide || "—";
               const nbJours = fuite.Fuite?.NbJours ?? fuite.Fuite?.Duree ?? null;
 
               return (
