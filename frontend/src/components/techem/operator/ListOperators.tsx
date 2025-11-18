@@ -54,14 +54,17 @@ export default function ListOperators() {
       await deleteOperator(operatorToDelete.PKUser);
       // Refresh the list
       await refetchOperators();
+      // Close modal and reset state on success
       closeModal();
       setOperatorToDelete(null);
+      setErrorMessage(null); // Clear any previous errors
     } catch (error) {
       console.error("Error deleting operator:", error);
       const errorMessage = handleApiError(error);
       setErrorMessage(
         deleteError || errorMessage || "Une erreur s'est produite lors de la suppression."
       );
+      // Keep modal open on error so user can retry or cancel
     }
   };
 
@@ -69,6 +72,7 @@ export default function ListOperators() {
   const handleCancelDelete = () => {
     closeModal();
     setOperatorToDelete(null);
+    setErrorMessage(null); // Clear error when canceling
   };
 
   // Format number with thousands separator
@@ -158,9 +162,9 @@ export default function ListOperators() {
         </div>
 
         {/* Error message */}
-        {deleteError && (
+        {errorMessage && (
           <div className="mb-4">
-            <Alert variant="error" title="Erreur" message={deleteError} />
+            <Alert variant="error" title="Erreur" message={errorMessage} />
           </div>
         )}
 
@@ -338,6 +342,13 @@ export default function ListOperators() {
               ? Cette action est irréversible.
             </p>
           </div>
+
+          {/* Error message in modal */}
+          {errorMessage && (
+            <div className="mt-4">
+              <Alert variant="error" title="Erreur" message={errorMessage} />
+            </div>
+          )}
 
           <div className="flex items-center justify-end gap-3 pt-4">
             <Button
