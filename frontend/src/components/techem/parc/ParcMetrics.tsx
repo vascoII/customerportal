@@ -20,28 +20,15 @@ export const ParcMetrics = () => {
   // Extract metrics from API response
   const metrics = useMemo(() => {
     const board = parcData?.board;
-    if (!board) {
-      return {
-        fuites: 0,
-        alarmes: 0,
-        anomalies: 0,
-        depannages: 0,
-        degresFuites: 0,
-        degresDysfonctionnements: 0,
-        degresAnomalies: 0,
-        degresDepannages: 0,
-      };
-    }
-
     return {
-      fuites: board.nbFuites ?? board.NbFuites ?? 0,
-      alarmes: board.nbDysfonctionnements ?? board.NbDysfonctionnements ?? 0,
-      anomalies: board.nbAnomalies ?? board.NbAnomalies ?? 0,
-      depannages: board.nbDepannages ?? board.NbDepannages ?? 0,
-      degresFuites: board.degresFuites ?? board.DegresFuites ?? 0,
-      degresDysfonctionnements: board.degresDysfonctionnements ?? board.DegresDysfonctionnements ?? 0,
-      degresAnomalies: board.degresAnomalies ?? board.DegresAnomalies ?? 0,
-      degresDepannages: board.degresDepannages ?? board.DegresDepannages ?? 0,
+      fuites: board?.nbFuites ?? 0,
+      alarmes: board?.nbDysfonctionnements ?? 0,
+      anomalies: board?.nbAnomalies ?? 0,
+      depannages: board?.nbDepannages ?? 0,
+      degresFuites: board?.degresFuites ?? 0,
+      degresDysfonctionnements: board?.degresDysfonctionnements ?? 0,
+      degresAnomalies: board?.degresAnomalies ?? 0,
+      degresDepannages: board?.degresDepannages ?? 0,
     };
   }, [parcData]);
 

@@ -9,24 +9,13 @@ export default function ParcMainCard() {
   // Extract parc information from API response
   const parcInfo = useMemo(() => {
     const board = parcData?.board;
-    if (!board) {
-      return {
-        nbImmeubles: 0,
-        nbCompteurs: 0,
-        nbCompteursEf: 0,
-        nbCompteursEc: 0,
-        nbCompteursRepart: 0,
-        nbCompteursCet: 0,
-      };
-    }
-
     return {
-      nbImmeubles: board.nbImmeubles ?? board.NbImmeubles ?? 0,
-      nbCompteurs: board.nbCompteurs ?? board.NbCompteurs ?? 0,
-      nbCompteursEf: board.nbCompteursEf ?? board.NbCompteursEf ?? 0,
-      nbCompteursEc: board.nbCompteursEc ?? board.NbCompteursEc ?? 0,
-      nbCompteursRepart: board.nbCompteursRepart ?? board.NbCompteursRepart ?? 0,
-      nbCompteursCet: board.nbCompteursCet ?? board.NbCompteursCet ?? 0,
+      nbImmeubles: board?.nbImmeubles ?? 0,
+      nbCompteurs: board?.nbCompteurs ?? 0,
+      nbCompteursEf: board?.nbCompteursEf ?? 0,
+      nbCompteursEc: board?.nbCompteursEc ?? 0,
+      nbCompteursRepart: board?.nbCompteursRepart ?? 0,
+      nbCompteursCet: board?.nbCompteursCet ?? 0,
     };
   }, [parcData]);
 

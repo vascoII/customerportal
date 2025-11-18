@@ -23,11 +23,15 @@ class TableauBordClientApiController extends AbstractApiController
         if ($this->isFakerMode()) {
             try {
                 $boardData = $this->fakeDataService->get('api.parc');
-                $normalizedBoard = $this->normalize($boardData);
+                $normalizedData = $this->normalize($boardData);
+                
+                // Extract board stats (handle legacy format without "board" wrapper)
+                $boardStats = $normalizedData['board'] ?? $normalizedData;
+                $boardStats = is_array($boardStats) ? $boardStats : (array) $boardStats;
                 
                 // Calculate installation statistics from fake data
-                $installed = $normalizedBoard['nbCompteursPoses'] ?? $normalizedBoard['NbCompteursPoses'] ?? 0;
-                $total = $normalizedBoard['nbCompteursCommandes'] ?? $normalizedBoard['NbCompteursCommandes'] ?? 0;
+                $installed = $boardStats['nbCompteursPoses'] ?? $boardStats['NbCompteursPoses'] ?? 0;
+                $total = $boardStats['nbCompteursCommandes'] ?? $boardStats['NbCompteursCommandes'] ?? 0;
                 $remaining = $total - $installed;
 
                 if ($total > 0) {
@@ -49,8 +53,8 @@ class TableauBordClientApiController extends AbstractApiController
 
                 // Structure the data the same way as SOAP response
                 $data = [
-                    'board' => $normalizedBoard,
-                    'chantier' => $chantier,
+                    'board' => $boardStats,
+                    'chantier' => $normalizedData['chantier'] ?? $chantier,
                 ];
 
                 return $this->success($data);

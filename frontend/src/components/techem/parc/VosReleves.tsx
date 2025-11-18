@@ -16,20 +16,11 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), {
 export default function VosReleves() {
   const { parcData, isParcLoading } = useParc();
   
-  // Get pcImmeublesTelereleve from API response, default to 0 if not available
-  // Handle both camelCase (from fake data) and PascalCase (from SOAP) formats
   const pcImmeublesTelereleve = useMemo(() => {
     const board = parcData?.board;
     if (!board) return 0;
-    
-    // Try camelCase first (fake data), then PascalCase (SOAP response)
-    const value = board.pcImmeublesTelereleve ?? board.PcImmeublesTelereleve ?? 0;
-    
-    // Ensure it's a number (convert string to number if needed)
-    const numValue = typeof value === 'string' ? parseFloat(value) : Number(value);
-    
-    // Return 0 if NaN, otherwise return the number
-    return isNaN(numValue) ? 0 : numValue;
+
+    return board.pcImmeublesTelereleve ?? 0;
   }, [parcData]);
 
   const series = [pcImmeublesTelereleve];
