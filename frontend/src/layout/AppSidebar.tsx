@@ -35,6 +35,9 @@ const navItems: NavItem[] = [
     ],
     
   },
+];
+
+const othersItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Template",
@@ -67,9 +70,6 @@ const navItems: NavItem[] = [
       { name: "404 Error", path: "/error-404", pro: false },
     ],
   },
-];
-
-const othersItems: NavItem[] = [
   {
     icon: <PieChartIcon />,
     name: "Charts",
