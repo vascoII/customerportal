@@ -1,12 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import { useAuth } from "@/lib/hooks/useAuth";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
+
+  // Extract user information
+  const displayName = useMemo(() => {
+    if (!user) return "—";
+    // Try to construct full name from FirstName and UserName
+    if (user.FirstName && user.UserName) {
+      return `${user.FirstName} ${user.UserName}`;
+    }
+    // Fallback to UserName or LoginID
+    return user.UserName || user.LoginID || "—";
+  }, [user]);
+
+  const email = user?.EMail ?? user?.Email ?? "";
 
 function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   e.stopPropagation();
@@ -22,7 +37,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         onClick={toggleDropdown} 
         className="flex items-center text-gray-700 dark:text-gray-400 dropdown-toggle"
       >
-        <span className="block mr-1 font-medium text-theme-sm">TEST CLIENT Complet Client</span>
+        <span className="block mr-1 font-medium text-theme-sm">{displayName}</span>
 
         <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
@@ -51,11 +66,13 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-            TEST CLIENT Complet Client
+            {displayName}
           </span>
-          <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-            no-reply@techem.fr
-          </span>
+          {email && (
+            <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
+              {email}
+            </span>
+          )}
         </div>
 
         <ul className="flex flex-col gap-1 pt-4 pb-3 border-b border-gray-200 dark:border-gray-800">
