@@ -1,8 +1,9 @@
 import { Metadata } from "next";
+import OperatorUpdateForm from "@/components/techem/operator/form/OperatorUpdateForm";
 
 export const metadata: Metadata = {
-  title: "Edit Gestionnaire | TECHEM - Espace client",
-  description: "Edit manager",
+  title: "Modifier Gestionnaire | TECHEM - Espace client",
+  description: "Modifier un compte gestionnaire",
 };
 
 export default function EditGestionnairePage({
@@ -11,9 +12,7 @@ export default function EditGestionnairePage({
   params: { id: string };
 }) {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold">Hello</h1>
-    </div>
+    <OperatorUpdateForm operatorId={params.id} />
   );
 }
 
