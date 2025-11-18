@@ -13,11 +13,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Modal } from "@/components/ui/modal";
+import { useModal } from "@/hooks/useModal";
 import { useImmeubles } from "@/lib/hooks/useImmeubles";
 import type { Building } from "@/lib/types/api";
 import EquipementIconsEau from "@/components/techem/images/EquipementIconsEau";
 import EquipementIconsRepartiteur from "@/components/techem/images/EquipementIconsRepartiteur";
 import EquipementIconsCompteur from "@/components/techem/images/EquipementIconsCompteur";
+import ToggleSwitchListImmeubles from "@/components/techem/immeuble/form/ToggleSwitchListImmeubles";
 
 
 export default function ListImmeubles() {
@@ -26,19 +29,87 @@ export default function ListImmeubles() {
   const { filterImmeubles, isFiltering } = useImmeubles();
   const [immeubles, setImmeubles] = useState<Building[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { isOpen, openModal, closeModal } = useModal();
 
-  // Get filter from URL parameters
-  const filterType = useMemo(() => {
-    if (searchParams.get('fuites') === '1') return 'fuites';
-    if (searchParams.get('dysfonctionnements') === '1') return 'dysfonctionnements';
-    if (searchParams.get('anomalies') === '1') return 'anomalies';
-    if (searchParams.get('depannages') === '1') return 'depannages';
-    return null;
+  // Get active filters from URL parameters
+  const activeFilters = useMemo(() => {
+    const equipmentParam = searchParams.get('equipment');
+    const equipment = equipmentParam ? equipmentParam.split(',') : [];
+    
+    return {
+      fuites: searchParams.get('fuites') === '1',
+      anomalies: searchParams.get('anomalies') === '1',
+      dysfonctionnements: searchParams.get('dysfonctionnements') === '1',
+      depannages: searchParams.get('depannages') === '1',
+      equipment: equipment,
+    };
   }, [searchParams]);
 
-  // Filter immeubles based on URL parameter
+  // Get filter type for display (single filter for backward compatibility)
+  const filterType = useMemo(() => {
+    const hasIssueFilters = activeFilters.fuites || activeFilters.anomalies || 
+                           activeFilters.dysfonctionnements || activeFilters.depannages;
+    const hasEquipmentFilters = activeFilters.equipment && activeFilters.equipment.length > 0;
+    
+    if (!hasIssueFilters && !hasEquipmentFilters) return null;
+    
+    const issueCount = [activeFilters.fuites, activeFilters.anomalies, 
+                       activeFilters.dysfonctionnements, activeFilters.depannages]
+                       .filter(Boolean).length;
+    
+    if (issueCount === 1 && !hasEquipmentFilters) {
+      if (activeFilters.fuites) return 'fuites';
+      if (activeFilters.dysfonctionnements) return 'dysfonctionnements';
+      if (activeFilters.anomalies) return 'anomalies';
+      if (activeFilters.depannages) return 'depannages';
+    }
+    return 'multiple'; // Multiple filters active
+  }, [activeFilters]);
+
+  // Get initial filter values from URL (for the form)
+  const initialFilters = useMemo(() => {
+    return {
+      fuites: activeFilters.fuites,
+      anomalies: activeFilters.anomalies,
+      dysfonctionnements: activeFilters.dysfonctionnements,
+      depannages: activeFilters.depannages,
+      equipment: activeFilters.equipment,
+    };
+  }, [activeFilters]);
+
+  // Handle filter application
+  const handleApplyFilters = (filters: {
+    fuites: boolean;
+    anomalies: boolean;
+    dysfonctionnements: boolean;
+    depannages: boolean;
+    equipment: string[];
+  }) => {
+    const params = new URLSearchParams();
+    
+    // Only add active filters to URL
+    if (filters.fuites) params.set('fuites', '1');
+    if (filters.anomalies) params.set('anomalies', '1');
+    if (filters.dysfonctionnements) params.set('dysfonctionnements', '1');
+    if (filters.depannages) params.set('depannages', '1');
+    if (filters.equipment && filters.equipment.length > 0) {
+      params.set('equipment', filters.equipment.join(','));
+    }
+
+    // Navigate with new filters
+    const queryString = params.toString();
+    router.push(`/immeuble${queryString ? `?${queryString}` : ''}`);
+    closeModal();
+  };
+
+  // Filter immeubles based on active filters
   const filteredImmeubles = useMemo(() => {
-    if (!filterType) {
+    // If no filters are active, return all immeubles
+    const hasIssueFilters = activeFilters.fuites || activeFilters.anomalies || 
+                           activeFilters.dysfonctionnements || activeFilters.depannages;
+    const hasEquipmentFilters = activeFilters.equipment && activeFilters.equipment.length > 0;
+    
+    if (!hasIssueFilters && !hasEquipmentFilters) {
       return immeubles;
     }
 
@@ -50,20 +121,34 @@ export default function ListImmeubles() {
         nbDysfonctionnements: building.NbDysfonctionnements ?? building.nbDysfonctionnements ?? 0,
       };
 
-      switch (filterType) {
-        case 'fuites':
-          return issues.nbFuites > 0;
-        case 'dysfonctionnements':
-          return issues.nbDysfonctionnements > 0;
-        case 'anomalies':
-          return issues.nbAnomalies > 0;
-        case 'depannages':
-          return issues.nbDepannages > 0;
-        default:
-          return true;
+      // Check if building matches all active issue filters
+      // A building must have the issue if the filter is active
+      if (activeFilters.fuites && issues.nbFuites === 0) return false;
+      if (activeFilters.anomalies && issues.nbAnomalies === 0) return false;
+      if (activeFilters.dysfonctionnements && issues.nbDysfonctionnements === 0) return false;
+      if (activeFilters.depannages && issues.nbDepannages === 0) return false;
+
+      // Check equipment filters
+      if (hasEquipmentFilters && activeFilters.equipment) {
+        const equipmentCounts = {
+          'eau-froide': building.NbCompteursEF ?? building.nbCompteursEF ?? 0,
+          'eau-chaude': building.NbCompteursEC ?? building.nbCompteursEC ?? 0,
+          'compteur-energie-thermique': building.NbCompteursCET ?? building.nbCompteursCET ?? 0,
+          'repartiteur': building.NbCompteursRepart ?? building.nbCompteursRepart ?? 0,
+        };
+
+        // Check if building has at least one of the selected equipment types
+        const hasSelectedEquipment = activeFilters.equipment.some(
+          (equipType) => equipmentCounts[equipType as keyof typeof equipmentCounts] > 0
+        );
+
+        if (!hasSelectedEquipment) return false;
       }
+
+      // Building matches all active filters
+      return true;
     });
-  }, [immeubles, filterType]);
+  }, [immeubles, activeFilters]);
 
   useEffect(() => {
     // Load all buildings on component mount
@@ -179,7 +264,7 @@ export default function ListImmeubles() {
           {filteredImmeubles.length > 0 && (
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               {filteredImmeubles.length} immeuble{filteredImmeubles.length > 1 ? 's' : ''}
-              {filterType && (
+              {filterType && filterType !== 'multiple' && (
                 <span className="ml-2">
                   ({filterType === 'fuites' && 'avec fuites'}
                   {filterType === 'dysfonctionnements' && 'avec dysfonctionnements'}
@@ -187,12 +272,20 @@ export default function ListImmeubles() {
                   {filterType === 'depannages' && 'avec dépannages'})
                 </span>
               )}
+              {filterType === 'multiple' && (
+                <span className="ml-2">
+                  (filtrés)
+                </span>
+              )}
             </p>
           )}
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+          <button 
+            onClick={openModal}
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+          >
             <svg
               className="stroke-current fill-white dark:fill-gray-800"
               width="20"
@@ -237,7 +330,9 @@ export default function ListImmeubles() {
           <div className="flex items-center justify-center min-h-[200px]">
             <p className="text-sm text-gray-500 dark:text-gray-400">
               {filterType 
-                ? `Aucun immeuble avec ${filterType === 'fuites' ? 'des fuites' : filterType === 'dysfonctionnements' ? 'des dysfonctionnements' : filterType === 'anomalies' ? 'des anomalies' : 'des dépannages'} trouvé`
+                ? filterType === 'multiple'
+                  ? 'Aucun immeuble ne correspond aux filtres sélectionnés'
+                  : `Aucun immeuble avec ${filterType === 'fuites' ? 'des fuites' : filterType === 'dysfonctionnements' ? 'des dysfonctionnements' : filterType === 'anomalies' ? 'des anomalies' : 'des dépannages'} trouvé`
                 : 'Aucun immeuble trouvé'
               }
             </p>
@@ -491,6 +586,20 @@ export default function ListImmeubles() {
           </Table>
         )}
       </div>
+
+      {/* Filter Modal */}
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        className="max-w-[500px] p-5 lg:p-10"
+      >
+        <ToggleSwitchListImmeubles
+          key={`filter-${JSON.stringify(initialFilters)}-${isOpen}`}
+          onApply={handleApplyFilters}
+          onCancel={closeModal}
+          initialFilters={initialFilters}
+        />
+      </Modal>
     </div>
   );
 }
