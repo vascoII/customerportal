@@ -364,7 +364,7 @@ export default function ListImmeubles() {
                         {/* Row 1 - Col 2: Dépannages (Wrench) */}
                         {issues.nbDepannages > 0 ? (
                           <Link 
-                            href={`/immeuble/${buildingNumero}/depannages`}
+                            href={`/immeuble/${buildingNumero}/interventions`}
                             className="flex items-center justify-center p-1 hover:opacity-80 transition-opacity cursor-pointer"
                             title={`${issues.nbDepannages} dépannage${issues.nbDepannages > 1 ? 's' : ''}`}
                             onClick={(e) => e.stopPropagation()}

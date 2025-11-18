@@ -216,6 +216,46 @@ export interface InterventionDetails extends Intervention {
   [key: string]: any;
 }
 
+export interface DepannageLogement {
+  PkLogement?: string | number;
+  NumBatiment?: string;
+  AdrBatiment?: string;
+  NumEscalier?: string;
+  AdrEscalier?: string;
+  NumEtage?: string;
+  NumOrdre?: string;
+  Type?: string;
+  [key: string]: any;
+}
+
+export interface DepannageOccupant {
+  PkOccupant?: string | number;
+  Nom?: string;
+  Ref?: string;
+  DateArrivee?: string;
+  DateDepart?: string;
+  [key: string]: any;
+}
+
+export interface DepannageDetails {
+  WorkOrderNumber?: string;
+  Numero?: string;
+  Statut?: string;
+  StatutAbrege?: string;
+  Date?: string;
+  Motif?: string;
+  MotifAbrege?: string;
+  CompteRendu?: string;
+  [key: string]: any;
+}
+
+export interface DepannageRecord {
+  Logement?: DepannageLogement;
+  Occupant?: DepannageOccupant;
+  Depannage?: DepannageDetails;
+  [key: string]: any;
+}
+
 /**
  * Ticket types
  */

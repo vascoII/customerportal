@@ -6,6 +6,7 @@ import type {
   Building,
   InterventionDetails,
   Intervention,
+  DepannageRecord,
   AnomalyListResponse,
   LeakListResponse,
   DysfunctionListResponse,
@@ -200,8 +201,8 @@ export interface InterventionResponse {
  */
 export interface InterventionsListResponse {
   immeuble: Building;
-  depannages: Intervention[];
-  filters: FilterValues;
+  depannages: DepannageRecord[];
+  filters?: FilterValues;
 }
 
 /**
