@@ -334,11 +334,22 @@ export interface DashboardResponse {
 /**
  * Anomaly, Leak, Dysfunction types
  */
+export interface AnomalyDetails {
+  Index?: string | number;
+  Conso?: string | number;
+  Observations?: string;
+  [key: string]: any;
+}
+
 export interface Anomaly {
   PkAnomalie?: string;
   DateAnomalie?: string;
   TypeAnomalie?: string;
   Description?: string;
+  Logement?: DepannageLogement;
+  Occupant?: DepannageOccupant;
+  Appareil?: Device;
+  Anomalie?: AnomalyDetails;
   [key: string]: any;
 }
 
