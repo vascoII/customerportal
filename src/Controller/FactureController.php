@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class FactureController extends  AbstractTechemController
 {
-    #[Route('/factures', name: 'TechemCoreBundle_facture_index')]
+    #[Route('/factures', name: 'TechemCoreBundle_facture_index', requirements: ['_locale' => 'en|fr'])]
     public function indexAction()
     {
         $client = $this->getClient();

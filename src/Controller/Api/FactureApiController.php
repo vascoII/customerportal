@@ -11,9 +11,74 @@ use Symfony\Component\Routing\Attribute\Route;
 /**
  * API Controller for Factures (Invoices)
  */
-#[Route("/api/factures", name: "api_facture_")]
+#[Route("/api/factures", name: "api_facture_", priority: 10)]
 class FactureApiController extends AbstractApiController
 {
+  /**
+   * Normalize a single invoice object/array to API format
+   * 
+   * @param mixed $facture Invoice object or array
+   * @return array Normalized invoice data
+   */
+  private function normalizeFacture($facture): array
+  {
+    // Handle both object and array formats
+    $factureData = is_array($facture) ? $facture : (array) $facture;
+
+    // Handle nested Facture object/array
+    if (isset($factureData['Facture'])) {
+      $nestedFacture = $factureData['Facture'];
+      $nestedArray = is_array($nestedFacture) ? $nestedFacture : (array) $nestedFacture;
+      $factureData = array_merge($factureData, $nestedArray);
+    }
+
+    // Get values with fallback for different field names
+    $pkFacture = $factureData['PKFacture'] ?? $factureData['pkFacture'] ?? null;
+    $numero = $factureData['NumFacture'] ?? $factureData['Numero'] ?? $factureData['numero'] ?? null;
+    $dateEdition = $factureData['DateEdition'] ?? $factureData['dateEdition'] ?? null;
+    $montantHT = $factureData['MontantTotalHT'] ?? $factureData['montantTotalHT'] ?? null;
+    $montantTTC = $factureData['MontantTotalTTC'] ?? $factureData['montantTotalTTC'] ?? null;
+    $montantAPayer = $factureData['MontantTotalAPayer'] ?? $factureData['montantTotalAPayer'] ?? null;
+    $codeGestio = $factureData['CodeGestio'] ?? $factureData['codeGestio'] ?? null;
+    $adresse = $factureData['Adresse'] ?? $factureData['adresse'] ?? null;
+    $ville = $factureData['Ville'] ?? $factureData['ville'] ?? null;
+    $cp = $factureData['CP'] ?? $factureData['Cp'] ?? $factureData['cp'] ?? null;
+
+    // Format date safely
+    $dateEditionFormatted = null;
+    $dateEditionISO = null;
+    if ($dateEdition) {
+      $timestamp = strtotime($dateEdition);
+      if ($timestamp !== false) {
+        $dateEditionISO = date('Y-m-d', $timestamp);
+        $dateEditionFormatted = date('d/m/Y', $timestamp);
+      }
+    }
+
+    return [
+      'pkFacture' => $pkFacture !== null ? (string) $pkFacture : null,
+      'numero' => $numero !== null ? (string) $numero : null,
+      'dateEdition' => $dateEditionISO,
+      'dateEditionFormatted' => $dateEditionFormatted,
+      'montantTotalHT' => $montantHT !== null ? (float) $montantHT : null,
+      'montantTotalHTFormatted' => $montantHT !== null
+        ? number_format((float) $montantHT, 2, ',', ' ') . ' €'
+        : null,
+      'montantTotalTTC' => $montantTTC !== null ? (float) $montantTTC : null,
+      'montantTotalTTCFormatted' => $montantTTC !== null
+        ? number_format((float) $montantTTC, 2, ',', ' ') . ' €'
+        : null,
+      'montantTotalAPayer' => $montantAPayer !== null ? (float) $montantAPayer : null,
+      'montantTotalAPayerFormatted' => $montantAPayer !== null
+        ? number_format((float) $montantAPayer, 2, ',', ' ') . ' €'
+        : null,
+      'codeGestio' => $codeGestio !== null ? (string) $codeGestio : null,
+      'adresse' => $adresse !== null ? (string) $adresse : null,
+      'ville' => $ville !== null ? (string) $ville : null,
+      'cp' => $cp !== null ? (string) $cp : null,
+    ];
+  }
+
   /**
    * Get list of invoices
    */
@@ -21,9 +86,41 @@ class FactureApiController extends AbstractApiController
   public function list(Request $request): JsonResponse
   {
     // Check if faker mode is enabled and return fake data
-    $fakeResponse = $this->sendFakeData('api.factures');
-    if ($fakeResponse !== null) {
-      return $fakeResponse;
+    if ($this->isFakerMode()) {
+      try {
+        $data = $this->fakeDataService->get('api.factures', []);
+        $normalizedData = $this->normalize($data);
+
+        // Extract factures array
+        $facturesArray = $normalizedData['factures'] ?? [];
+
+        // Ensure facturesArray is an array
+        if (!is_array($facturesArray)) {
+          $facturesArray = [];
+        }
+
+        // Normalize each facture
+        $normalizedFactures = [];
+        foreach ($facturesArray as $facture) {
+          try {
+            $normalizedFactures[] = $this->normalizeFacture($facture);
+          } catch (\Exception $e) {
+            // Log error but continue processing other invoices
+            error_log('Error normalizing invoice: ' . $e->getMessage());
+            continue;
+          }
+        }
+
+        return $this->success([
+          'factures' => $normalizedFactures,
+          'count' => count($normalizedFactures),
+        ]);
+      } catch (\Exception $e) {
+        error_log('Error in factures list (faker mode): ' . $e->getMessage());
+        error_log('Stack trace: ' . $e->getTraceAsString());
+        error_log('File: ' . $e->getFile() . ' Line: ' . $e->getLine());
+        return $this->error('Fake data not available: ' . $e->getMessage() . ' (File: ' . basename($e->getFile()) . ':' . $e->getLine() . ')', 500);
+      }
     }
 
     $client = $this->getAuthenticatedClientFromHeaders($request);
@@ -35,7 +132,10 @@ class FactureApiController extends AbstractApiController
       $factures = $client->getFactures();
 
       if (empty($factures)) {
-        return $this->success([], 'No invoices found');
+        return $this->success([
+          'factures' => [],
+          'count' => 0,
+        ], 'No invoices found');
       }
 
       $listFactures = (array) $factures->ListeFactures;
@@ -46,28 +146,7 @@ class FactureApiController extends AbstractApiController
       // Normalize data for API
       $normalizedFactures = [];
       foreach ($listFactures as $facture) {
-        $normalizedFactures[] = [
-          'pkFacture' => $facture->PKFacture ?? null,
-          'numero' => $facture->Numero ?? null,
-          'dateEdition' => isset($facture->DateEdition)
-            ? date('Y-m-d', strtotime($facture->DateEdition))
-            : null,
-          'dateEditionFormatted' => isset($facture->DateEdition)
-            ? date('d/m/Y', strtotime($facture->DateEdition))
-            : null,
-          'montantTotalHT' => $facture->MontantTotalHT ?? null,
-          'montantTotalHTFormatted' => isset($facture->MontantTotalHT)
-            ? number_format($facture->MontantTotalHT, 2, ',', ' ') . ' €'
-            : null,
-          'montantTotalTTC' => $facture->MontantTotalTTC ?? null,
-          'montantTotalTTCFormatted' => isset($facture->MontantTotalTTC)
-            ? number_format($facture->MontantTotalTTC, 2, ',', ' ') . ' €'
-            : null,
-          'montantTotalAPayer' => $facture->MontantTotalAPayer ?? null,
-          'montantTotalAPayerFormatted' => isset($facture->MontantTotalAPayer)
-            ? number_format($facture->MontantTotalAPayer, 2, ',', ' ') . ' €'
-            : null,
-        ];
+        $normalizedFactures[] = $this->normalizeFacture($facture);
       }
 
       return $this->success([

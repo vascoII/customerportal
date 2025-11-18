@@ -489,6 +489,10 @@ export interface Invoice {
   montantTotalTTCFormatted?: string;
   montantTotalAPayer?: number;
   montantTotalAPayerFormatted?: string;
+  codeGestio?: string;
+  adresse?: string;
+  ville?: string;
+  cp?: string;
 }
 
 export interface InvoiceListResponse {

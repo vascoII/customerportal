@@ -7,15 +7,15 @@
         "DateEdition": "2008-06-15",
         "DateDebut": "2008-01-01",
         "DateFin": "2008-06-01",
-        "MontantTotalHT": 1000.00,
+        "MontantTotalHT": 1000.0,
         "MontantTotalTTC": 1234.56,
         "MontantTotalAPayer": 1234.56,
         "IDImm": "ABC123",
         "CodeGestio": "123456",
-        "CP": 75016,
+        "CP": "75016",
         "Adresse": "Rue de Paris",
         "Ville": "Paris"
       }
-    }  
+    }
   ]
 }
