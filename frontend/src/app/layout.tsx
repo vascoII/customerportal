@@ -1,4 +1,5 @@
 import { Outfit } from 'next/font/google';
+import type { Metadata } from 'next';
 import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
@@ -8,6 +9,16 @@ import Providers from './providers';
 const outfit = Outfit({
   subsets: ["latin"],
 });
+
+export const metadata: Metadata = {
+  title: 'TECHEM - Espace client',
+  description: 'Espace client TECHEM',
+  icons: {
+    icon: '/images/techem/logo.svg',
+    shortcut: '/images/techem/logo.svg',
+    apple: '/images/techem/logo.svg',
+  },
+};
 
 export default function RootLayout({
   children,
