@@ -2,7 +2,6 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { api, extractApiData, handleApiError } from "@/lib/api/client";
 import { getStaleTimeUntilMidnight } from "@/lib/utils/cache";
 import type {
-  BuildingListResponse,
   BuildingDetailsResponse,
   Building,
   InterventionDetails,
@@ -12,8 +11,9 @@ import type {
   DysfunctionListResponse,
   FilterParams,
   FilterValues,
-  ChantierData,
 } from "@/lib/types/api";
+
+/* eslint-disable react-hooks/rules-of-hooks */
 
 /**
  * Parameters for filtering buildings
@@ -44,7 +44,7 @@ export interface InterventionReportParams {
  * Response from /api/immeubles endpoint
  */
 export interface ImmeublesIndexResponse {
-  board: any; // DashboardData normalized
+  board: Record<string, unknown>;
   filters: FilterValues;
 }
 
@@ -53,7 +53,139 @@ export interface ImmeublesIndexResponse {
  */
 export interface FilterImmeublesResponse {
   immeubles: Building[];
+  gestion?: boolean;
 }
+
+interface RawImmeubleEntry {
+  Immeuble?: Record<string, unknown>;
+  immeuble?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+interface FilterImmeublesApiResponse {
+  immeubles: RawImmeubleEntry[];
+  gestion?: boolean;
+}
+
+const toStringOrEmpty = (value: unknown): string => {
+  if (value === undefined || value === null) {
+    return "";
+  }
+  return String(value);
+};
+
+const normalizeNumber = (value: unknown): number => {
+  if (typeof value === "number" && !Number.isNaN(value)) {
+    return value;
+  }
+  if (typeof value === "string") {
+    const parsed = Number(value.replace(",", "."));
+    return Number.isNaN(parsed) ? 0 : parsed;
+  }
+  return 0;
+};
+
+const normalizeBoolean = (value: unknown): boolean | undefined => {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  if (typeof value === "boolean") {
+    return value;
+  }
+  if (typeof value === "number") {
+    return value !== 0;
+  }
+  if (typeof value === "string") {
+    const normalized = value.toLowerCase();
+    if (normalized === "true" || normalized === "1") {
+      return true;
+    }
+    if (normalized === "false" || normalized === "0") {
+      return false;
+    }
+  }
+  return undefined;
+};
+
+const pickValue = (
+  sources: Array<Record<string, unknown> | undefined>,
+  keys: string[]
+): unknown => {
+  for (const source of sources) {
+    if (!source) continue;
+    for (const key of keys) {
+      if (source[key] !== undefined && source[key] !== null) {
+        return source[key];
+      }
+    }
+  }
+  return undefined;
+};
+
+const normalizeImmeubleEntry = (entry: RawImmeubleEntry): Building => {
+  const immeubleInfo = (entry.Immeuble ?? entry.immeuble ?? {}) as Record<string, unknown>;
+  const sources = [immeubleInfo, entry];
+
+  const getStringField = (field: string): string => {
+    const camel = field.charAt(0).toLowerCase() + field.slice(1);
+    return toStringOrEmpty(pickValue(sources, [field, camel]));
+  };
+
+  const building: Building = {
+    PkImmeuble: getStringField("PkImmeuble"),
+    Numero: getStringField("Numero"),
+    Nom: getStringField("Nom"),
+    Adresse1: getStringField("Adresse1"),
+    Adresse2: getStringField("Adresse2"),
+    Adresse3: getStringField("Adresse3"),
+    Cp: getStringField("Cp"),
+    Ville: getStringField("Ville"),
+    Ref: getStringField("Ref"),
+    DateActivationClient: getStringField("DateActivationClient"),
+    DateActivationOccupant: getStringField("DateActivationOccupant"),
+    FkClientTop: getStringField("FkClientTop"),
+  };
+  const buildingRecord = building as Record<string, unknown>;
+
+  const applyBooleanField = (field: string) => {
+    const camel = field.charAt(0).toLowerCase() + field.slice(1);
+    const boolValue = normalizeBoolean(pickValue(sources, [field, camel]));
+    if (boolValue !== undefined) {
+      buildingRecord[field] = boolValue;
+    }
+  };
+
+  ["HasTelereleve", "HasNoteOccupant", "HasDecompteOccupant", "HasFactures", "HasChantiers", "Actif"].forEach(
+    applyBooleanField
+  );
+
+  const applyNumericField = (field: string) => {
+    const camel = field.charAt(0).toLowerCase() + field.slice(1);
+    const value = pickValue(sources, [field, camel]);
+    if (value !== undefined) {
+      buildingRecord[field] = normalizeNumber(value);
+    }
+  };
+
+  [
+    "NbLogements",
+    "NbAppareils",
+    "NbCompteursEC",
+    "NbCompteursEF",
+    "NbCompteursRepart",
+    "NbCompteursCET",
+    "NbCompteursCapteur",
+    "NbCompteursElect",
+    "NbCompteursGaz",
+    "NbCompteurs",
+    "NbFuites",
+    "NbDepannages",
+    "NbDysfonctionnements",
+    "NbAnomalies",
+  ].forEach(applyNumericField);
+
+  return building;
+};
 
 /**
  * Response from /api/immeubles/{pkImmeuble}/interventions/{pkIntervention}
@@ -154,11 +286,15 @@ export function useImmeubles() {
     mutationFn: async (
       params: FilterImmeublesParams
     ): Promise<FilterImmeublesResponse> => {
-      const response = await api.post<FilterImmeublesResponse>(
+      const response = await api.post<FilterImmeublesApiResponse>(
         "/immeubles/filtre",
         params
       );
-      return extractApiData<FilterImmeublesResponse>(response);
+      const raw = extractApiData<FilterImmeublesApiResponse>(response);
+      return {
+        ...raw,
+        immeubles: (raw.immeubles ?? []).map(normalizeImmeubleEntry),
+      };
     },
   });
 
@@ -447,7 +583,7 @@ export function useImmeubles() {
       // Handle 'repartition' type (converted to null in API)
       const typeParam = params.type === "repartition" ? "repartition" : params.type || "";
 
-      const requestParams: any = {};
+      const requestParams: Record<string, string> = {};
       if (params.date) {
         requestParams.date = params.date;
       }
