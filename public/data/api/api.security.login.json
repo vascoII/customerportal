@@ -1,18 +1,41 @@
 {
-  "user": {
-    "PKUser": 1043,
-    "LoginID": "demo@techem.fr",
-    "Email": "demo@techem.fr",
-    "UserType": "G",
+  "Erreur": "",
+  "Info": "",
+  "Connected": true,
+  "SessionID": "128b6158-f027-44cf-89e1-51391c54e99b",
+  "User": {
+    "Erreur": "",
+    "Info": "",
+    "LoginID": "DEMOCLIENT",
     "UserName": "Demo",
+    "Password": "Techem92",
+    "EMail": "noreply@techem.fr",
+    "UserType": "C",
+    "PKUser": 1043,
+    "Adresse": "",
+    "CP": "",
+    "Ville": "",
+    "FK": 38227,
+    "PhoneNumber": "",
     "FirstName": "Client",
-    "LastName": "Test"
-  },
-  "roles": [
-    "ROLE_USER",
-    "ROLE_GESTIONNAIRE"
-  ],
-  "session_id": "54ea1174-b2f9-4472-bfb6-93ebe19d596b",
-  "pk_user": 1043
+    "UserRole": "MAISON MERE",
+    "ClientName": "",
+    "ClientID": "C00892",
+    "ExpirationDate": "0001-01-01T00:00:00",
+    "PasswordExpirationDate": "2025-11-18T14:53:44",
+    "CGU": "O",
+    "FKClient": 38227,
+    "FKClientTop": 38227,
+    "NbImmeubles": -1,
+    "Seuil_Conso_EF": -1,
+    "Seuil_Conso_EC": -1,
+    "Seuil_Conso_Repart": -1,
+    "Seuil_Conso_CET": -1,
+    "Seuil_Conso_Actif": true,
+    "Seuil_Conso_Email": "",
+    "showImmeublesArc": false,
+    "showFactures": true,
+    "showChgtOccupant": true,
+    "showChantiers": true
+  }
 }
-
