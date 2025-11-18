@@ -1,6 +1,5 @@
 "use client";
 import React, { useMemo } from "react";
-import Link from "next/link";
 import { useImmeubles } from "@/lib/hooks/useImmeubles";
 
 interface ImmeubleRelevesCardProps {
@@ -16,18 +15,9 @@ export default function ImmeubleRelevesCard({ pkImmeuble }: ImmeubleRelevesCardP
     const immeuble = immeubleData?.immeuble;
     return {
       hasTelereleve: (immeuble?.HasTelereleve ?? immeuble?.HasTelereleve ?? false) as boolean,
-      nbCompteurs: (immeuble?.NbAppareils ?? immeuble?.nbAppareils ?? 0) as number,
-      nbCompteursEf: (immeuble?.NbCompteursEF ?? immeuble?.nbCompteursEF ?? immeuble?.NbCompteursEf ?? immeuble?.nbCompteursEf ?? 0) as number,
-      nbCompteursEc: (immeuble?.NbCompteursEC ?? immeuble?.nbCompteursEC ?? immeuble?.NbCompteursEc ?? immeuble?.nbCompteursEc ?? 0) as number,
-      nbCompteursRepart: (immeuble?.NbCompteursRepart ?? immeuble?.nbCompteursRepart ?? 0) as number,
-      nbCompteursCet: (immeuble?.NbCompteursCET ?? immeuble?.nbCompteursCET ?? immeuble?.NbCompteursCet ?? immeuble?.nbCompteursCet ?? 0) as number,
     };
   }, [immeubleData]);
 
-  // Format number with thousands separator
-  const formatNumber = (num: number): string => {
-    return num.toLocaleString('fr-FR');
-  };
 
   return (
     <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
