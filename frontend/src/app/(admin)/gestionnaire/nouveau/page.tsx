@@ -1,15 +1,12 @@
 import { Metadata } from "next";
+import OperatorCreateForm from "@/components/techem/operator/form/OperatorCreateForm";
 
 export const metadata: Metadata = {
-  title: "New Gestionnaire | TECHEM - Espace client",
-  description: "Create new manager",
+  title: "Nouveau Gestionnaire | TECHEM - Espace client",
+  description: "Créer un nouveau compte gestionnaire",
 };
 
 export default function NewGestionnairePage() {
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold">Hello</h1>
-    </div>
-  );
+  return <OperatorCreateForm />;
 }
 

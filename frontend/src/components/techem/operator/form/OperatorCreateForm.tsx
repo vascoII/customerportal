@@ -1,17 +1,17 @@
 "use client";
-import Input from "@/components/form/input/InputField";
-import Label from "@/components/form/Label";
-import Button from "@/components/ui/button/Button";
-import Alert from "@/components/ui/alert/Alert";
-import { ChevronLeftIcon } from "@/icons";
-import Link from "next/link";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useOperators } from "@/lib/hooks/useOperators";
 import { useRouter } from "next/navigation";
 import { handleApiError } from "@/lib/api/client";
+import Label from "@/components/form/Label";
+import Input from "@/components/form/input/InputField";
+import Button from "@/components/ui/button/Button";
+import Alert from "@/components/ui/alert/Alert";
+import { ChevronDownIcon, ChevronLeftIcon } from "@/icons";
+import Link from "next/link";
 
 /**
  * Schéma de validation pour le formulaire de création d'opérateur
@@ -23,37 +23,48 @@ import { handleApiError } from "@/lib/api/client";
  * - Email requis et valide
  * - Confirmation email requise et doit correspondre au premier email
  */
-const createOperatorSchema = z.object({
-  job: z.string().min(1, "La fonction est requise"),
-  lastname: z.string().min(1, "Le nom est requis"),
-  firstname: z.string().min(1, "Le prénom est requis"),
-  phone: z.string().min(1, "Le téléphone est requis"),
-  email: z
-    .object({
-      first: z
-        .string()
-        .min(1, "L'email est requis")
-        .email("Veuillez entrer une adresse email valide"),
-      second: z
-        .string()
-        .min(1, "La confirmation de l'email est requise")
-        .email("Veuillez entrer une adresse email valide"),
-    })
-    .refine((data) => data.first === data.second, {
-      message: "Les emails ne correspondent pas",
-      path: ["second"],
-    }),
-});
+const createOperatorSchema = z
+  .object({
+    job: z.string().min(1, "La fonction est requise"),
+    lastname: z.string().min(1, "Le nom est requis"),
+    firstname: z.string().min(1, "Le prénom est requis"),
+    phone: z.string().min(1, "Le téléphone est requis"),
+    email: z
+      .object({
+        first: z
+          .string()
+          .min(1, "L'email est requis")
+          .email("Veuillez entrer une adresse email valide"),
+        second: z
+          .string()
+          .min(1, "La confirmation de l'email est requise")
+          .email("Veuillez entrer une adresse email valide"),
+      })
+      .refine((data) => data.first === data.second, {
+        message: "Les emails ne correspondent pas",
+        path: ["second"],
+      }),
+  });
 
 type CreateOperatorFormData = z.infer<typeof createOperatorSchema>;
 
-export default function CreateOperatorForm() {
+// Options pour le champ Fonction
+const jobOptions = [
+  { value: "Gestionnaire", label: "Gestionnaire" },
+  { value: "Administrateur", label: "Administrateur" },
+  { value: "Technicien", label: "Technicien" },
+  { value: "Responsable", label: "Responsable" },
+  { value: "Coordinateur", label: "Coordinateur" },
+];
+
+export default function OperatorCreateForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
     setError,
     watch,
@@ -71,7 +82,11 @@ export default function CreateOperatorForm() {
     },
   });
 
-  const { createOperator, isCreating, createError } = useOperators();
+  const {
+    createOperatorMutation,
+    isCreating,
+    createError,
+  } = useOperators();
 
   // Surveiller les valeurs des emails pour la validation en temps réel
   const emailFirst = watch("email.first");
@@ -82,7 +97,7 @@ export default function CreateOperatorForm() {
    */
   const onSubmit = async (data: CreateOperatorFormData) => {
     try {
-      await createOperator({
+      await createOperatorMutation.mutateAsync({
         job: data.job,
         lastname: data.lastname,
         firstname: data.firstname,
@@ -95,7 +110,7 @@ export default function CreateOperatorForm() {
 
       setIsSuccess(true);
 
-      // Rediriger vers la liste des opérateurs après 2 secondes
+      // Rediriger vers la liste des gestionnaires après 2 secondes
       setTimeout(() => {
         router.push("/gestionnaire");
       }, 2000);
@@ -129,7 +144,7 @@ export default function CreateOperatorForm() {
         <div>
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-              Création de compte
+              Création d&apos;un compte gestionnaire
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Remplissez les informations pour créer un nouveau compte gestionnaire
@@ -162,14 +177,44 @@ export default function CreateOperatorForm() {
                     <Label htmlFor="job">
                       Fonction <span className="text-error-500">*</span>
                     </Label>
-                    <Input
-                      id="job"
-                      type="text"
-                      placeholder="Fonction"
-                      {...register("job")}
-                      error={!!errors.job}
-                      hint={errors.job?.message}
-                    />
+                    <div className="relative">
+                      <Controller
+                        name="job"
+                        control={control}
+                        render={({ field }) => (
+                          <select
+                            id="job"
+                            {...field}
+                            className={`h-11 w-full appearance-none rounded-lg border border-gray-300 px-4 py-2.5 pr-11 text-sm shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 ${
+                              field.value
+                                ? "text-gray-800 dark:text-white/90"
+                                : "text-gray-400 dark:text-gray-400"
+                            } ${errors.job ? "border-error-500 focus:ring-error-500/10 dark:border-error-500" : ""}`}
+                          >
+                            <option value="" disabled className="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
+                              Sélectionner une fonction
+                            </option>
+                            {jobOptions.map((option) => (
+                              <option
+                                key={option.value}
+                                value={option.value}
+                                className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                              >
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      />
+                      <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
+                        <ChevronDownIcon />
+                      </span>
+                    </div>
+                    {errors.job && (
+                      <p className="mt-1.5 text-xs text-error-500">
+                        {errors.job.message}
+                      </p>
+                    )}
                   </div>
 
                   {/* Champs Nom et Prénom */}
@@ -182,7 +227,11 @@ export default function CreateOperatorForm() {
                         id="lastname"
                         type="text"
                         placeholder="Nom"
-                        {...register("lastname")}
+                        {...(() => {
+                          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                          const { ref, onChange, onBlur, min, max, ...rest } = register("lastname");
+                          return { onChange, onBlur, ref, ...rest };
+                        })()}
                         error={!!errors.lastname}
                         hint={errors.lastname?.message}
                       />
@@ -195,7 +244,11 @@ export default function CreateOperatorForm() {
                         id="firstname"
                         type="text"
                         placeholder="Prénom"
-                        {...register("firstname")}
+                        {...(() => {
+                          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                          const { ref, onChange, onBlur, min, max, ...rest } = register("firstname");
+                          return { onChange, onBlur, ref, ...rest };
+                        })()}
                         error={!!errors.firstname}
                         hint={errors.firstname?.message}
                       />
@@ -211,7 +264,11 @@ export default function CreateOperatorForm() {
                       id="phone"
                       type="tel"
                       placeholder="Téléphone"
-                      {...register("phone")}
+                      {...(() => {
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        const { ref, onChange, onBlur, min, max, ...rest } = register("phone");
+                        return { onChange, onBlur, ref, ...rest };
+                      })()}
                       error={!!errors.phone}
                       hint={errors.phone?.message}
                     />
@@ -226,7 +283,11 @@ export default function CreateOperatorForm() {
                       id="email.first"
                       type="email"
                       placeholder="Email"
-                      {...register("email.first")}
+                      {...(() => {
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        const { ref, onChange, onBlur, min, max, ...rest } = register("email.first");
+                        return { onChange, onBlur, ref, ...rest };
+                      })()}
                       error={!!errors.email?.first}
                       hint={errors.email?.first?.message}
                     />
@@ -240,7 +301,11 @@ export default function CreateOperatorForm() {
                       id="email.second"
                       type="email"
                       placeholder="Confirmation Email"
-                      {...register("email.second")}
+                      {...(() => {
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        const { ref, onChange, onBlur, min, max, ...rest } = register("email.second");
+                        return { onChange, onBlur, ref, ...rest };
+                      })()}
                       error={!!errors.email?.second}
                       hint={errors.email?.second?.message}
                     />
@@ -277,4 +342,3 @@ export default function CreateOperatorForm() {
     </div>
   );
 }
-
