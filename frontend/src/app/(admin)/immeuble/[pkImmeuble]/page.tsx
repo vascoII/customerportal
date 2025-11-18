@@ -19,6 +19,7 @@ export default function ImmeubleDetailsPage({
     <div className="grid grid-cols-12 gap-4 md:gap-6">
       <div className="col-span-12 space-y-6 xl:col-span-7">
         <ImmeubleMainCard pkImmeuble={params.pkImmeuble} />
+        <ImmeubleMetrics pkImmeuble={params.pkImmeuble} />
       </div>
 
       <div className="col-span-12 xl:col-span-5">
@@ -26,19 +27,20 @@ export default function ImmeubleDetailsPage({
       </div>
 
       <div className="col-span-12 space-y-6 xl:col-span-7">
-        <ImmeubleRelevesCard pkImmeuble={params.pkImmeuble} />
+        
       </div>
 
       <div className="col-span-12 xl:col-span-7">
-        <ImmeubleMetrics pkImmeuble={params.pkImmeuble} />
+        
       </div>
 
       <div className="col-span-12 space-y-6 xl:col-span-7">
         <ImmeubleReleves pkImmeuble={params.pkImmeuble} />
+        
       </div>
 
       <div className="col-span-12 xl:col-span-5">
-        
+        <ImmeubleRelevesCard pkImmeuble={params.pkImmeuble} />
       </div>
 
       <div className="col-span-12 xl:col-span-7">

@@ -1,7 +1,40 @@
 "use client";
 import React, { useMemo, useState, useEffect, useCallback } from "react";
-import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+import dynamic from "next/dynamic";
+import { Icon } from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { useImmeubles } from "@/lib/hooks/useImmeubles";
+
+// Fix for default marker icons in Next.js (SSR issue)
+if (typeof window !== "undefined") {
+  delete (Icon.Default.prototype as { _getIconUrl?: unknown })._getIconUrl;
+  Icon.Default.mergeOptions({
+    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+    iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  });
+}
+
+// Dynamically import MapContainer to avoid SSR issues
+const MapContainer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.MapContainer),
+  { ssr: false }
+);
+
+const TileLayer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+
+const Marker = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  { ssr: false }
+);
+
+const Popup = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Popup),
+  { ssr: false }
+);
 
 interface ImmeubleCardProps {
   pkImmeuble: string;
@@ -11,31 +44,22 @@ interface ImmeubleCardProps {
 const FALLBACK_ADDRESS = "378 Avenue de la Division Leclerc, 92290 Châtenay-Malabry, France";
 
 // Configuration de la carte
-const mapContainerStyle = {
-  width: "100%",
-  height: "300px",
-};
-
-const defaultCenter = {
-  lat: 48.8566, // Paris par défaut
-  lng: 2.3522,
-};
-
+const defaultCenter: [number, number] = [48.8566, 2.3522]; // Paris par défaut [lat, lng]
 const defaultZoom = 15;
+
+// Interface pour les coordonnées Nominatim
+interface NominatimResult {
+  lat: string;
+  lon: string;
+  display_name: string;
+}
 
 export default function ImmeubleCard({ pkImmeuble }: ImmeubleCardProps) {
   const { getImmeubleQuery } = useImmeubles();
   const { data: immeubleData, isLoading: isImmeubleLoading } = getImmeubleQuery(pkImmeuble);
-  const [mapCenter, setMapCenter] = useState(defaultCenter);
+  const [mapCenter, setMapCenter] = useState<[number, number]>(defaultCenter);
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [geocodingError, setGeocodingError] = useState(false);
-
-  const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-  
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: googleMapsApiKey || "",
-    libraries: ["places"],
-  });
 
   // Extract immeuble information from API response
   const immeubleInfo = useMemo(() => {
@@ -66,27 +90,38 @@ export default function ImmeubleCard({ pkImmeuble }: ImmeubleCardProps) {
     return parts.length > 0 ? parts.join(" ") : null;
   }, [immeubleInfo]);
 
-  // Geocode address using Google Geocoding API
+  // Geocode address using Nominatim (OpenStreetMap)
   const geocodeAddress = useCallback(async (address: string, useFallback = false) => {
-    if (!isLoaded || !window.google?.maps?.Geocoder) {
-      return;
-    }
-
     setIsGeocoding(true);
     if (useFallback) {
       setGeocodingError(true);
     }
 
     try {
-      const geocoder = new window.google.maps.Geocoder();
-      const result = await geocoder.geocode({ address });
+      // Respect Nominatim usage policy: max 1 request per second
+      // Add a small delay to avoid rate limiting
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      if (result.results && result.results.length > 0) {
-        const location = result.results[0].geometry.location;
-        setMapCenter({
-          lat: location.lat(),
-          lng: location.lng(),
-        });
+      const encodedAddress = encodeURIComponent(address);
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}&limit=1`,
+        {
+          headers: {
+            "User-Agent": "Techem Customer Portal", // Required by Nominatim
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const results: NominatimResult[] = await response.json();
+
+      if (results && results.length > 0) {
+        const location = results[0];
+        setMapCenter([parseFloat(location.lat), parseFloat(location.lon)]);
+        setGeocodingError(false);
       } else {
         // Address not found, use fallback
         if (!useFallback) {
@@ -104,15 +139,21 @@ export default function ImmeubleCard({ pkImmeuble }: ImmeubleCardProps) {
     } finally {
       setIsGeocoding(false);
     }
-  }, [isLoaded]);
+  }, []);
 
   useEffect(() => {
-    if (isImmeubleLoading || !fullAddress || !isLoaded) {
+    if (isImmeubleLoading) {
       return;
     }
 
-    geocodeAddress(fullAddress);
-  }, [fullAddress, isImmeubleLoading, isLoaded, geocodeAddress]);
+    // If no address is available, use fallback address directly
+    const addressToGeocode = fullAddress || FALLBACK_ADDRESS;
+    if (!fullAddress) {
+      setGeocodingError(true);
+    }
+
+    geocodeAddress(addressToGeocode);
+  }, [fullAddress, isImmeubleLoading, geocodeAddress]);
 
   if (isImmeubleLoading) {
     return (
@@ -142,59 +183,43 @@ export default function ImmeubleCard({ pkImmeuble }: ImmeubleCardProps) {
         </h3>
       </div>
 
-      {/* Google Map */}
-      {googleMapsApiKey && (
-        <div className="mb-6 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800">
-          {loadError && (
-            <div className="w-full h-[300px] flex items-center justify-center bg-red-50 dark:bg-red-900/20">
-              <p className="text-sm text-red-600 dark:text-red-400">
-                Erreur lors du chargement de Google Maps
-              </p>
-            </div>
-          )}
-          {!isLoaded && !loadError && (
-            <div className="w-full h-[300px] flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Chargement de la carte...
-              </p>
-            </div>
-          )}
-          {isLoaded && !loadError && (
-            <>
-              {isGeocoding && (
-                <div className="w-full h-[300px] flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Recherche de l&apos;adresse...
-                  </p>
-                </div>
-              )}
-              {!isGeocoding && (
-                <GoogleMap
-                  mapContainerStyle={mapContainerStyle}
-                  center={mapCenter}
-                  zoom={defaultZoom}
-                  options={{
-                    disableDefaultUI: false,
-                    zoomControl: true,
-                    streetViewControl: false,
-                    mapTypeControl: false,
-                    fullscreenControl: true,
-                  }}
-                >
-                  <Marker position={mapCenter} />
-                </GoogleMap>
-              )}
-              {geocodingError && (
-                <div className="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/20 border-t border-yellow-200 dark:border-yellow-800">
-                  <p className="text-xs text-yellow-800 dark:text-yellow-200">
-                    Adresse non trouvée. Affichage de l&apos;adresse de secours.
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
+      {/* OpenStreetMap with Leaflet */}
+      <div className="mb-6 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800">
+        {isGeocoding && (
+          <div className="w-full h-[300px] flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Recherche de l&apos;adresse...
+            </p>
+          </div>
+        )}
+        {!isGeocoding && (
+          <div className="w-full h-[300px]">
+            <MapContainer
+              center={mapCenter}
+              zoom={defaultZoom}
+              style={{ height: "100%", width: "100%" }}
+              scrollWheelZoom={true}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={mapCenter}>
+                <Popup>
+                  {fullAddress || "Localisation"}
+                </Popup>
+              </Marker>
+            </MapContainer>
+          </div>
+        )}
+        {geocodingError && (
+          <div className="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/20 border-t border-yellow-200 dark:border-yellow-800">
+            <p className="text-xs text-yellow-800 dark:text-yellow-200">
+              Adresse non trouvée. Affichage de l&apos;adresse de secours.
+            </p>
+          </div>
+        )}
+      </div>
 
       <div className="space-y-4">
         <div className="space-y-2">
