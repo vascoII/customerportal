@@ -1,11 +1,31 @@
 import React from 'react';
-import FuiteIcon from './icons_svg/fuite.svg';
 
-export default function StatusIconsFuite({ size = 32, color = 'currentColor' }) {
-  const style = { width: size, height: size, color };
+interface StatusIconsFuiteProps {
+  size?: number;
+  className?: string;
+  color?: string;
+}
+
+export default function StatusIconsFuite({ 
+  size = 24, 
+  className = '', 
+  color = 'currentColor' 
+}: StatusIconsFuiteProps) {
   return (
-    <div style={{ display: 'flex', gap: '1rem' }}>
-      <FuiteIcon style={style} />
-    </div>
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke={color} 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+      width={size}
+      height={size}
+      className={className}
+    >
+      <path d="M12 2C12 2 8 8 8 12a4 4 0 0 0 8 0c0-4-4-10-4-10z"/>
+      <path d="M12 22a6 6 0 0 0 6-6"/>
+    </svg>
   );
 }

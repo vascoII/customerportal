@@ -1,9 +1,11 @@
 "use client";
 import React, { useMemo } from "react";
 import Link from "next/link";
-
-import { BoxIconLine, GroupIcon } from "@/icons";
 import { useParc } from "@/lib/hooks/useParc";
+import StatusIconsAlerte from '@/components/techem/images/StatusIconsAlerte';
+import StatusIconsAnomalie from '@/components/techem/images/StatusIconsAnomalie';
+import StatusIconsDysfonctionnement from '@/components/techem/images/StatusIconsDysfonctionnement';
+import StatusIconsFuite from '@/components/techem/images/StatusIconsFuite';
 
 /**
  * Component displaying 4 parc metrics side by side:
@@ -74,13 +76,13 @@ export const ParcMetrics = () => {
       {/* Fuites - Metric Item Start */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-          <GroupIcon className="text-gray-800 size-6 dark:text-white/90" />
+          <StatusIconsFuite size={24} className="text-gray-800 dark:text-white/90" />
         </div>
 
         <div className="flex items-end justify-between mt-5">
           <div>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              Nombre de fuites
+              Fuites
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
               {formatNumber(metrics.fuites)}
@@ -95,7 +97,7 @@ export const ParcMetrics = () => {
       <Link href="/immeuble?dysfonctionnements=1">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-          <BoxIconLine className="text-gray-800 size-6 dark:text-white/90" />
+          <StatusIconsDysfonctionnement size={24} className="text-gray-800 dark:text-white/90" />
         </div>
         <div className="flex items-end justify-between mt-5">
           <div>
@@ -115,13 +117,13 @@ export const ParcMetrics = () => {
       <Link href="/immeuble?anomalies=1">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-          <GroupIcon className="text-gray-800 size-6 dark:text-white/90" />
+          <StatusIconsAnomalie size={24} className="text-gray-800 dark:text-white/90" />
         </div>
 
         <div className="flex items-end justify-between mt-5">
           <div>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              Nombre d&apos;anomalies de consommation
+              Anomalies de consommation
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
               {formatNumber(metrics.anomalies)}
@@ -136,7 +138,7 @@ export const ParcMetrics = () => {
       <Link href="/immeuble?depannages=1">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-          <BoxIconLine className="text-gray-800 size-6 dark:text-white/90" />
+          <StatusIconsAlerte size={24} className="text-gray-800 dark:text-white/90" />
         </div>
         <div className="flex items-end justify-between mt-5">
           <div>

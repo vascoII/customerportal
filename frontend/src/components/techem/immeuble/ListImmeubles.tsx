@@ -13,12 +13,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Badge from "@/components/ui/badge/Badge";
 import { useImmeubles } from "@/lib/hooks/useImmeubles";
 import type { Building } from "@/lib/types/api";
-import { GiBrainLeak  } from "react-icons/gi";
-import { FaScrewdriverWrench } from "react-icons/fa6";
-import { MdOutlineTroubleshoot } from "react-icons/md";
+
 
 export default function ListImmeubles() {
   const router = useRouter();
@@ -74,12 +71,6 @@ export default function ListImmeubles() {
     };
   };
 
-  // Check if building has any issues
-  const hasIssues = (building: Building): boolean => {
-    const issues = getBuildingIssues(building);
-    return issues.nbAnomalies > 0 || issues.nbFuites > 0 || 
-           issues.nbDepannages > 0 || issues.nbDysfonctionnements > 0;
-  };
 
   // Get building reference
   const getBuildingRef = (building: Building): string => {
@@ -256,7 +247,6 @@ export default function ListImmeubles() {
                 const nbCompteursRepart = getNbCompteursRepart(immeuble);
                 const nbCompteursCET = getNbCompteursCET(immeuble);
                 const issues = getBuildingIssues(immeuble);
-                const hasAnyIssues = hasIssues(immeuble);
 
                 const handleRowClick = (e: React.MouseEvent) => {
                   // Don't navigate if clicking on a link or button
@@ -331,52 +321,103 @@ export default function ListImmeubles() {
                       {formatNumber(nbCompteursCET)}
                     </TableCell>
                     <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                      {!hasAnyIssues ? (
-                        <Badge size="sm" color="success">
-                          OK
-                        </Badge>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          {issues.nbFuites > 0 && (
-                            <Link 
-                              href={`/immeuble/${buildingNumero}fuites`}
-                              className="text-error-500 hover:text-error-600 dark:text-error-400 dark:hover:text-error-300 transition-colors"
-                              title={`${issues.nbFuites} fuite${issues.nbFuites > 1 ? 's' : ''}`}
-                            >
-                              <GiBrainLeak />
-                            </Link>
-                          )}
-                          {issues.nbAnomalies > 0 && (
-                            <Link 
-                              href={`/immeuble/${buildingNumero}anomalies`}
-                              className="text-warning-500 hover:text-warning-600 dark:text-warning-400 dark:hover:text-warning-300 transition-colors"
-                              title={`${issues.nbAnomalies} anomalie${issues.nbAnomalies > 1 ? 's' : ''}`}
-                            >
-                              <MdOutlineTroubleshoot />
-                            </Link>
-                          )}
-                          {issues.nbDysfonctionnements > 0 && (
-                            <Link 
-                              href={`/immeuble/${buildingNumero}dysfonctionnements`}
-                              className="text-error-500 hover:text-error-600 dark:text-error-400 dark:hover:text-error-300 transition-colors"
-                              title={`${issues.nbDysfonctionnements} dysfonctionnement${issues.nbDysfonctionnements > 1 ? 's' : ''}`}
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5" />
-                              </svg>
-                            </Link>
-                          )}
-                          {issues.nbDepannages > 0 && (
-                            <Link 
-                              href={`/immeuble/${buildingNumero}depannages`}
-                              className="text-warning-500 hover:text-warning-600 dark:text-warning-400 dark:hover:text-warning-300 transition-colors"
-                              title={`${issues.nbDepannages} dépannage${issues.nbDepannages > 1 ? 's' : ''}`}
-                            >
-                              <FaScrewdriverWrench />
-                            </Link>
-                          )}
-                        </div>
-                      )}
+                      <div className="grid grid-cols-2 gap-2 w-20">
+                        {/* Row 1 - Col 1: Dysfonctionnements (Bell) */}
+                        {issues.nbDysfonctionnements > 0 ? (
+                          <Link 
+                            href={`/immeuble/${buildingNumero}/dysfonctionnements`}
+                            className="flex items-center justify-center p-1 hover:opacity-80 transition-opacity cursor-pointer"
+                            title={`${issues.nbDysfonctionnements} dysfonctionnement${issues.nbDysfonctionnements > 1 ? 's' : ''}`}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <StatusIconsDysfonctionnement 
+                              size={20} 
+                              className="text-error-500 dark:text-error-400" 
+                              color="currentColor"
+                            />
+                          </Link>
+                        ) : (
+                          <div className="flex items-center justify-center p-1">
+                            <StatusIconsDysfonctionnement 
+                              size={20} 
+                              className="text-gray-400 dark:text-gray-500" 
+                              color="currentColor"
+                            />
+                          </div>
+                        )}
+
+                        {/* Row 1 - Col 2: Dépannages (Wrench) */}
+                        {issues.nbDepannages > 0 ? (
+                          <Link 
+                            href={`/immeuble/${buildingNumero}/depannages`}
+                            className="flex items-center justify-center p-1 hover:opacity-80 transition-opacity cursor-pointer"
+                            title={`${issues.nbDepannages} dépannage${issues.nbDepannages > 1 ? 's' : ''}`}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <StatusIconsAlerte 
+                              size={20} 
+                              className="text-warning-500 dark:text-warning-400" 
+                              color="currentColor"
+                            />
+                          </Link>
+                        ) : (
+                          <div className="flex items-center justify-center p-1">
+                            <StatusIconsAlerte 
+                              size={20} 
+                              className="text-gray-400 dark:text-gray-500" 
+                              color="currentColor"
+                            />
+                          </div>
+                        )}
+
+                        {/* Row 2 - Col 1: Fuites (Teardrop) */}
+                        {issues.nbFuites > 0 ? (
+                          <Link 
+                            href={`/immeuble/${buildingNumero}/fuites`}
+                            className="flex items-center justify-center p-1 hover:opacity-80 transition-opacity cursor-pointer"
+                            title={`${issues.nbFuites} fuite${issues.nbFuites > 1 ? 's' : ''}`}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <StatusIconsFuite 
+                              size={20} 
+                              className="text-blue-500 dark:text-blue-400" 
+                              color="currentColor"
+                            />
+                          </Link>
+                        ) : (
+                          <div className="flex items-center justify-center p-1">
+                            <StatusIconsFuite 
+                              size={20} 
+                              className="text-gray-400 dark:text-gray-500" 
+                              color="currentColor"
+                            />
+                          </div>
+                        )}
+
+                        {/* Row 2 - Col 2: Anomalies (Diamond exclamation) */}
+                        {issues.nbAnomalies > 0 ? (
+                          <Link 
+                            href={`/immeuble/${buildingNumero}/anomalies`}
+                            className="flex items-center justify-center p-1 hover:opacity-80 transition-opacity cursor-pointer"
+                            title={`${issues.nbAnomalies} anomalie${issues.nbAnomalies > 1 ? 's' : ''}`}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <StatusIconsAnomalie 
+                              size={20} 
+                              className="text-warning-500 dark:text-warning-400" 
+                              color="currentColor"
+                            />
+                          </Link>
+                        ) : (
+                          <div className="flex items-center justify-center p-1">
+                            <StatusIconsAnomalie 
+                              size={20} 
+                              className="text-gray-400 dark:text-gray-500" 
+                              color="currentColor"
+                            />
+                          </div>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 );
