@@ -1,12 +1,11 @@
 "use client";
-import React, { useEffect, useRef, useState,useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import {
   BoxCubeIcon,
-  CalenderIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
@@ -25,13 +24,14 @@ type NavItem = {
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
 
-const navItems: NavItem[] = [
+const getNavItems = (pkImmeuble?: string): NavItem[] => [
   {
     icon: <GridIcon />,
     name: "Dashboard",
     subItems: [
       { name: "Parc", path: "/parc", pro: false },
-      { name: "Immeubles", path: "/immeuble", pro: false }
+      { name: "Immeubles", path: "/immeuble", pro: false },
+      ...(pkImmeuble ? [{ name: "Immeuble", path: `/immeuble/${pkImmeuble}`, pro: false }] : [])
     ],
     
   },
@@ -102,6 +102,13 @@ const othersItems: NavItem[] = [
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
+
+  // Extract pkImmeuble from pathname if we're on an immeuble detail page
+  const immeubleMatch = pathname.match(/^\/immeuble\/([^/]+)/);
+  const pkImmeuble = immeubleMatch ? immeubleMatch[1] : undefined;
+
+  // Get dynamic nav items based on current route (memoized to avoid unnecessary re-renders)
+  const navItems = useMemo(() => getNavItems(pkImmeuble), [pkImmeuble]);
 
   const renderMenuItems = (
     navItems: NavItem[],
@@ -265,7 +272,7 @@ const AppSidebar: React.FC = () => {
     if (!submenuMatched) {
       setOpenSubmenu(null);
     }
-  }, [pathname,isActive]);
+  }, [pathname, isActive, navItems]);
 
   useEffect(() => {
     // Set the height of the submenu items when the submenu is opened
