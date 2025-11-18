@@ -81,7 +81,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
                   fill=""
                 />
               </svg>
-              Edit profile
+              Mon compte
             </DropdownItem>
           </li>
           <li>
