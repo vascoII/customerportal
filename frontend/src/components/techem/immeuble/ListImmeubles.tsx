@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import StatusIconsAlerte from '@/components/techem/images/StatusIconsAlerte';
 import StatusIconsAnomalie from '@/components/techem/images/StatusIconsAnomalie';
@@ -22,9 +22,48 @@ import EquipementIconsCompteur from "@/components/techem/images/EquipementIconsC
 
 export default function ListImmeubles() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { filterImmeubles, isFiltering } = useImmeubles();
   const [immeubles, setImmeubles] = useState<Building[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Get filter from URL parameters
+  const filterType = useMemo(() => {
+    if (searchParams.get('fuites') === '1') return 'fuites';
+    if (searchParams.get('dysfonctionnements') === '1') return 'dysfonctionnements';
+    if (searchParams.get('anomalies') === '1') return 'anomalies';
+    if (searchParams.get('depannages') === '1') return 'depannages';
+    return null;
+  }, [searchParams]);
+
+  // Filter immeubles based on URL parameter
+  const filteredImmeubles = useMemo(() => {
+    if (!filterType) {
+      return immeubles;
+    }
+
+    return immeubles.filter((building) => {
+      const issues = {
+        nbAnomalies: building.NbAnomalies ?? building.nbAnomalies ?? 0,
+        nbFuites: building.NbFuites ?? building.nbFuites ?? 0,
+        nbDepannages: building.NbDepannages ?? building.nbDepannages ?? 0,
+        nbDysfonctionnements: building.NbDysfonctionnements ?? building.nbDysfonctionnements ?? 0,
+      };
+
+      switch (filterType) {
+        case 'fuites':
+          return issues.nbFuites > 0;
+        case 'dysfonctionnements':
+          return issues.nbDysfonctionnements > 0;
+        case 'anomalies':
+          return issues.nbAnomalies > 0;
+        case 'depannages':
+          return issues.nbDepannages > 0;
+        default:
+          return true;
+      }
+    });
+  }, [immeubles, filterType]);
 
   useEffect(() => {
     // Load all buildings on component mount
@@ -137,9 +176,17 @@ export default function ListImmeubles() {
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
             Liste des Immeubles
           </h3>
-          {immeubles.length > 0 && (
+          {filteredImmeubles.length > 0 && (
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              {immeubles.length} immeuble{immeubles.length > 1 ? 's' : ''}
+              {filteredImmeubles.length} immeuble{filteredImmeubles.length > 1 ? 's' : ''}
+              {filterType && (
+                <span className="ml-2">
+                  ({filterType === 'fuites' && 'avec fuites'}
+                  {filterType === 'dysfonctionnements' && 'avec dysfonctionnements'}
+                  {filterType === 'anomalies' && 'avec anomalies'}
+                  {filterType === 'depannages' && 'avec dépannages'})
+                </span>
+              )}
             </p>
           )}
         </div>
@@ -186,10 +233,13 @@ export default function ListImmeubles() {
         </div>
       </div>
       <div className="max-w-full overflow-x-auto">
-        {immeubles.length === 0 ? (
+        {filteredImmeubles.length === 0 ? (
           <div className="flex items-center justify-center min-h-[200px]">
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Aucun immeuble trouvé
+              {filterType 
+                ? `Aucun immeuble avec ${filterType === 'fuites' ? 'des fuites' : filterType === 'dysfonctionnements' ? 'des dysfonctionnements' : filterType === 'anomalies' ? 'des anomalies' : 'des dépannages'} trouvé`
+                : 'Aucun immeuble trouvé'
+              }
             </p>
           </div>
         ) : (
@@ -250,7 +300,7 @@ export default function ListImmeubles() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-              {immeubles.map((immeuble) => {
+              {filteredImmeubles.map((immeuble) => {
                 const pkImmeuble = immeuble.PkImmeuble ?? immeuble.pkImmeuble ?? "";
                 const buildingRef = getBuildingRef(immeuble);
                 const buildingNumero = getBuildingNumero(immeuble);
