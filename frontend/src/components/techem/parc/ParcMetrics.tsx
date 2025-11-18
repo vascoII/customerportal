@@ -1,8 +1,8 @@
 "use client";
 import React, { useMemo } from "react";
 import Link from "next/link";
-import Badge from "@/components/ui/badge/Badge";
-import { ArrowDownIcon, ArrowUpIcon, BoxIconLine, GroupIcon } from "@/icons";
+
+import { BoxIconLine, GroupIcon } from "@/icons";
 import { useParc } from "@/lib/hooks/useParc";
 
 /**
@@ -46,24 +46,6 @@ export const ParcMetrics = () => {
   // Format number with thousands separator
   const formatNumber = (num: number): string => {
     return num.toLocaleString('fr-FR');
-  };
-
-  // Get badge color and icon based on degres value
-  const getBadgeProps = (degres: number) => {
-    if (degres > 0) {
-      return {
-        color: "success" as const,
-        icon: <ArrowUpIcon />,
-        value: `+${degres}%`,
-      };
-    } else if (degres < 0) {
-      return {
-        color: "error" as const,
-        icon: <ArrowDownIcon className="text-error-500" />,
-        value: `${degres}%`,
-      };
-    }
-    return null; // No badge if degres is 0 or -1
   };
 
   // Show loading state
