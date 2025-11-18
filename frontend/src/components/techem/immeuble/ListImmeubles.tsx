@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/table";
 import { useImmeubles } from "@/lib/hooks/useImmeubles";
 import type { Building } from "@/lib/types/api";
+import EquipementIconsEau from "@/components/techem/images/EquipementIconsEau";
+import EquipementIconsRepartiteur from "@/components/techem/images/EquipementIconsRepartiteur";
+import EquipementIconsCompteur from "@/components/techem/images/EquipementIconsCompteur";
 
 
 export default function ListImmeubles() {
@@ -204,25 +207,37 @@ export default function ListImmeubles() {
                 isHeader
                 className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                Eau froide
+                <div className="flex items-center gap-2">
+                  <EquipementIconsEau size={16} className="text-gray-400 dark:text-gray-500" />
+                  <span>Eau froide</span>
+                </div>
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                Eau chaude
+                <div className="flex items-center gap-2">
+                  <EquipementIconsEau size={16} className="text-gray-400 dark:text-gray-500" />
+                  <span>Eau chaude</span>
+                </div>
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                Répartiteurs
+                <div className="flex items-center gap-2">
+                  <EquipementIconsRepartiteur size={16} className="text-gray-400 dark:text-gray-500" />
+                  <span>Répartiteurs</span>
+                </div>
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                Compteurs d&apos;énergie
+                <div className="flex items-center gap-2">
+                  <EquipementIconsCompteur size={16} className="text-gray-400 dark:text-gray-500" />
+                  <span>Compteurs d&apos;énergie</span>
+                </div>
               </TableCell>
               <TableCell
                 isHeader
