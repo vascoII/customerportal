@@ -1,0 +1,659 @@
+{
+   "immeuble":{
+      "Erreur":"",
+      "Info":"",
+      "Immeuble":{
+         "PkImmeuble":4423,
+         "Nom":"Immeuble Demo 70",
+         "Numero":"4423",
+         "Ref":"5625",
+         "Adresse1":"5 rue du dtjctud",
+         "Adresse2":"",
+         "Adresse3":"",
+         "Cp":"75001",
+         "Ville":"Demoville",
+         "HasTelereleve":false,
+         "FkClientTop":37718,
+         "Actif":true,
+         "DateActivationClient":"0001-01-01T00:00:00",
+         "DateActivationOccupant":"2025-09-14T00:00:00",
+         "HasNoteOccupant":true,
+         "HasDecompteOccupant":true,
+         "HasFactures":true,
+         "HasChantiers":true
+      },
+      "NbLogements":52,
+      "NbAppareils":202,
+      "NbDepannages":0,
+      "NbDepannagesTotal":4,
+      "DegresDepannages":-1,
+      "NbDysfonctionnements":0,
+      "DegresDysfonctionnements":-1,
+      "HasTelereleve":false,
+      "NbCompteursEC":100,
+      "NbCompteursEF":102,
+      "NbCompteursRepart":0,
+      "NbCompteursCET":0,
+      "NbCompteursCapteur":0,
+      "NbCompteursElect":-1,
+      "NbCompteursGaz":-1,
+      "NbCompteursTelereveleTotal":-1,
+      "NbCompteursTelereveleOK":-1,
+      "HasTransfertFichiers":false,
+      "ImmeubleEC":{
+         "NbCompteursARelever":82,
+         "NbCompteursReleves":70,
+         "NbFuites":12,
+         "DegresFuites":-1,
+         "NbAnomalies":0,
+         "DegresAnomalies":-1,
+         "Chantier":{
+            "PkChantier":-1,
+            "PkDevis":-1,
+            "PkImmeuble":-1,
+            "DateEntreeChantier":"0001-01-01T00:00:00",
+            "NbCompteursPoses":-1,
+            "NbCompteursCommandes":-1
+         },
+         "TopConsos":{
+            "Erreur":"",
+            "Info":"",
+            "DateReleve":"2016-01-05T00:00:00",
+            "consosGrandes":{
+               "conso":[
+                  {
+                     "PkLogement":1036244,
+                     "NomOcc":"M Mme Onois_1643574",
+                     "RefOcc":"LOT 41",
+                     "Fluide":1,
+                     "Conso":"1514"
+                  },
+                  {
+                     "PkLogement":1036238,
+                     "NomOcc":"M Mme Onois_1643568",
+                     "RefOcc":"LOT 35",
+                     "Fluide":1,
+                     "Conso":"1413"
+                  },
+                  {
+                     "PkLogement":1036235,
+                     "NomOcc":"M Mme Onois_1643565",
+                     "RefOcc":"LOT 32",
+                     "Fluide":1,
+                     "Conso":"886"
+                  },
+                  {
+                     "PkLogement":1036214,
+                     "NomOcc":"M Mme Onois_1643542",
+                     "RefOcc":"LOT 11",
+                     "Fluide":1,
+                     "Conso":"837"
+                  },
+                  {
+                     "PkLogement":1036247,
+                     "NomOcc":"M Mme Onois_1643579",
+                     "RefOcc":"LOT 44",
+                     "Fluide":1,
+                     "Conso":"820"
+                  }
+               ]
+            },
+            "consosPetites":{
+               "conso":[
+                  {
+                     "PkLogement":1036246,
+                     "NomOcc":"M Mme Onois_1643578",
+                     "RefOcc":"LOT 43",
+                     "Fluide":1,
+                     "Conso":"0"
+                  },
+                  {
+                     "PkLogement":1036254,
+                     "NomOcc":"M Mme Onois_2104161",
+                     "RefOcc":"LOT 46",
+                     "Fluide":1,
+                     "Conso":"0"
+                  },
+                  {
+                     "PkLogement":1036219,
+                     "NomOcc":"M Mme Onois_1643547",
+                     "RefOcc":"LOT 16",
+                     "Fluide":1,
+                     "Conso":"9"
+                  },
+                  {
+                     "PkLogement":1036221,
+                     "NomOcc":"M Mme Onois_2307855",
+                     "RefOcc":"LOT 18",
+                     "Fluide":1,
+                     "Conso":"28"
+                  },
+                  {
+                     "PkLogement":1036231,
+                     "NomOcc":"M Mme Onois_1643560",
+                     "RefOcc":"LOT 28",
+                     "Fluide":1,
+                     "Conso":"31"
+                  }
+               ]
+            }
+         },
+         "SerieConsos1":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":"2025"
+         },
+         "SerieConsos2":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":"2024"
+         },
+         "ListeReleves":{
+            
+         }
+      },
+      "ImmeubleEF":{
+         "NbCompteursARelever":82,
+         "NbCompteursReleves":70,
+         "NbFuites":12,
+         "DegresFuites":-1,
+         "NbAnomalies":0,
+         "DegresAnomalies":-1,
+         "Chantier":{
+            "PkChantier":-1,
+            "PkDevis":-1,
+            "PkImmeuble":-1,
+            "DateEntreeChantier":"0001-01-01T00:00:00",
+            "NbCompteursPoses":-1,
+            "NbCompteursCommandes":-1
+         },
+         "TopConsos":{
+            "Erreur":"",
+            "Info":"",
+            "DateReleve":"2016-01-05T00:00:00",
+            "consosGrandes":{
+               "conso":[
+                  {
+                     "PkLogement":1036205,
+                     "NomOcc":"M Mme Onois_1643533",
+                     "RefOcc":"LOT 148",
+                     "Fluide":2,
+                     "Conso":"3430"
+                  },
+                  {
+                     "PkLogement":1036235,
+                     "NomOcc":"M Mme Onois_1643565",
+                     "RefOcc":"LOT 32",
+                     "Fluide":2,
+                     "Conso":"3128"
+                  },
+                  {
+                     "PkLogement":1036281,
+                     "NomOcc":"M Mme Onois_1643613",
+                     "RefOcc":"LOT 150",
+                     "Fluide":2,
+                     "Conso":"2124"
+                  },
+                  {
+                     "PkLogement":1036211,
+                     "NomOcc":"M Mme Onois_1764184",
+                     "RefOcc":"LOT 8",
+                     "Fluide":2,
+                     "Conso":"1905"
+                  },
+                  {
+                     "PkLogement":1036214,
+                     "NomOcc":"M Mme Onois_1643542",
+                     "RefOcc":"LOT 11",
+                     "Fluide":2,
+                     "Conso":"1574"
+                  }
+               ]
+            },
+            "consosPetites":{
+               "conso":[
+                  {
+                     "PkLogement":1036254,
+                     "NomOcc":"M Mme Onois_2104161",
+                     "RefOcc":"LOT 46",
+                     "Fluide":2,
+                     "Conso":"0"
+                  },
+                  {
+                     "PkLogement":1036246,
+                     "NomOcc":"M Mme Onois_1643578",
+                     "RefOcc":"LOT 43",
+                     "Fluide":2,
+                     "Conso":"0"
+                  },
+                  {
+                     "PkLogement":1036231,
+                     "NomOcc":"M Mme Onois_1643560",
+                     "RefOcc":"LOT 28",
+                     "Fluide":2,
+                     "Conso":"14"
+                  },
+                  {
+                     "PkLogement":1036216,
+                     "NomOcc":"M Mme Onois_1643544",
+                     "RefOcc":"LOT 13",
+                     "Fluide":2,
+                     "Conso":"32"
+                  },
+                  {
+                     "PkLogement":1036216,
+                     "NomOcc":"M Mme Onois_1643544",
+                     "RefOcc":"LOT 13",
+                     "Fluide":2,
+                     "Conso":"33"
+                  }
+               ]
+            }
+         },
+         "SerieConsos1":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":"2025"
+         },
+         "SerieConsos2":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":"2024"
+         },
+         "ListeReleves":{
+            
+         }
+      },
+      "ImmeubleRepart":{
+         "NbCompteursARelever":-1,
+         "NbCompteursReleves":-1,
+         "Chantier":{
+            "PkChantier":-1,
+            "PkDevis":-1,
+            "PkImmeuble":-1,
+            "DateEntreeChantier":"0001-01-01T00:00:00",
+            "NbCompteursPoses":-1,
+            "NbCompteursCommandes":-1
+         },
+         "TopConsos":{
+            "Erreur":"",
+            "Info":"",
+            "DateReleve":"0001-01-01T00:00:00",
+            "consosGrandes":{
+               
+            },
+            "consosPetites":{
+               
+            }
+         },
+         "SerieConsos":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":""
+         },
+         "ListeReleves":{
+            
+         },
+         "Tot_URepart":"-1",
+         "Tot_TantChauff":"-1",
+         "PU_Tant":"-1",
+         "Prix_URepart":"-1",
+         "Prix_Abonn":"-1",
+         "Mont_ARepartTant":"-1",
+         "Part_RepartConsos":"-1",
+         "CT_Combust":"-1",
+         "SerieConsosTotale1":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":""
+         },
+         "SerieConsosTotale2":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":""
+         },
+         "SerieConsosDJU":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":""
+         }
+      },
+      "ImmeubleCET":{
+         "NbCompteursARelever":-1,
+         "NbCompteursReleves":-1,
+         "Chantier":{
+            "PkChantier":-1,
+            "PkDevis":-1,
+            "PkImmeuble":-1,
+            "DateEntreeChantier":"0001-01-01T00:00:00",
+            "NbCompteursPoses":-1,
+            "NbCompteursCommandes":-1
+         },
+         "TopConsos":{
+            "Erreur":"",
+            "Info":"",
+            "DateReleve":"0001-01-01T00:00:00",
+            "consosGrandes":{
+               
+            },
+            "consosPetites":{
+               
+            }
+         },
+         "SerieConsos":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":""
+         },
+         "ListeReleves":{
+            
+         },
+         "Tot_URepart":"-1",
+         "Tot_TantChauff":"-1",
+         "PU_Tant":"-1",
+         "Prix_URepart":"-1",
+         "Prix_Abonn":"-1",
+         "Mont_ARepartTant":"-1",
+         "Part_RepartConsos":"-1",
+         "CT_Combust":"-1",
+         "SerieConsosTotale1":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":""
+         },
+         "SerieConsosTotale2":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":""
+         },
+         "SerieConsosDJU":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":""
+         }
+      },
+      "ImmeubleCapteur":{
+         "IndexRecapTemperature":{
+            "Date":"0001-01-01T00:00:00",
+            "Moy":"-1",
+            "Max":"-1",
+            "Min":"-1"
+         },
+         "IndexRecapHumidite":{
+            "Date":"0001-01-01T00:00:00",
+            "Moy":"-1",
+            "Max":"-1",
+            "Min":"-1"
+         },
+         "SerieConsosTemperature":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":""
+         },
+         "SerieConsosHumidite":{
+            "Erreur":"",
+            "Info":"",
+            "DefaultIntervalle":365,
+            "ValeursXYL":"",
+            "Annee":""
+         }
+      },
+      "ImmeubleElect":{
+         "NbCompteursARelever":-1,
+         "NbCompteursReleves":-1,
+         "Chantier":{
+            "PkChantier":-1,
+            "PkDevis":-1,
+            "PkImmeuble":-1,
+            "DateEntreeChantier":"0001-01-01T00:00:00",
+            "NbCompteursPoses":-1,
+            "NbCompteursCommandes":-1
+         },
+         "TopConsos":{
+            "Erreur":"",
+            "Info":"",
+            "DateReleve":"0001-01-01T00:00:00",
+            "consosGrandes":{
+               
+            },
+            "consosPetites":{
+               
+            }
+         },
+         "ListeReleves":{
+            
+         }
+      },
+      "ImmeubleGaz":{
+         "NbCompteursARelever":-1,
+         "NbCompteursReleves":-1,
+         "Chantier":{
+            "PkChantier":-1,
+            "PkDevis":-1,
+            "PkImmeuble":-1,
+            "DateEntreeChantier":"0001-01-01T00:00:00",
+            "NbCompteursPoses":-1,
+            "NbCompteursCommandes":-1
+         },
+         "TopConsos":{
+            "Erreur":"",
+            "Info":"",
+            "DateReleve":"0001-01-01T00:00:00",
+            "consosGrandes":{
+               
+            },
+            "consosPetites":{
+               
+            }
+         },
+         "ListeReleves":{
+            
+         }
+      },
+      "SerieConsosEAU":{
+         "Erreur":"",
+         "Info":"",
+         "DefaultIntervalle":365,
+         "ValeursXYL":"",
+         "Annee":""
+      },
+      "SerieConsosCompteurGeneral":{
+         "Erreur":"",
+         "Info":"",
+         "DefaultIntervalle":365,
+         "ValeursXYL":"",
+         "Annee":""
+      },
+      "SerieConsosECValues":[
+         
+      ],
+      "SerieConsosEFValues":[
+         
+      ],
+      "SerieConsosEAUValues":[
+         
+      ],
+      "SerieConsosRepartValues":[
+         
+      ],
+      "SerieConsosEnergieValues":[
+         
+      ],
+      "SerieConsosElectValues":[
+         
+      ],
+      "SerieConsosGazValues":[
+         
+      ],
+      "SerieConsosCompteurGeneralValues":[
+         
+      ],
+      "PcCompteursTelereveleOK":85.37,
+      "RatioNbDepannages":0,
+      "RatioNbDysfonctionnements":0
+   },
+   "depannages":[
+      {
+         "Logement":{
+            "PkLogement":1036206,
+            "NumBatiment":"1",
+            "AdrBatiment":"14 rue de le source",
+            "NumEscalier":"1",
+            "AdrEscalier":"17 RUE DE LORRAINE",
+            "NumEtage":"1",
+            "NumOrdre":"1",
+            "Type":"  "
+         },
+         "Occupant":{
+            "PkOccupant":1643534,
+            "Nom":"Demo",
+            "Ref":"LOT 3",
+            "DateArrivee":"2016-01-01T00:00:00",
+            "DateDepart":"2999-12-31T00:00:00"
+         },
+         "Depannage":{
+            "WorkOrderNumber":"00146041",
+            "Numero":"00146041",
+            "Statut":"Realise",
+            "StatutAbrege":"",
+            "Date":"2024-09-17T00:00:00",
+            "Motif":"1 - Compteur d'eau : 435928-4 () (EC) (..) : V\u00e9rification consommation  compteur d'eau\n2 - Compteur d'eau : 662233-4 () (EF) (..) : V\u00e9rification consommation  compteur d'eau\n3 - Compteur d'eau : 376639-4 () (EC) (..) : V\u00e9rification consommation  compteur d'eau\n4 - Compteur d'eau : 662236-4 () (EF) (..) : V\u00e9rification consommation  compteur d'eau\n",
+            "MotifAbrege":"V\u00e9rification consommation  compteur d'eau",
+            "CompteRendu":"1 - Compteur remplac\u00e9\n2 - Compteur remplac\u00e9\n3 - Compteur eau chaude fonctionne normalement\n4 - Compteur eau froide fonctionne normalement\n\nInformations techniques d\u00e9taill\u00e9es : \n> Le compteur fonctionne normalement : 435928-4 ()(EC)(WC) \u00e0 896 m3\n> Le compteur fonctionne normalement : 662233-3 ()(EF)(WC) \u00e0 1562 m3\n> Le compteur fonctionne normalement : 376639-4 ()(EC)(CU) \u00e0 315 m3\n> Remplacement de compteur r\u00e9alis\u00e9 : 662236-3 ()(EF)(CU) \u00e0 299 m3 par 40619175 ()(EF)(CU) \u00e0 0 m3"
+         }
+      },
+      {
+         "Logement":{
+            "PkLogement":1036210,
+            "NumBatiment":"1",
+            "AdrBatiment":"14 rue de le source",
+            "NumEscalier":"1",
+            "AdrEscalier":"17 RUE DE LORRAINE",
+            "NumEtage":"1",
+            "NumOrdre":"5",
+            "Type":"  "
+         },
+         "Occupant":{
+            "PkOccupant":2502558,
+            "Nom":"Demo",
+            "Ref":"LOT 7",
+            "DateArrivee":"2023-11-24T00:00:00",
+            "DateDepart":"2999-12-31T00:00:00"
+         },
+         "Depannage":{
+            "WorkOrderNumber":"00146042",
+            "Numero":"00146042",
+            "Statut":"Realise",
+            "StatutAbrege":"",
+            "Date":"2024-09-17T00:00:00",
+            "Motif":"1 - Compteur d'eau : 05PA064471 () (EC) (WC) : V\u00e9rification consommation  compteur d'eau\n2 - Compteur d'eau : 21147130 (20866928-07-95-TCH) (EC) (SB) : V\u00e9rification consommation  compteur d'eau\n3 - Compteur d'eau : 662256-3 () (EF) (WC) : V\u00e9rification consommation  compteur d'eau\n4 - Compteur d'eau : 20131525 (14955698-06-95-TCH) (EF) (SB) : V\u00e9rification consommation  compteur d'eau\n",
+            "MotifAbrege":"V\u00e9rification consommation  compteur d'eau",
+            "CompteRendu":"1 - Compteur eau chaude fonctionne normalement\n2 - Compteur mal attribu\u00e9\n3 - Compteur eau froide fonctionne normalement\n4 - Compteur mal attribu\u00e9\n\nInformations techniques d\u00e9taill\u00e9es : \n> Le compteur \u00e9tait mal attribu\u00e9 : 21147130 ()(EF)(SB) \u00e0 16 m3\n> Le compteur fonctionne normalement : 05PA064471 ()(EC)(WC) \u00e0 56 m3\n> Le compteur \u00e9tait mal attribu\u00e9 : 20131525 ()(EC)(SB) \u00e0 20 m3\n> Le compteur fonctionne normalement : 662256-3 (--)(EF)(WC) \u00e0 884 m3"
+         }
+      },
+      {
+         "Logement":{
+            "PkLogement":1036211,
+            "NumBatiment":"1",
+            "AdrBatiment":"14 rue de le source",
+            "NumEscalier":"1",
+            "AdrEscalier":"17 RUE DE LORRAINE",
+            "NumEtage":"2",
+            "NumOrdre":"1",
+            "Type":"  "
+         },
+         "Occupant":{
+            "PkOccupant":1764184,
+            "Nom":"Demo",
+            "Ref":"LOT 8",
+            "DateArrivee":"2018-01-01T00:00:00",
+            "DateDepart":"2999-12-31T00:00:00"
+         },
+         "Depannage":{
+            "WorkOrderNumber":"00146043",
+            "Numero":"00146043",
+            "Statut":"Nonrealise",
+            "StatutAbrege":"",
+            "Date":"2024-09-17T00:00:00",
+            "Motif":"1 - Compteur d'eau : 02PA517475 () (EC) (..) : V\u00e9rification consommation  compteur d'eau\n2 - Compteur d'eau : 662225-3 () (EF) (..) : V\u00e9rification consommation  compteur d'eau\n3 - Compteur d'eau : 436243-4 () (EC) (..) : V\u00e9rification consommation  compteur d'eau\n4 - Compteur d'eau : 662249-3 () (EF) (..) : V\u00e9rification consommation  compteur d'eau\n",
+            "MotifAbrege":"V\u00e9rification consommation  compteur d'eau",
+            "CompteRendu":"1 - Occupant absent\n2 - Occupant absent\n3 - Occupant absent\n4 - Occupant absent\n\nInformations techniques d\u00e9taill\u00e9es : \n> Occupant absent\n> Occupant absent\n> Occupant absent\n> Occupant absent"
+         }
+      },
+      {
+         "Logement":{
+            "PkLogement":1036239,
+            "NumBatiment":"1",
+            "AdrBatiment":"14 rue de le source",
+            "NumEscalier":"1",
+            "AdrEscalier":"17 RUE DE LORRAINE",
+            "NumEtage":"6",
+            "NumOrdre":"5",
+            "Type":"  "
+         },
+         "Occupant":{
+            "PkOccupant":2502461,
+            "Nom":"Demo",
+            "Ref":"LOT 36",
+            "DateArrivee":"2023-11-24T00:00:00",
+            "DateDepart":"2999-12-31T00:00:00"
+         },
+         "Depannage":{
+            "WorkOrderNumber":"00146045",
+            "Numero":"00146045",
+            "Statut":"Nonrealise",
+            "StatutAbrege":"",
+            "Date":"2024-09-17T00:00:00",
+            "Motif":"1 - Compteur d'eau : 384145-4 () (EC) (PL - PLACARD - PENDERIE) : V\u00e9rification consommation  compteur d'eau\n",
+            "MotifAbrege":"V\u00e9rification consommation  compteur d'eau",
+            "CompteRendu":"1 - Occupant absent\n\nInformations techniques d\u00e9taill\u00e9es : \n> Occupant absent"
+         }
+      }
+   ],
+   "filters":{
+      "motif-abrege":[
+         "V\u00e9rification consommation  compteur d'eau"
+      ],
+      "statut":{
+         "2":"Nonrealise",
+         "0":"Realise"
+      },
+      "batiment":[
+         "1"
+      ],
+      "escalier":[
+         "1"
+      ],
+      "etage":{
+         "0":"1",
+         "2":"2",
+         "3":"6"
+      }
+   }
+}
