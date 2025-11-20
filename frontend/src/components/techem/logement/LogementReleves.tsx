@@ -1,8 +1,10 @@
 "use client";
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useLogements } from "@/lib/hooks/useLogements";
+import { useExport } from "@/lib/hooks/useExport";
+import Alert from "@/components/ui/alert/Alert";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
 
 // Dynamically import the ReactApexChart component
@@ -17,9 +19,44 @@ interface LogementRelevesProps {
 type TabType = "eauFroide" | "eauChaude" | "repartiteur" | "compteurEnergie";
 
 export default function LogementReleves({ pkLogement }: LogementRelevesProps) {
-  const { getLogementQuery } = useLogements();
+  const { getLogementQuery, getRepartReleve } = useLogements();
   const { data: logementData, isLoading: isLogementLoading } = getLogementQuery(pkLogement);
   const [selectedTab, setSelectedTab] = useState<TabType>("eauFroide");
+
+  // Create wrapper function for PDF export based on selected tab
+  const handleExportPdf = useCallback(async () => {
+    // For logement, we only have getRepartReleve for repartiteur
+    // For other types, we might need to use different endpoints or show an error
+    if (selectedTab === "repartiteur") {
+      await getRepartReleve(pkLogement);
+    } else {
+      // For other types, PDF export might not be available yet
+      throw new Error(`L'export PDF pour ${selectedTab === "eauFroide" ? "l'eau froide" : selectedTab === "eauChaude" ? "l'eau chaude" : "le compteur d'énergie"} n'est pas encore disponible pour les logements.`);
+    }
+  }, [getRepartReleve, pkLogement, selectedTab]);
+
+  // Create wrapper function for Excel export based on selected tab
+  // TODO: Implement Excel export function when available
+  const handleExportExcel = useCallback(async () => {
+    // For now, throw an error indicating Excel export is not yet implemented
+    // This can be replaced with actual Excel export function when available
+    throw new Error("L'export Excel des relevés n'est pas encore disponible pour les logements.");
+  }, []);
+
+  // Use the reusable export hooks
+  const { 
+    handleExport: handleExportPdfClick, 
+    isExporting: isExportingPdf, 
+    error: exportPdfError, 
+    clearError: clearExportPdfError 
+  } = useExport(handleExportPdf, { errorTitle: "Erreur d'export PDF" });
+
+  const { 
+    handleExport: handleExportExcelClick, 
+    isExporting: isExportingExcel, 
+    error: exportExcelError, 
+    clearError: clearExportExcelError 
+  } = useExport(handleExportExcel, { errorTitle: "Erreur d'export Excel" });
 
   // Extract data from API response
   const relevesData = useMemo(() => {
@@ -271,11 +308,120 @@ export default function LogementReleves({ pkLogement }: LogementRelevesProps) {
   return (
     <div className="rounded-2xl border border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-white/[0.03]">
       <div className="px-5 pt-5 bg-white shadow-default rounded-2xl pb-11 dark:bg-gray-900 sm:px-6 sm:pt-6">
+        {(exportPdfError || exportExcelError) && (
+          <div className="mb-4">
+            <Alert
+              variant={(exportPdfError || exportExcelError)?.variant || "error"}
+              title={(exportPdfError || exportExcelError)?.title || "Erreur"}
+              message={(exportPdfError || exportExcelError)?.message || ""}
+              showLink={false}
+            />
+            <button
+              onClick={() => {
+                if (exportPdfError) clearExportPdfError();
+                if (exportExcelError) clearExportExcelError();
+              }}
+              className="mt-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              Fermer
+            </button>
+          </div>
+        )}
         <div className="flex justify-between mb-6">
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
               Relevés
             </h3>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleExportExcelClick}
+              disabled={isExportingExcel || isLogementLoading}
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+            >
+              <svg
+                className="stroke-current"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M16.6667 11.6667V15.8333C16.6667 16.2754 16.4911 16.6993 16.1785 17.0118C15.866 17.3244 15.442 17.5 15 17.5H5C4.55797 17.5 4.13405 17.3244 3.82149 17.0118C3.50893 16.6993 3.33333 16.2754 3.33333 15.8333V11.6667"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M8.33333 13.3333L10 15L11.6667 13.3333"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M10 15V8.33333"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M3.33333 8.33333L10 2.5L16.6667 8.33333"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {isExportingExcel ? "Export en cours..." : "Export Excel"}
+            </button>
+            <button
+              onClick={handleExportPdfClick}
+              disabled={isExportingPdf || isLogementLoading}
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+            >
+              <svg
+                className="stroke-current"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M16.6667 11.6667V15.8333C16.6667 16.2754 16.4911 16.6993 16.1785 17.0118C15.866 17.3244 15.442 17.5 15 17.5H5C4.55797 17.5 4.13405 17.3244 3.82149 17.0118C3.50893 16.6993 3.33333 16.2754 3.33333 15.8333V11.6667"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M8.33333 13.3333L10 15L11.6667 13.3333"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M10 15V8.33333"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M3.33333 8.33333L10 2.5L16.6667 8.33333"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {isExportingPdf ? "Export en cours..." : "Export PDF"}
+            </button>
           </div>
         </div>
 

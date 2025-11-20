@@ -26,23 +26,34 @@ export interface UseExportOptions {
 /**
  * Custom hook for handling data export with error management
  * 
- * Provides a reusable way to handle export operations with:
+ * Provides a reusable way to handle export operations (Excel, PDF, etc.) with:
  * - Loading state management
  * - Error handling with environment-aware messages (dev/prod)
  * - Generic error formatting
  * 
- * @param exportFunction - Async function that performs the export
+ * Works for both Excel and PDF exports. The export function passed as parameter
+ * should handle the specific format (Excel/PDF) and file download.
+ * 
+ * @param exportFunction - Async function that performs the export (Excel, PDF, etc.)
  * @param options - Optional configuration
  * @returns Object with handleExport function, isExporting state, and error state
  * 
  * @example
  * ```tsx
+ * // Excel export
  * const { exportImmeubles } = useImmeubles();
  * const { handleExport, isExporting, error } = useExport(exportImmeubles);
  * 
+ * // PDF export
+ * const { getReport } = useImmeubles();
+ * const handleExportPdf = async () => {
+ *   await getReport(pkImmeuble, { type: null, energie: "EAU" });
+ * };
+ * const { handleExport, isExporting, error } = useExport(handleExportPdf);
+ * 
  * // In component
  * <button onClick={handleExport} disabled={isExporting}>
- *   {isExporting ? "Export en cours..." : "Exporter"}
+ *   {isExporting ? "Export en cours..." : "Export Excel"}
  * </button>
  * {error && <Alert variant={error.variant} title={error.title} message={error.message} />}
  * ```
