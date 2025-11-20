@@ -7,7 +7,7 @@ echo "📦 Installation des dépendances Symfony..."
 composer install
 
 
-echo "📂 Cpie du dossier techemcore vers /public/bundles..."
+echo "📂 Copie du dossier techemcore vers /public/bundles..."
 mkdir -p public/bundles
 cp -r public/techemcore public/bundles/
 
