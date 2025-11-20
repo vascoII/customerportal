@@ -32,8 +32,10 @@ class SecurityApiController extends AbstractApiController
             return $fakeResponse;
         }
 
-        $username = $request->request->get('_username') ?? $request->get('username');
-        $password = $request->request->get('_password') ?? $request->get('password');
+        $data = json_decode($request->getContent(), true);
+
+        $username = (string) $data['username'] ?? null;
+        $password = (string) $data['password'] ?? null;
 
         if (empty($username) || empty($password)) {
             return $this->error('Username and password are required', 400);
@@ -56,18 +58,16 @@ class SecurityApiController extends AbstractApiController
                         $roles[] = 'ROLE_OCCUPANT';
                         break;
                     case 'M':
-                        $roles[] = 'ROLE_MAISONMERE';
-                        break;
                     case 'A':
-                        $roles[] = 'ROLE_AGENCE';
-                        break;
                     case 'S':
                     case 'C':
-                        $roles[] = 'ROLE_SYNDICAT';
+                        $roles[] = 'ROLE_CIENT';
                         break;
                     case 'G':
+                         $roles[] = 'ROLE_GESTIONNAIRE';
+                        break;
                     default:
-                        $roles[] = 'ROLE_GESTIONNAIRE';
+                        $roles[] = 'ROLE_CIENT';
                         break;
                 }
             }
