@@ -1,1099 +1,616 @@
 {
-   "immeuble":{
-      "Erreur":"",
-      "Info":"",
-      "Immeuble":{
-         "PkImmeuble":221230,
-         "Nom":"GERGOVIE",
-         "Numero":"013567",
-         "Ref":"214507",
-         "Adresse1":"117 121 RUE DE L OUEST",
-         "Adresse2":"10 RUE DU MOULIN DE LA VIERGE",
-         "Adresse3":"30 RUE DE GERGOVIE",
-         "Cp":"75014",
-         "Ville":"PARIS",
-         "HasTelereleve":true,
-         "FkClientTop":38439,
-         "Actif":true,
-         "DateActivationClient":"0001-01-01T00:00:00",
-         "DateActivationOccupant":"0001-01-01T00:00:00",
-         "HasNoteOccupant":false,
-         "HasDecompteOccupant":true,
-         "HasFactures":false,
-         "HasChantiers":false
+  "success": true,
+  "status": 200,
+  "data": {
+    "immeuble": {
+      "Erreur": "",
+      "Info": "",
+      "Immeuble": {
+        "PkImmeuble": 207219,
+        "Nom": "AUGUSTE RENOIR",
+        "Numero": "010808",
+        "Ref": "0066",
+        "Adresse1": "1 A 35 PLACE DES IMPRESSIONNISTES",
+        "Adresse2": "10-14-18-20 RUE FRANCIS PRESSENSE",
+        "Adresse3": "",
+        "Cp": "95870",
+        "Ville": "BEZONS",
+        "HasTelereleve": true,
+        "FkClientTop": 36334,
+        "Actif": true,
+        "DateActivationClient": "0001-01-01T00:00:00",
+        "DateActivationOccupant": "0001-01-01T00:00:00",
+        "HasNoteOccupant": false,
+        "HasDecompteOccupant": true,
+        "HasFactures": false,
+        "HasChantiers": false
       },
-      "NbLogements":206,
-      "NbAppareils":377,
-      "NbDepannages":1,
-      "NbDepannagesTotal":12,
-      "DegresDepannages":-1,
-      "NbDysfonctionnements":1,
-      "DegresDysfonctionnements":-1,
-      "HasTelereleve":true,
-      "NbCompteursEC":0,
-      "NbCompteursEF":377,
-      "NbCompteursRepart":0,
-      "NbCompteursCET":0,
-      "NbCompteursCapteur":0,
-      "NbCompteursElect":-1,
-      "NbCompteursGaz":-1,
-      "NbCompteursTelereveleTotal":364,
-      "NbCompteursTelereveleOK":349,
-      "HasTransfertFichiers":true,
-      "ImmeubleEC":{
-         "NbCompteursARelever":-1,
-         "NbCompteursReleves":-1,
-         "NbFuites":-1,
-         "DegresFuites":-1,
-         "NbAnomalies":-1,
-         "DegresAnomalies":-1,
-         "Chantier":{
-            "PkChantier":-1,
-            "PkDevis":-1,
-            "PkImmeuble":-1,
-            "DateEntreeChantier":"0001-01-01T00:00:00",
-            "NbCompteursPoses":-1,
-            "NbCompteursCommandes":-1
-         },
-         "TopConsos":{
-            "Erreur":"",
-            "Info":"",
-            "DateReleve":"0001-01-01T00:00:00",
-            "consosGrandes":{
-               
-            },
-            "consosPetites":{
-               
-            }
-         },
-         "SerieConsos1":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"",
-            "Annee":""
-         },
-         "SerieConsos2":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"",
-            "Annee":""
-         },
-         "ListeReleves":{
-            
-         }
+      "NbLogements": 119,
+      "NbAppareils": 119,
+      "NbDepannages": 0,
+      "NbDepannagesTotal": 5,
+      "DegresDepannages": -1,
+      "NbDysfonctionnements": 0,
+      "DegresDysfonctionnements": -1,
+      "HasTelereleve": true,
+      "NbCompteursEC": 0,
+      "NbCompteursEF": 119,
+      "NbCompteursRepart": 0,
+      "NbCompteursCET": 0,
+      "NbCompteursCapteur": 0,
+      "NbCompteursElect": -1,
+      "NbCompteursGaz": -1,
+      "NbCompteursTelereveleTotal": 119,
+      "NbCompteursTelereveleOK": 112,
+      "HasTransfertFichiers": true,
+      "ImmeubleEC": {
+        "NbCompteursARelever": -1,
+        "NbCompteursReleves": -1,
+        "NbFuites": -1,
+        "DegresFuites": -1,
+        "NbAnomalies": -1,
+        "DegresAnomalies": -1,
+        "Chantier": {
+          "PkChantier": -1,
+          "PkDevis": -1,
+          "PkImmeuble": -1,
+          "DateEntreeChantier": "0001-01-01T00:00:00",
+          "NbCompteursPoses": -1,
+          "NbCompteursCommandes": -1
+        },
+        "TopConsos": {
+          "Erreur": "",
+          "Info": "",
+          "DateReleve": "0001-01-01T00:00:00",
+          "consosGrandes": [],
+          "consosPetites": []
+        },
+        "SerieConsos1": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "",
+          "Annee": ""
+        },
+        "SerieConsos2": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "",
+          "Annee": ""
+        },
+        "ListeReleves": []
       },
-      "ImmeubleEF":{
-         "NbCompteursARelever":377,
-         "NbCompteursReleves":373,
-         "NbFuites":1,
-         "DegresFuites":-1,
-         "NbAnomalies":2,
-         "DegresAnomalies":-1,
-         "Chantier":{
-            "PkChantier":-1,
-            "PkDevis":-1,
-            "PkImmeuble":-1,
-            "DateEntreeChantier":"0001-01-01T00:00:00",
-            "NbCompteursPoses":-1,
-            "NbCompteursCommandes":-1
-         },
-         "TopConsos":{
-            "Erreur":"",
-            "Info":"",
-            "DateReleve":"2025-10-20T00:00:00",
-            "consosGrandes":{
-               "conso":[
-                  {
-                     "PkLogement":1211041,
-                     "NomOcc":"JEGOU FAUVE",
-                     "RefOcc":"214507H0052",
-                     "Fluide":2,
-                     "Conso":"29"
-                  },
-                  {
-                     "PkLogement":1211000,
-                     "NomOcc":"DOUCOURE AISSATOU",
-                     "RefOcc":"214507H0011",
-                     "Fluide":2,
-                     "Conso":"19"
-                  },
-                  {
-                     "PkLogement":1211063,
-                     "NomOcc":"BEN RABAH BAHIA",
-                     "RefOcc":"214507H0074",
-                     "Fluide":2,
-                     "Conso":"17"
-                  },
-                  {
-                     "PkLogement":1211054,
-                     "NomOcc":"TANDJIGORA BOUTTE",
-                     "RefOcc":"214507H0065",
-                     "Fluide":2,
-                     "Conso":"16"
-                  },
-                  {
-                     "PkLogement":1210995,
-                     "NomOcc":"BAH HADJA MARIAMA & BAH MAMADOU",
-                     "RefOcc":"214507H0006",
-                     "Fluide":2,
-                     "Conso":"14"
-                  }
-               ]
-            },
-            "consosPetites":{
-               "conso":[
-                  {
-                     "PkLogement":1211049,
-                     "NomOcc":"FOFANA ABOUBAKARY",
-                     "RefOcc":"214507H0060",
-                     "Fluide":2,
-                     "Conso":"0"
-                  },
-                  {
-                     "PkLogement":1211078,
-                     "NomOcc":"DESPLAT JEREMY",
-                     "RefOcc":"214507H0089",
-                     "Fluide":2,
-                     "Conso":"0"
-                  },
-                  {
-                     "PkLogement":1211150,
-                     "NomOcc":"VINOUZE MARIE-FRANCE",
-                     "RefOcc":"214507H0163",
-                     "Fluide":2,
-                     "Conso":"0"
-                  },
-                  {
-                     "PkLogement":1211071,
-                     "NomOcc":"ANDREU SOLANGE",
-                     "RefOcc":"214507H0082",
-                     "Fluide":2,
-                     "Conso":"0"
-                  },
-                  {
-                     "PkLogement":1211185,
-                     "NomOcc":"MUSCAT FRANCK",
-                     "RefOcc":"214507H0198",
-                     "Fluide":2,
-                     "Conso":"0"
-                  }
-               ]
-            }
-         },
-         "SerieConsos1":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"Janv|1273|112565|VIRTUAL=N;F\u00e9vr|1390|113955|VIRTUAL=N;Mars|1249|115204|VIRTUAL=N;Avr|1305|116509|VIRTUAL=N;Mai|1189|117698|VIRTUAL=N;Juin|1259|118957|VIRTUAL=N;Juil|1593|120550|VIRTUAL=N;Ao\u00fbt|1177|121727|VIRTUAL=N;Sept|1340|123067|VIRTUAL=N;Oct|1358|124425|VIRTUAL=N;Nov|-1|-1|VISIBLE=N;D\u00e9c|-1|-1|VISIBLE=N",
-            "Annee":"2025"
-         },
-         "SerieConsos2":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"Janv|1391|96819|VIRTUAL=N;F\u00e9vr|1095|97914|VIRTUAL=N;Mars|1302|99216|VIRTUAL=N;Avr|1354|100570|VIRTUAL=N;Mai|1287|101857|VIRTUAL=N;Juin|1370|103227|VIRTUAL=N;Juil|1296|104523|VIRTUAL=N;Ao\u00fbt|1382|105905|VIRTUAL=N;Sept|1430|107335|VIRTUAL=N;Oct|1426|108761|VIRTUAL=N;Nov|1165|109926|VIRTUAL=N;D\u00e9c|1366|111292|VIRTUAL=N",
-            "Annee":"2024"
-         },
-         "ListeReleves":{
-            "releve":[
-               {
-                  "PkReleve":1560909,
-                  "DateReleve":"2025-10-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1554424,
-                  "DateReleve":"2025-09-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1547826,
-                  "DateReleve":"2025-08-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1542590,
-                  "DateReleve":"2025-07-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1530907,
-                  "DateReleve":"2025-06-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1524684,
-                  "DateReleve":"2025-05-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1518654,
-                  "DateReleve":"2025-04-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1510763,
-                  "DateReleve":"2025-03-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1503967,
-                  "DateReleve":"2025-02-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1496835,
-                  "DateReleve":"2025-01-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1484058,
-                  "DateReleve":"2024-12-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1474852,
-                  "DateReleve":"2024-11-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1468786,
-                  "DateReleve":"2024-10-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1462335,
-                  "DateReleve":"2024-09-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1456937,
-                  "DateReleve":"2024-08-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1452449,
-                  "DateReleve":"2024-07-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1441487,
-                  "DateReleve":"2024-06-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1434886,
-                  "DateReleve":"2024-05-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1430186,
-                  "DateReleve":"2024-04-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1424562,
-                  "DateReleve":"2024-03-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1419461,
-                  "DateReleve":"2024-02-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1413121,
-                  "DateReleve":"2024-01-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1400860,
-                  "DateReleve":"2023-12-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1392012,
-                  "DateReleve":"2023-11-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1386893,
-                  "DateReleve":"2023-10-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1380688,
-                  "DateReleve":"2023-09-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1376157,
-                  "DateReleve":"2023-08-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1371988,
-                  "DateReleve":"2023-07-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1361741,
-                  "DateReleve":"2023-06-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1355460,
-                  "DateReleve":"2023-05-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1349922,
-                  "DateReleve":"2023-04-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1343785,
-                  "DateReleve":"2023-03-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1338726,
-                  "DateReleve":"2023-02-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1333321,
-                  "DateReleve":"2023-01-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1321328,
-                  "DateReleve":"2022-12-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1314680,
-                  "DateReleve":"2022-11-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1309978,
-                  "DateReleve":"2022-10-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1303732,
-                  "DateReleve":"2022-09-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1299550,
-                  "DateReleve":"2022-08-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1292442,
-                  "DateReleve":"2022-07-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1280952,
-                  "DateReleve":"2022-06-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1275478,
-                  "DateReleve":"2022-05-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1270799,
-                  "DateReleve":"2022-04-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1265320,
-                  "DateReleve":"2022-03-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1260302,
-                  "DateReleve":"2022-02-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1253152,
-                  "DateReleve":"2022-01-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1242073,
-                  "DateReleve":"2021-12-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1235038,
-                  "DateReleve":"2021-11-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1229345,
-                  "DateReleve":"2021-10-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1220741,
-                  "DateReleve":"2021-09-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1216844,
-                  "DateReleve":"2021-08-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1213219,
-                  "DateReleve":"2021-07-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1185647,
-                  "DateReleve":"2021-06-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1179863,
-                  "DateReleve":"2021-05-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1174906,
-                  "DateReleve":"2021-04-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1146709,
-                  "DateReleve":"2021-03-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1108728,
-                  "DateReleve":"2021-02-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1085380,
-                  "DateReleve":"2021-01-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1072116,
-                  "DateReleve":"2020-12-20T00:00:00",
-                  "TypeERC":"EAU"
-               },
-               {
-                  "PkReleve":1061322,
-                  "DateReleve":"2020-11-20T00:00:00",
-                  "TypeERC":"EAU"
-               }
+      "ImmeubleEF": {
+        "NbCompteursARelever": 119,
+        "NbCompteursReleves": 14,
+        "NbFuites": 0,
+        "DegresFuites": -1,
+        "NbAnomalies": 9,
+        "DegresAnomalies": -1,
+        "Chantier": {
+          "PkChantier": 107754,
+          "PkDevis": 482526,
+          "PkImmeuble": 207219,
+          "DateEntreeChantier": "2025-07-21T00:00:00",
+          "NbCompteursPoses": 104,
+          "NbCompteursCommandes": 117
+        },
+        "TopConsos": {
+          "Erreur": "",
+          "Info": "",
+          "DateReleve": "2025-09-30T00:00:00",
+          "consosGrandes": {
+            "conso": [
+              {
+                "PkLogement": 907777,
+                "NomOcc": "VACANT",
+                "RefOcc": "00669118",
+                "Fluide": 2,
+                "Conso": "50"
+              },
+              {
+                "PkLogement": 907667,
+                "NomOcc": "CASSOTTI VANESSA",
+                "RefOcc": "00660008",
+                "Fluide": 2,
+                "Conso": "44"
+              },
+              {
+                "PkLogement": 907771,
+                "NomOcc": "SEU KEMEDAKAN LARISSA",
+                "RefOcc": "00660112",
+                "Fluide": 2,
+                "Conso": "39"
+              },
+              {
+                "PkLogement": 907774,
+                "NomOcc": "LUCE STEPHANE",
+                "RefOcc": "00660115",
+                "Fluide": 2,
+                "Conso": "35"
+              },
+              {
+                "PkLogement": 907661,
+                "NomOcc": "GAMOUDI MOHAMED",
+                "RefOcc": "00660002",
+                "Fluide": 2,
+                "Conso": "29"
+              }
             ]
-         }
-      },
-      "ImmeubleRepart":{
-         "NbCompteursARelever":-1,
-         "NbCompteursReleves":-1,
-         "Chantier":{
-            "PkChantier":-1,
-            "PkDevis":-1,
-            "PkImmeuble":-1,
-            "DateEntreeChantier":"0001-01-01T00:00:00",
-            "NbCompteursPoses":-1,
-            "NbCompteursCommandes":-1
-         },
-         "TopConsos":{
-            "Erreur":"",
-            "Info":"",
-            "DateReleve":"0001-01-01T00:00:00",
-            "consosGrandes":{
-               
+          },
+          "consosPetites": {
+            "conso": [
+              {
+                "PkLogement": 939749,
+                "NomOcc": "POINT PUISAGE",
+                "RefOcc": "0066HLVO",
+                "Fluide": 2,
+                "Conso": "0"
+              },
+              {
+                "PkLogement": 907773,
+                "NomOcc": "ROLLAND CHRISTINE",
+                "RefOcc": "00660114",
+                "Fluide": 2,
+                "Conso": "5"
+              },
+              {
+                "PkLogement": 907767,
+                "NomOcc": "VACANT ENSEMBLE 0066",
+                "RefOcc": "00660108",
+                "Fluide": 2,
+                "Conso": "10"
+              },
+              {
+                "PkLogement": 907755,
+                "NomOcc": "SEGHIOUER HOURRIA",
+                "RefOcc": "00660096",
+                "Fluide": 2,
+                "Conso": "11"
+              },
+              {
+                "PkLogement": 907772,
+                "NomOcc": "LAMBERT ELISABETH",
+                "RefOcc": "00660113",
+                "Fluide": 2,
+                "Conso": "12"
+              }
+            ]
+          }
+        },
+        "SerieConsos1": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "Janv|329|14093,3|VIRTUAL=O;Févr|327|14201,7|VIRTUAL=O;Mars|325|14310|VIRTUAL=N;Avr|376,3|14469,7|VIRTUAL=O;Mai|427,7|14629,3|VIRTUAL=O;Juin|479|14789|VIRTUAL=N;Juil|426|14895,7|VIRTUAL=O;Août|373|15002,3|VIRTUAL=O;Sept|320|15109|VIRTUAL=N;Oct|-1|-1|VISIBLE=N;Nov|-1|-1|VISIBLE=N;Déc|-1|-1|VISIBLE=N",
+          "Annee": "2025"
+        },
+        "SerieConsos2": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "Janv|335|12818,3|VIRTUAL=O;Févr|342|12934,7|VIRTUAL=O;Mars|349|13051|VIRTUAL=N;Avr|340|13158,3|VIRTUAL=O;Mai|331|13265,7|VIRTUAL=O;Juin|322|13373|VIRTUAL=N;Juil|308,3|13466,7|VIRTUAL=O;Août|294,7|13560,3|VIRTUAL=O;Sept|281|13654|VIRTUAL=N;Oct|297,7|13764,3|VIRTUAL=O;Nov|314,3|13874,7|VIRTUAL=O;Déc|331|13985|VIRTUAL=N",
+          "Annee": "2024"
+        },
+        "ListeReleves": {
+          "releve": [
+            {
+              "PkReleve": 1555225,
+              "DateReleve": "2025-09-30T00:00:00",
+              "TypeERC": "EAU"
             },
-            "consosPetites":{
-               
-            }
-         },
-         "SerieConsos":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"",
-            "Annee":""
-         },
-         "ListeReleves":{
-            
-         },
-         "Tot_URepart":"-1",
-         "Tot_TantChauff":"-1",
-         "PU_Tant":"-1",
-         "Prix_URepart":"-1",
-         "Prix_Abonn":"-1",
-         "Mont_ARepartTant":"-1",
-         "Part_RepartConsos":"-1",
-         "CT_Combust":"-1",
-         "SerieConsosTotale1":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"",
-            "Annee":""
-         },
-         "SerieConsosTotale2":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"",
-            "Annee":""
-         },
-         "SerieConsosDJU":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"",
-            "Annee":""
-         }
-      },
-      "ImmeubleCET":{
-         "NbCompteursARelever":-1,
-         "NbCompteursReleves":-1,
-         "Chantier":{
-            "PkChantier":-1,
-            "PkDevis":-1,
-            "PkImmeuble":-1,
-            "DateEntreeChantier":"0001-01-01T00:00:00",
-            "NbCompteursPoses":-1,
-            "NbCompteursCommandes":-1
-         },
-         "TopConsos":{
-            "Erreur":"",
-            "Info":"",
-            "DateReleve":"0001-01-01T00:00:00",
-            "consosGrandes":{
-               
+            {
+              "PkReleve": 1535767,
+              "DateReleve": "2025-06-30T00:00:00",
+              "TypeERC": "EAU"
             },
-            "consosPetites":{
-               
-            }
-         },
-         "SerieConsos":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"",
-            "Annee":""
-         },
-         "ListeReleves":{
-            
-         },
-         "Tot_URepart":"-1",
-         "Tot_TantChauff":"-1",
-         "PU_Tant":"-1",
-         "Prix_URepart":"-1",
-         "Prix_Abonn":"-1",
-         "Mont_ARepartTant":"-1",
-         "Part_RepartConsos":"-1",
-         "CT_Combust":"-1",
-         "SerieConsosTotale1":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"",
-            "Annee":""
-         },
-         "SerieConsosTotale2":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"",
-            "Annee":""
-         },
-         "SerieConsosDJU":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"",
-            "Annee":""
-         }
-      },
-      "ImmeubleCapteur":{
-         "IndexRecapTemperature":{
-            "Date":"0001-01-01T00:00:00",
-            "Moy":"-1",
-            "Max":"-1",
-            "Min":"-1"
-         },
-         "IndexRecapHumidite":{
-            "Date":"0001-01-01T00:00:00",
-            "Moy":"-1",
-            "Max":"-1",
-            "Min":"-1"
-         },
-         "SerieConsosTemperature":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"",
-            "Annee":""
-         },
-         "SerieConsosHumidite":{
-            "Erreur":"",
-            "Info":"",
-            "DefaultIntervalle":365,
-            "ValeursXYL":"",
-            "Annee":""
-         }
-      },
-      "ImmeubleElect":{
-         "NbCompteursARelever":-1,
-         "NbCompteursReleves":-1,
-         "Chantier":{
-            "PkChantier":-1,
-            "PkDevis":-1,
-            "PkImmeuble":-1,
-            "DateEntreeChantier":"0001-01-01T00:00:00",
-            "NbCompteursPoses":-1,
-            "NbCompteursCommandes":-1
-         },
-         "TopConsos":{
-            "Erreur":"",
-            "Info":"",
-            "DateReleve":"0001-01-01T00:00:00",
-            "consosGrandes":{
-               
+            {
+              "PkReleve": 1513774,
+              "DateReleve": "2025-03-31T00:00:00",
+              "TypeERC": "EAU"
             },
-            "consosPetites":{
-               
-            }
-         },
-         "ListeReleves":{
-            
-         }
-      },
-      "ImmeubleGaz":{
-         "NbCompteursARelever":-1,
-         "NbCompteursReleves":-1,
-         "Chantier":{
-            "PkChantier":-1,
-            "PkDevis":-1,
-            "PkImmeuble":-1,
-            "DateEntreeChantier":"0001-01-01T00:00:00",
-            "NbCompteursPoses":-1,
-            "NbCompteursCommandes":-1
-         },
-         "TopConsos":{
-            "Erreur":"",
-            "Info":"",
-            "DateReleve":"0001-01-01T00:00:00",
-            "consosGrandes":{
-               
+            {
+              "PkReleve": 1487043,
+              "DateReleve": "2024-12-31T00:00:00",
+              "TypeERC": "EAU"
             },
-            "consosPetites":{
-               
+            {
+              "PkReleve": 1464308,
+              "DateReleve": "2024-09-30T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1444102,
+              "DateReleve": "2024-06-30T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1429121,
+              "DateReleve": "2024-03-31T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1404159,
+              "DateReleve": "2023-12-31T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1382630,
+              "DateReleve": "2023-09-30T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1364838,
+              "DateReleve": "2023-06-30T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1346837,
+              "DateReleve": "2023-03-31T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1324560,
+              "DateReleve": "2022-12-31T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1306143,
+              "DateReleve": "2022-09-30T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1284120,
+              "DateReleve": "2022-06-30T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1267971,
+              "DateReleve": "2022-03-31T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1245968,
+              "DateReleve": "2021-12-31T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1223240,
+              "DateReleve": "2021-09-30T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1188420,
+              "DateReleve": "2021-06-30T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1166307,
+              "DateReleve": "2021-03-31T00:00:00",
+              "TypeERC": "EAU"
+            },
+            {
+              "PkReleve": 1074707,
+              "DateReleve": "2020-12-31T00:00:00",
+              "TypeERC": "EAU"
             }
-         },
-         "ListeReleves":{
-            
-         }
+          ]
+        }
       },
-      "SerieConsosEAU":{
-         "Erreur":"",
-         "Info":"",
-         "DefaultIntervalle":365,
-         "ValeursXYL":"20\/11\/2020|1359|43675;20\/12\/2020|1517|45192;20\/01\/2021|1541|46733;20\/02\/2021|1577|48310;20\/03\/2021|1440|49750;20\/04\/2021|1600|51350;20\/05\/2021|1521|52871;20\/06\/2021|1563|54434;20\/07\/2021|1425|55859;20\/08\/2021|1280|57139;20\/09\/2021|1403|58542;20\/10\/2021|1345|59887;20\/11\/2021|1512|61399;20\/12\/2021|1417|62816;20\/01\/2022|1502|64318;20\/02\/2022|1517|65835;20\/03\/2022|1369|67204;20\/04\/2022|1461|68665;20\/05\/2022|1378|70043;20\/06\/2022|1388|71431;20\/07\/2022|1343|72774;20\/08\/2022|1269|74043;20\/09\/2022|1349|75392;20\/10\/2022|1368|76760;20\/11\/2022|1424|78184;20\/12\/2022|1356|79540;20\/01\/2023|1401|80941;20\/02\/2023|1406|82347;20\/03\/2023|1254|83601;20\/04\/2023|1409|85010;20\/05\/2023|1324|86334;20\/06\/2023|1400|87734;20\/07\/2023|1298|89032;20\/08\/2023|1225|90257;20\/09\/2023|1316|91573;20\/10\/2023|1284|92857;20\/11\/2023|1177|94034;20\/12\/2023|1394|95428;20\/01\/2024|1391|96819;20\/02\/2024|1095|97914;20\/03\/2024|1302|99216;20\/04\/2024|1353|100570;20\/05\/2024|1287|101857;20\/06\/2024|1370|103227;20\/07\/2024|1296|104523;20\/08\/2024|1382|105905;20\/09\/2024|1430|107335;20\/10\/2024|1426|108761;20\/11\/2024|1165|109926;20\/12\/2024|1366|111292;20\/01\/2025|1273|112565;20\/02\/2025|1390|113955;20\/03\/2025|1249|115204;20\/04\/2025|1305|116509;20\/05\/2025|1189|117698;20\/06\/2025|1259|118957;20\/07\/2025|1593|120550;20\/08\/2025|1177|121727;20\/09\/2025|1340|123067;20\/10\/2025|1358|124425",
-         "Annee":""
+      "ImmeubleRepart": {
+        "NbCompteursARelever": -1,
+        "NbCompteursReleves": -1,
+        "Chantier": {
+          "PkChantier": -1,
+          "PkDevis": -1,
+          "PkImmeuble": -1,
+          "DateEntreeChantier": "0001-01-01T00:00:00",
+          "NbCompteursPoses": -1,
+          "NbCompteursCommandes": -1
+        },
+        "TopConsos": {
+          "Erreur": "",
+          "Info": "",
+          "DateReleve": "0001-01-01T00:00:00",
+          "consosGrandes": [],
+          "consosPetites": []
+        },
+        "SerieConsos": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "",
+          "Annee": ""
+        },
+        "ListeReleves": [],
+        "Tot_URepart": "-1",
+        "Tot_TantChauff": "-1",
+        "PU_Tant": "-1",
+        "Prix_URepart": "-1",
+        "Prix_Abonn": "-1",
+        "Mont_ARepartTant": "-1",
+        "Part_RepartConsos": "-1",
+        "CT_Combust": "-1",
+        "SerieConsosTotale1": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "",
+          "Annee": ""
+        },
+        "SerieConsosTotale2": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "",
+          "Annee": ""
+        },
+        "SerieConsosDJU": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "",
+          "Annee": ""
+        }
       },
-      "SerieConsosCompteurGeneral":{
-         "Erreur":"",
-         "Info":"",
-         "DefaultIntervalle":365,
-         "ValeursXYL":"",
-         "Annee":""
+      "ImmeubleCET": {
+        "NbCompteursARelever": -1,
+        "NbCompteursReleves": -1,
+        "Chantier": {
+          "PkChantier": -1,
+          "PkDevis": -1,
+          "PkImmeuble": -1,
+          "DateEntreeChantier": "0001-01-01T00:00:00",
+          "NbCompteursPoses": -1,
+          "NbCompteursCommandes": -1
+        },
+        "TopConsos": {
+          "Erreur": "",
+          "Info": "",
+          "DateReleve": "0001-01-01T00:00:00",
+          "consosGrandes": [],
+          "consosPetites": []
+        },
+        "SerieConsos": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "",
+          "Annee": ""
+        },
+        "ListeReleves": [],
+        "Tot_URepart": "-1",
+        "Tot_TantChauff": "-1",
+        "PU_Tant": "-1",
+        "Prix_URepart": "-1",
+        "Prix_Abonn": "-1",
+        "Mont_ARepartTant": "-1",
+        "Part_RepartConsos": "-1",
+        "CT_Combust": "-1",
+        "SerieConsosTotale1": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "",
+          "Annee": ""
+        },
+        "SerieConsosTotale2": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "",
+          "Annee": ""
+        },
+        "SerieConsosDJU": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "",
+          "Annee": ""
+        }
       },
-      "SerieConsosECValues":[
-         
+      "ImmeubleCapteur": {
+        "IndexRecapTemperature": {
+          "Date": "0001-01-01T00:00:00",
+          "Moy": "-1",
+          "Max": "-1",
+          "Min": "-1"
+        },
+        "IndexRecapHumidite": {
+          "Date": "0001-01-01T00:00:00",
+          "Moy": "-1",
+          "Max": "-1",
+          "Min": "-1"
+        },
+        "SerieConsosTemperature": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "",
+          "Annee": ""
+        },
+        "SerieConsosHumidite": {
+          "Erreur": "",
+          "Info": "",
+          "DefaultIntervalle": 365,
+          "ValeursXYL": "",
+          "Annee": ""
+        }
+      },
+      "ImmeubleElect": {
+        "NbCompteursARelever": -1,
+        "NbCompteursReleves": -1,
+        "Chantier": {
+          "PkChantier": -1,
+          "PkDevis": -1,
+          "PkImmeuble": -1,
+          "DateEntreeChantier": "0001-01-01T00:00:00",
+          "NbCompteursPoses": -1,
+          "NbCompteursCommandes": -1
+        },
+        "TopConsos": {
+          "Erreur": "",
+          "Info": "",
+          "DateReleve": "0001-01-01T00:00:00",
+          "consosGrandes": [],
+          "consosPetites": []
+        },
+        "ListeReleves": []
+      },
+      "ImmeubleGaz": {
+        "NbCompteursARelever": -1,
+        "NbCompteursReleves": -1,
+        "Chantier": {
+          "PkChantier": -1,
+          "PkDevis": -1,
+          "PkImmeuble": -1,
+          "DateEntreeChantier": "0001-01-01T00:00:00",
+          "NbCompteursPoses": -1,
+          "NbCompteursCommandes": -1
+        },
+        "TopConsos": {
+          "Erreur": "",
+          "Info": "",
+          "DateReleve": "0001-01-01T00:00:00",
+          "consosGrandes": [],
+          "consosPetites": []
+        },
+        "ListeReleves": []
+      },
+      "SerieConsosEAU": {
+        "Erreur": "",
+        "Info": "",
+        "DefaultIntervalle": 365,
+        "ValeursXYL": "31/12/2020|415|8822;31/03/2021|369|9191;30/06/2021|363|9554;30/09/2021|269|9823;31/12/2021|318|10141;31/03/2022|360|10501;30/06/2022|347|10848;30/09/2022|211|11059;31/12/2022|329|11388;31/03/2023|311|11699;30/06/2023|344|12043;30/09/2023|331|12374;31/12/2023|328|12702;31/03/2024|349|13051;30/06/2024|322|13373;30/09/2024|281|13654;31/12/2024|331|13985;31/03/2025|325|14310;30/06/2025|344|14789;30/09/2025|320|15109",
+        "Annee": ""
+      },
+      "SerieConsosCompteurGeneral": {
+        "Erreur": "",
+        "Info": "",
+        "DefaultIntervalle": 365,
+        "ValeursXYL": "",
+        "Annee": ""
+      },
+      "SerieConsosECValues": [],
+      "SerieConsosEFValues": [],
+      "SerieConsosEAUValues": [
+        [
+          "31/12/2020",
+          "415",
+          "8822"
+        ],
+        [
+          "31/03/2021",
+          "369",
+          "9191"
+        ],
+        [
+          "30/06/2021",
+          "363",
+          "9554"
+        ],
+        [
+          "30/09/2021",
+          "269",
+          "9823"
+        ],
+        [
+          "31/12/2021",
+          "318",
+          "10141"
+        ],
+        [
+          "31/03/2022",
+          "360",
+          "10501"
+        ],
+        [
+          "30/06/2022",
+          "347",
+          "10848"
+        ],
+        [
+          "30/09/2022",
+          "211",
+          "11059"
+        ],
+        [
+          "31/12/2022",
+          "329",
+          "11388"
+        ],
+        [
+          "31/03/2023",
+          "311",
+          "11699"
+        ],
+        [
+          "30/06/2023",
+          "344",
+          "12043"
+        ],
+        [
+          "30/09/2023",
+          "331",
+          "12374"
+        ],
+        [
+          "31/12/2023",
+          "328",
+          "12702"
+        ],
+        [
+          "31/03/2024",
+          "349",
+          "13051"
+        ],
+        [
+          "30/06/2024",
+          "322",
+          "13373"
+        ],
+        [
+          "30/09/2024",
+          "281",
+          "13654"
+        ],
+        [
+          "31/12/2024",
+          "331",
+          "13985"
+        ],
+        [
+          "31/03/2025",
+          "325",
+          "14310"
+        ],
+        [
+          "30/06/2025",
+          "344",
+          "14789"
+        ],
+        [
+          "30/09/2025",
+          "320",
+          "15109"
+        ]
       ],
-      "SerieConsosEFValues":[
-         
-      ],
-      "SerieConsosEAUValues":[
-         [
-            "20\/11\/2020",
-            "1359",
-            "43675"
-         ],
-         [
-            "20\/12\/2020",
-            "1517",
-            "45192"
-         ],
-         [
-            "20\/01\/2021",
-            "1541",
-            "46733"
-         ],
-         [
-            "20\/02\/2021",
-            "1577",
-            "48310"
-         ],
-         [
-            "20\/03\/2021",
-            "1440",
-            "49750"
-         ],
-         [
-            "20\/04\/2021",
-            "1600",
-            "51350"
-         ],
-         [
-            "20\/05\/2021",
-            "1521",
-            "52871"
-         ],
-         [
-            "20\/06\/2021",
-            "1563",
-            "54434"
-         ],
-         [
-            "20\/07\/2021",
-            "1425",
-            "55859"
-         ],
-         [
-            "20\/08\/2021",
-            "1280",
-            "57139"
-         ],
-         [
-            "20\/09\/2021",
-            "1403",
-            "58542"
-         ],
-         [
-            "20\/10\/2021",
-            "1345",
-            "59887"
-         ],
-         [
-            "20\/11\/2021",
-            "1512",
-            "61399"
-         ],
-         [
-            "20\/12\/2021",
-            "1417",
-            "62816"
-         ],
-         [
-            "20\/01\/2022",
-            "1502",
-            "64318"
-         ],
-         [
-            "20\/02\/2022",
-            "1517",
-            "65835"
-         ],
-         [
-            "20\/03\/2022",
-            "1369",
-            "67204"
-         ],
-         [
-            "20\/04\/2022",
-            "1461",
-            "68665"
-         ],
-         [
-            "20\/05\/2022",
-            "1378",
-            "70043"
-         ],
-         [
-            "20\/06\/2022",
-            "1388",
-            "71431"
-         ],
-         [
-            "20\/07\/2022",
-            "1343",
-            "72774"
-         ],
-         [
-            "20\/08\/2022",
-            "1269",
-            "74043"
-         ],
-         [
-            "20\/09\/2022",
-            "1349",
-            "75392"
-         ],
-         [
-            "20\/10\/2022",
-            "1368",
-            "76760"
-         ],
-         [
-            "20\/11\/2022",
-            "1424",
-            "78184"
-         ],
-         [
-            "20\/12\/2022",
-            "1356",
-            "79540"
-         ],
-         [
-            "20\/01\/2023",
-            "1401",
-            "80941"
-         ],
-         [
-            "20\/02\/2023",
-            "1406",
-            "82347"
-         ],
-         [
-            "20\/03\/2023",
-            "1254",
-            "83601"
-         ],
-         [
-            "20\/04\/2023",
-            "1409",
-            "85010"
-         ],
-         [
-            "20\/05\/2023",
-            "1324",
-            "86334"
-         ],
-         [
-            "20\/06\/2023",
-            "1400",
-            "87734"
-         ],
-         [
-            "20\/07\/2023",
-            "1298",
-            "89032"
-         ],
-         [
-            "20\/08\/2023",
-            "1225",
-            "90257"
-         ],
-         [
-            "20\/09\/2023",
-            "1316",
-            "91573"
-         ],
-         [
-            "20\/10\/2023",
-            "1284",
-            "92857"
-         ],
-         [
-            "20\/11\/2023",
-            "1177",
-            "94034"
-         ],
-         [
-            "20\/12\/2023",
-            "1394",
-            "95428"
-         ],
-         [
-            "20\/01\/2024",
-            "1391",
-            "96819"
-         ],
-         [
-            "20\/02\/2024",
-            "1095",
-            "97914"
-         ],
-         [
-            "20\/03\/2024",
-            "1302",
-            "99216"
-         ],
-         [
-            "20\/04\/2024",
-            "1353",
-            "100570"
-         ],
-         [
-            "20\/05\/2024",
-            "1287",
-            "101857"
-         ],
-         [
-            "20\/06\/2024",
-            "1370",
-            "103227"
-         ],
-         [
-            "20\/07\/2024",
-            "1296",
-            "104523"
-         ],
-         [
-            "20\/08\/2024",
-            "1382",
-            "105905"
-         ],
-         [
-            "20\/09\/2024",
-            "1430",
-            "107335"
-         ],
-         [
-            "20\/10\/2024",
-            "1426",
-            "108761"
-         ],
-         [
-            "20\/11\/2024",
-            "1165",
-            "109926"
-         ],
-         [
-            "20\/12\/2024",
-            "1366",
-            "111292"
-         ],
-         [
-            "20\/01\/2025",
-            "1273",
-            "112565"
-         ],
-         [
-            "20\/02\/2025",
-            "1390",
-            "113955"
-         ],
-         [
-            "20\/03\/2025",
-            "1249",
-            "115204"
-         ],
-         [
-            "20\/04\/2025",
-            "1305",
-            "116509"
-         ],
-         [
-            "20\/05\/2025",
-            "1189",
-            "117698"
-         ],
-         [
-            "20\/06\/2025",
-            "1259",
-            "118957"
-         ],
-         [
-            "20\/07\/2025",
-            "1593",
-            "120550"
-         ],
-         [
-            "20\/08\/2025",
-            "1177",
-            "121727"
-         ],
-         [
-            "20\/09\/2025",
-            "1340",
-            "123067"
-         ],
-         [
-            "20\/10\/2025",
-            "1358",
-            "124425"
-         ]
-      ],
-      "SerieConsosRepartValues":[
-         
-      ],
-      "SerieConsosEnergieValues":[
-         
-      ],
-      "SerieConsosElectValues":[
-         
-      ],
-      "SerieConsosGazValues":[
-         
-      ],
-      "SerieConsosCompteurGeneralValues":[
-         
-      ],
-      "PcCompteursTelereveleOK":100,
-      "RatioNbDepannages":0.002652519893899204,
-      "RatioNbDysfonctionnements":0.002652519893899204
-   },
-   "dysfonctionnements":[
-      {
-         "Logement":{
-            "PkLogement":1211049,
-            "NumBatiment":"4",
-            "AdrBatiment":"121 RUE DE L'OUEST",
-            "NumEscalier":"1",
-            "AdrEscalier":"",
-            "NumEtage":"3",
-            "NumOrdre":"6",
-            "Type":"T4"
-         },
-         "Occupant":{
-            "PkOccupant":1874558,
-            "Nom":"Demo",
-            "Ref":"214507H0060",
-            "DateArrivee":"2018-09-17T00:00:00",
-            "DateDepart":"2999-12-31T00:00:00"
-         },
-         "Appareil":{
-            "PkAppareil":4125415,
-            "Numero":"I19JA069004",
-            "Emplacement":"CUISINE",
-            "Fluide":"EF",
-            "TypeAppareil":"EF",
-            "Unite":"m3"
-         },
-         "Dysfonctionnement":{
-            "Duree":5,
-            "DateDebut":"2025-11-13T00:00:00",
-            "IndexDebut":"513.7",
-            "Conso":"0.0",
-            "Type":"Retour d'eau"
-         }
-      }
-   ],
-   "filters":{
-      "type":[
-         "Retour d'eau"
-      ],
-      "batiment":[
-         "4"
-      ],
-      "escalier":[
-         "1"
-      ],
-      "etage":[
-         "3"
-      ]
-   }
+      "SerieConsosRepartValues": [],
+      "SerieConsosEnergieValues": [],
+      "SerieConsosElectValues": [],
+      "SerieConsosGazValues": [],
+      "SerieConsosCompteurGeneralValues": [],
+      "PcCompteursTelereveleOK": 100,
+      "RatioNbDepannages": 0,
+      "RatioNbDysfonctionnements": 0
+    },
+    "dysfonctionnements": [],
+    "filters": {
+      "type": [],
+      "batiment": [],
+      "escalier": [],
+      "etage": []
+    }
+  }
 }
