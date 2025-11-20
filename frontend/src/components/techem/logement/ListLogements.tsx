@@ -807,8 +807,10 @@ export default function ListLogements({ pkImmeuble }: ListLogementsProps) {
       <Modal
         isOpen={filterModal.isOpen}
         onClose={filterModal.closeModal}
+        className="max-w-[500px] p-5 lg:p-10"
       >
         <ToggleSwitchListLogements
+          key={`filter-${JSON.stringify(initialFilters)}-${filterModal.isOpen}`}
           onApply={handleApplyFilters}
           onCancel={filterModal.closeModal}
           initialFilters={initialFilters}
