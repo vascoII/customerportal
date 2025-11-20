@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+
 import Link from "next/link";
 import React, { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
@@ -90,7 +90,7 @@ export default function NotificationDropdown() {
                   <span className="font-medium text-gray-800 dark:text-white/90">
                     Techem France
                   </span>
-                  <span>vous souhaite la bienvenue dans </span>
+                  <span>vous souhaite la bienvenue dans</span>
                   <span className="font-medium text-gray-800 dark:text-white/90">
                     l&apos;espace client TECHEM
                   </span>

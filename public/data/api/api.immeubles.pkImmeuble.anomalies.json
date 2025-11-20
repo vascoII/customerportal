@@ -3,43 +3,43 @@
       "Erreur":"",
       "Info":"",
       "Immeuble":{
-         "PkImmeuble":1785,
-         "Nom":"Immeuble Demo 21",
-         "Numero":"1785",
-         "Ref":"2987",
-         "Adresse1":"2 rue du egictud",
-         "Adresse2":"",
-         "Adresse3":"",
-         "Cp":"75001",
-         "Ville":"Demoville",
-         "HasTelereleve":false,
-         "FkClientTop":37718,
+         "PkImmeuble":221230,
+         "Nom":"GERGOVIE",
+         "Numero":"013567",
+         "Ref":"214507",
+         "Adresse1":"117 121 RUE DE L OUEST",
+         "Adresse2":"10 RUE DU MOULIN DE LA VIERGE",
+         "Adresse3":"30 RUE DE GERGOVIE",
+         "Cp":"75014",
+         "Ville":"PARIS",
+         "HasTelereleve":true,
+         "FkClientTop":38439,
          "Actif":true,
          "DateActivationClient":"0001-01-01T00:00:00",
-         "DateActivationOccupant":"2025-09-14T00:00:00",
-         "HasNoteOccupant":true,
+         "DateActivationOccupant":"0001-01-01T00:00:00",
+         "HasNoteOccupant":false,
          "HasDecompteOccupant":true,
-         "HasFactures":true,
-         "HasChantiers":true
+         "HasFactures":false,
+         "HasChantiers":false
       },
-      "NbLogements":19,
-      "NbAppareils":19,
-      "NbDepannages":0,
-      "NbDepannagesTotal":0,
+      "NbLogements":206,
+      "NbAppareils":377,
+      "NbDepannages":1,
+      "NbDepannagesTotal":12,
       "DegresDepannages":-1,
-      "NbDysfonctionnements":0,
+      "NbDysfonctionnements":1,
       "DegresDysfonctionnements":-1,
-      "HasTelereleve":false,
+      "HasTelereleve":true,
       "NbCompteursEC":0,
-      "NbCompteursEF":19,
+      "NbCompteursEF":377,
       "NbCompteursRepart":0,
       "NbCompteursCET":0,
       "NbCompteursCapteur":0,
       "NbCompteursElect":-1,
       "NbCompteursGaz":-1,
-      "NbCompteursTelereveleTotal":-1,
-      "NbCompteursTelereveleOK":-1,
-      "HasTransfertFichiers":false,
+      "NbCompteursTelereveleTotal":364,
+      "NbCompteursTelereveleOK":349,
+      "HasTransfertFichiers":true,
       "ImmeubleEC":{
          "NbCompteursARelever":-1,
          "NbCompteursReleves":-1,
@@ -85,9 +85,9 @@
          }
       },
       "ImmeubleEF":{
-         "NbCompteursARelever":19,
-         "NbCompteursReleves":19,
-         "NbFuites":0,
+         "NbCompteursARelever":377,
+         "NbCompteursReleves":373,
+         "NbFuites":1,
          "DegresFuites":-1,
          "NbAnomalies":2,
          "DegresAnomalies":-1,
@@ -102,82 +102,82 @@
          "TopConsos":{
             "Erreur":"",
             "Info":"",
-            "DateReleve":"2023-10-30T00:00:00",
+            "DateReleve":"2025-10-20T00:00:00",
             "consosGrandes":{
                "conso":[
                   {
-                     "PkLogement":74131,
-                     "NomOcc":"M Mme Onois_578790",
-                     "RefOcc":"",
+                     "PkLogement":1211041,
+                     "NomOcc":"JEGOU FAUVE",
+                     "RefOcc":"214507H0052",
                      "Fluide":2,
-                     "Conso":"131"
+                     "Conso":"29"
                   },
                   {
-                     "PkLogement":74139,
-                     "NomOcc":"M Mme Onois_609341",
-                     "RefOcc":"",
+                     "PkLogement":1211000,
+                     "NomOcc":"DOUCOURE AISSATOU",
+                     "RefOcc":"214507H0011",
                      "Fluide":2,
-                     "Conso":"74"
+                     "Conso":"19"
                   },
                   {
-                     "PkLogement":74138,
-                     "NomOcc":"M Mme Onois_149794",
-                     "RefOcc":"",
+                     "PkLogement":1211063,
+                     "NomOcc":"BEN RABAH BAHIA",
+                     "RefOcc":"214507H0074",
                      "Fluide":2,
-                     "Conso":"72"
+                     "Conso":"17"
                   },
                   {
-                     "PkLogement":74136,
-                     "NomOcc":"M Mme Onois_149792",
-                     "RefOcc":"",
+                     "PkLogement":1211054,
+                     "NomOcc":"TANDJIGORA BOUTTE",
+                     "RefOcc":"214507H0065",
                      "Fluide":2,
-                     "Conso":"71"
+                     "Conso":"16"
                   },
                   {
-                     "PkLogement":74134,
-                     "NomOcc":"M Mme Onois_292704",
-                     "RefOcc":"",
+                     "PkLogement":1210995,
+                     "NomOcc":"BAH HADJA MARIAMA & BAH MAMADOU",
+                     "RefOcc":"214507H0006",
                      "Fluide":2,
-                     "Conso":"54"
+                     "Conso":"14"
                   }
                ]
             },
             "consosPetites":{
                "conso":[
                   {
-                     "PkLogement":74149,
-                     "NomOcc":"M Mme Onois_149752",
-                     "RefOcc":"",
+                     "PkLogement":1211049,
+                     "NomOcc":"FOFANA ABOUBAKARY",
+                     "RefOcc":"214507H0060",
                      "Fluide":2,
                      "Conso":"0"
                   },
                   {
-                     "PkLogement":74146,
-                     "NomOcc":"M Mme Onois_1940354",
-                     "RefOcc":"",
+                     "PkLogement":1211078,
+                     "NomOcc":"DESPLAT JEREMY",
+                     "RefOcc":"214507H0089",
                      "Fluide":2,
                      "Conso":"0"
                   },
                   {
-                     "PkLogement":74145,
-                     "NomOcc":"M Mme Onois_1589697",
-                     "RefOcc":"",
+                     "PkLogement":1211150,
+                     "NomOcc":"VINOUZE MARIE-FRANCE",
+                     "RefOcc":"214507H0163",
                      "Fluide":2,
                      "Conso":"0"
                   },
                   {
-                     "PkLogement":74148,
-                     "NomOcc":"M Mme Onois_149751",
-                     "RefOcc":"",
+                     "PkLogement":1211071,
+                     "NomOcc":"ANDREU SOLANGE",
+                     "RefOcc":"214507H0082",
                      "Fluide":2,
                      "Conso":"0"
                   },
                   {
-                     "PkLogement":997059,
-                     "NomOcc":"M Mme Onois_1589757",
-                     "RefOcc":"",
+                     "PkLogement":1211185,
+                     "NomOcc":"MUSCAT FRANCK",
+                     "RefOcc":"214507H0198",
                      "Fluide":2,
-                     "Conso":"2"
+                     "Conso":"0"
                   }
                ]
             }
@@ -186,46 +186,316 @@
             "Erreur":"",
             "Info":"",
             "DefaultIntervalle":365,
-            "ValeursXYL":"",
+            "ValeursXYL":"Janv|1273|112565|VIRTUAL=N;F\u00e9vr|1390|113955|VIRTUAL=N;Mars|1249|115204|VIRTUAL=N;Avr|1305|116509|VIRTUAL=N;Mai|1189|117698|VIRTUAL=N;Juin|1259|118957|VIRTUAL=N;Juil|1593|120550|VIRTUAL=N;Ao\u00fbt|1177|121727|VIRTUAL=N;Sept|1340|123067|VIRTUAL=N;Oct|1358|124425|VIRTUAL=N;Nov|-1|-1|VISIBLE=N;D\u00e9c|-1|-1|VISIBLE=N",
             "Annee":"2025"
          },
          "SerieConsos2":{
             "Erreur":"",
             "Info":"",
             "DefaultIntervalle":365,
-            "ValeursXYL":"",
+            "ValeursXYL":"Janv|1391|96819|VIRTUAL=N;F\u00e9vr|1095|97914|VIRTUAL=N;Mars|1302|99216|VIRTUAL=N;Avr|1354|100570|VIRTUAL=N;Mai|1287|101857|VIRTUAL=N;Juin|1370|103227|VIRTUAL=N;Juil|1296|104523|VIRTUAL=N;Ao\u00fbt|1382|105905|VIRTUAL=N;Sept|1430|107335|VIRTUAL=N;Oct|1426|108761|VIRTUAL=N;Nov|1165|109926|VIRTUAL=N;D\u00e9c|1366|111292|VIRTUAL=N",
             "Annee":"2024"
          },
          "ListeReleves":{
             "releve":[
                {
-                  "PkReleve":1387621,
-                  "DateReleve":"2023-10-30T00:00:00",
+                  "PkReleve":1560909,
+                  "DateReleve":"2025-10-20T00:00:00",
                   "TypeERC":"EAU"
                },
                {
-                  "PkReleve":1349032,
-                  "DateReleve":"2023-04-13T00:00:00",
+                  "PkReleve":1554424,
+                  "DateReleve":"2025-09-20T00:00:00",
                   "TypeERC":"EAU"
                },
                {
-                  "PkReleve":1310338,
-                  "DateReleve":"2022-10-21T00:00:00",
+                  "PkReleve":1547826,
+                  "DateReleve":"2025-08-20T00:00:00",
                   "TypeERC":"EAU"
                },
                {
-                  "PkReleve":1271262,
-                  "DateReleve":"2022-04-22T00:00:00",
+                  "PkReleve":1542590,
+                  "DateReleve":"2025-07-20T00:00:00",
                   "TypeERC":"EAU"
                },
                {
-                  "PkReleve":1226261,
-                  "DateReleve":"2021-10-11T00:00:00",
+                  "PkReleve":1530907,
+                  "DateReleve":"2025-06-20T00:00:00",
                   "TypeERC":"EAU"
                },
                {
-                  "PkReleve":1174106,
-                  "DateReleve":"2021-04-14T00:00:00",
+                  "PkReleve":1524684,
+                  "DateReleve":"2025-05-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1518654,
+                  "DateReleve":"2025-04-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1510763,
+                  "DateReleve":"2025-03-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1503967,
+                  "DateReleve":"2025-02-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1496835,
+                  "DateReleve":"2025-01-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1484058,
+                  "DateReleve":"2024-12-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1474852,
+                  "DateReleve":"2024-11-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1468786,
+                  "DateReleve":"2024-10-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1462335,
+                  "DateReleve":"2024-09-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1456937,
+                  "DateReleve":"2024-08-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1452449,
+                  "DateReleve":"2024-07-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1441487,
+                  "DateReleve":"2024-06-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1434886,
+                  "DateReleve":"2024-05-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1430186,
+                  "DateReleve":"2024-04-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1424562,
+                  "DateReleve":"2024-03-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1419461,
+                  "DateReleve":"2024-02-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1413121,
+                  "DateReleve":"2024-01-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1400860,
+                  "DateReleve":"2023-12-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1392012,
+                  "DateReleve":"2023-11-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1386893,
+                  "DateReleve":"2023-10-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1380688,
+                  "DateReleve":"2023-09-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1376157,
+                  "DateReleve":"2023-08-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1371988,
+                  "DateReleve":"2023-07-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1361741,
+                  "DateReleve":"2023-06-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1355460,
+                  "DateReleve":"2023-05-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1349922,
+                  "DateReleve":"2023-04-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1343785,
+                  "DateReleve":"2023-03-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1338726,
+                  "DateReleve":"2023-02-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1333321,
+                  "DateReleve":"2023-01-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1321328,
+                  "DateReleve":"2022-12-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1314680,
+                  "DateReleve":"2022-11-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1309978,
+                  "DateReleve":"2022-10-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1303732,
+                  "DateReleve":"2022-09-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1299550,
+                  "DateReleve":"2022-08-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1292442,
+                  "DateReleve":"2022-07-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1280952,
+                  "DateReleve":"2022-06-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1275478,
+                  "DateReleve":"2022-05-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1270799,
+                  "DateReleve":"2022-04-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1265320,
+                  "DateReleve":"2022-03-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1260302,
+                  "DateReleve":"2022-02-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1253152,
+                  "DateReleve":"2022-01-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1242073,
+                  "DateReleve":"2021-12-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1235038,
+                  "DateReleve":"2021-11-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1229345,
+                  "DateReleve":"2021-10-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1220741,
+                  "DateReleve":"2021-09-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1216844,
+                  "DateReleve":"2021-08-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1213219,
+                  "DateReleve":"2021-07-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1185647,
+                  "DateReleve":"2021-06-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1179863,
+                  "DateReleve":"2021-05-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1174906,
+                  "DateReleve":"2021-04-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1146709,
+                  "DateReleve":"2021-03-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1108728,
+                  "DateReleve":"2021-02-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1085380,
+                  "DateReleve":"2021-01-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1072116,
+                  "DateReleve":"2020-12-20T00:00:00",
+                  "TypeERC":"EAU"
+               },
+               {
+                  "PkReleve":1061322,
+                  "DateReleve":"2020-11-20T00:00:00",
                   "TypeERC":"EAU"
                }
             ]
@@ -439,7 +709,7 @@
          "Erreur":"",
          "Info":"",
          "DefaultIntervalle":365,
-         "ValeursXYL":"14\/04\/2021|764|5080;11\/10\/2021|410|5490;22\/04\/2022|613|6103;21\/10\/2022|425|6528;13\/04\/2023|405|6933;30\/10\/2023|621|7554",
+         "ValeursXYL":"20\/11\/2020|1359|43675;20\/12\/2020|1517|45192;20\/01\/2021|1541|46733;20\/02\/2021|1577|48310;20\/03\/2021|1440|49750;20\/04\/2021|1600|51350;20\/05\/2021|1521|52871;20\/06\/2021|1563|54434;20\/07\/2021|1425|55859;20\/08\/2021|1280|57139;20\/09\/2021|1403|58542;20\/10\/2021|1345|59887;20\/11\/2021|1512|61399;20\/12\/2021|1417|62816;20\/01\/2022|1502|64318;20\/02\/2022|1517|65835;20\/03\/2022|1369|67204;20\/04\/2022|1461|68665;20\/05\/2022|1378|70043;20\/06\/2022|1388|71431;20\/07\/2022|1343|72774;20\/08\/2022|1269|74043;20\/09\/2022|1349|75392;20\/10\/2022|1368|76760;20\/11\/2022|1424|78184;20\/12\/2022|1356|79540;20\/01\/2023|1401|80941;20\/02\/2023|1406|82347;20\/03\/2023|1254|83601;20\/04\/2023|1409|85010;20\/05\/2023|1324|86334;20\/06\/2023|1400|87734;20\/07\/2023|1298|89032;20\/08\/2023|1225|90257;20\/09\/2023|1316|91573;20\/10\/2023|1284|92857;20\/11\/2023|1177|94034;20\/12\/2023|1394|95428;20\/01\/2024|1391|96819;20\/02\/2024|1095|97914;20\/03\/2024|1302|99216;20\/04\/2024|1353|100570;20\/05\/2024|1287|101857;20\/06\/2024|1370|103227;20\/07\/2024|1296|104523;20\/08\/2024|1382|105905;20\/09\/2024|1430|107335;20\/10\/2024|1426|108761;20\/11\/2024|1165|109926;20\/12\/2024|1366|111292;20\/01\/2025|1273|112565;20\/02\/2025|1390|113955;20\/03\/2025|1249|115204;20\/04\/2025|1305|116509;20\/05\/2025|1189|117698;20\/06\/2025|1259|118957;20\/07\/2025|1593|120550;20\/08\/2025|1177|121727;20\/09\/2025|1340|123067;20\/10\/2025|1358|124425",
          "Annee":""
       },
       "SerieConsosCompteurGeneral":{
@@ -457,34 +727,304 @@
       ],
       "SerieConsosEAUValues":[
          [
-            "14\/04\/2021",
-            "764",
-            "5080"
+            "20\/11\/2020",
+            "1359",
+            "43675"
          ],
          [
-            "11\/10\/2021",
-            "410",
-            "5490"
+            "20\/12\/2020",
+            "1517",
+            "45192"
          ],
          [
-            "22\/04\/2022",
-            "613",
-            "6103"
+            "20\/01\/2021",
+            "1541",
+            "46733"
          ],
          [
-            "21\/10\/2022",
-            "425",
-            "6528"
+            "20\/02\/2021",
+            "1577",
+            "48310"
          ],
          [
-            "13\/04\/2023",
-            "405",
-            "6933"
+            "20\/03\/2021",
+            "1440",
+            "49750"
          ],
          [
-            "30\/10\/2023",
-            "621",
-            "7554"
+            "20\/04\/2021",
+            "1600",
+            "51350"
+         ],
+         [
+            "20\/05\/2021",
+            "1521",
+            "52871"
+         ],
+         [
+            "20\/06\/2021",
+            "1563",
+            "54434"
+         ],
+         [
+            "20\/07\/2021",
+            "1425",
+            "55859"
+         ],
+         [
+            "20\/08\/2021",
+            "1280",
+            "57139"
+         ],
+         [
+            "20\/09\/2021",
+            "1403",
+            "58542"
+         ],
+         [
+            "20\/10\/2021",
+            "1345",
+            "59887"
+         ],
+         [
+            "20\/11\/2021",
+            "1512",
+            "61399"
+         ],
+         [
+            "20\/12\/2021",
+            "1417",
+            "62816"
+         ],
+         [
+            "20\/01\/2022",
+            "1502",
+            "64318"
+         ],
+         [
+            "20\/02\/2022",
+            "1517",
+            "65835"
+         ],
+         [
+            "20\/03\/2022",
+            "1369",
+            "67204"
+         ],
+         [
+            "20\/04\/2022",
+            "1461",
+            "68665"
+         ],
+         [
+            "20\/05\/2022",
+            "1378",
+            "70043"
+         ],
+         [
+            "20\/06\/2022",
+            "1388",
+            "71431"
+         ],
+         [
+            "20\/07\/2022",
+            "1343",
+            "72774"
+         ],
+         [
+            "20\/08\/2022",
+            "1269",
+            "74043"
+         ],
+         [
+            "20\/09\/2022",
+            "1349",
+            "75392"
+         ],
+         [
+            "20\/10\/2022",
+            "1368",
+            "76760"
+         ],
+         [
+            "20\/11\/2022",
+            "1424",
+            "78184"
+         ],
+         [
+            "20\/12\/2022",
+            "1356",
+            "79540"
+         ],
+         [
+            "20\/01\/2023",
+            "1401",
+            "80941"
+         ],
+         [
+            "20\/02\/2023",
+            "1406",
+            "82347"
+         ],
+         [
+            "20\/03\/2023",
+            "1254",
+            "83601"
+         ],
+         [
+            "20\/04\/2023",
+            "1409",
+            "85010"
+         ],
+         [
+            "20\/05\/2023",
+            "1324",
+            "86334"
+         ],
+         [
+            "20\/06\/2023",
+            "1400",
+            "87734"
+         ],
+         [
+            "20\/07\/2023",
+            "1298",
+            "89032"
+         ],
+         [
+            "20\/08\/2023",
+            "1225",
+            "90257"
+         ],
+         [
+            "20\/09\/2023",
+            "1316",
+            "91573"
+         ],
+         [
+            "20\/10\/2023",
+            "1284",
+            "92857"
+         ],
+         [
+            "20\/11\/2023",
+            "1177",
+            "94034"
+         ],
+         [
+            "20\/12\/2023",
+            "1394",
+            "95428"
+         ],
+         [
+            "20\/01\/2024",
+            "1391",
+            "96819"
+         ],
+         [
+            "20\/02\/2024",
+            "1095",
+            "97914"
+         ],
+         [
+            "20\/03\/2024",
+            "1302",
+            "99216"
+         ],
+         [
+            "20\/04\/2024",
+            "1353",
+            "100570"
+         ],
+         [
+            "20\/05\/2024",
+            "1287",
+            "101857"
+         ],
+         [
+            "20\/06\/2024",
+            "1370",
+            "103227"
+         ],
+         [
+            "20\/07\/2024",
+            "1296",
+            "104523"
+         ],
+         [
+            "20\/08\/2024",
+            "1382",
+            "105905"
+         ],
+         [
+            "20\/09\/2024",
+            "1430",
+            "107335"
+         ],
+         [
+            "20\/10\/2024",
+            "1426",
+            "108761"
+         ],
+         [
+            "20\/11\/2024",
+            "1165",
+            "109926"
+         ],
+         [
+            "20\/12\/2024",
+            "1366",
+            "111292"
+         ],
+         [
+            "20\/01\/2025",
+            "1273",
+            "112565"
+         ],
+         [
+            "20\/02\/2025",
+            "1390",
+            "113955"
+         ],
+         [
+            "20\/03\/2025",
+            "1249",
+            "115204"
+         ],
+         [
+            "20\/04\/2025",
+            "1305",
+            "116509"
+         ],
+         [
+            "20\/05\/2025",
+            "1189",
+            "117698"
+         ],
+         [
+            "20\/06\/2025",
+            "1259",
+            "118957"
+         ],
+         [
+            "20\/07\/2025",
+            "1593",
+            "120550"
+         ],
+         [
+            "20\/08\/2025",
+            "1177",
+            "121727"
+         ],
+         [
+            "20\/09\/2025",
+            "1340",
+            "123067"
+         ],
+         [
+            "20\/10\/2025",
+            "1358",
+            "124425"
          ]
       ],
       "SerieConsosRepartValues":[
@@ -503,84 +1043,86 @@
          
       ],
       "PcCompteursTelereveleOK":100,
-      "RatioNbDepannages":0,
-      "RatioNbDysfonctionnements":0
+      "RatioNbDepannages":0.002652519893899204,
+      "RatioNbDysfonctionnements":0.002652519893899204
    },
    "anomalies":[
       {
          "Logement":{
-            "PkLogement":74145,
+            "PkLogement":1211006,
             "NumBatiment":"1",
-            "AdrBatiment":"14 rue de le source",
+            "AdrBatiment":"10 RUE DU MOULIN DE LA VIERGE",
             "NumEscalier":"1",
             "AdrEscalier":"",
-            "NumEtage":"5",
-            "NumOrdre":"3",
-            "Type":""
+            "NumEtage":"3",
+            "NumOrdre":"1",
+            "Type":"T3"
          },
          "Occupant":{
-            "PkOccupant":1589697,
+            "PkOccupant":1874515,
             "Nom":"Demo",
-            "Ref":"",
-            "DateArrivee":"2016-09-06T00:00:00",
+            "Ref":"214507H0017",
+            "DateArrivee":"2018-09-17T00:00:00",
             "DateDepart":"2999-12-31T00:00:00"
          },
          "Appareil":{
-            "PkAppareil":2798402,
-            "Numero":"61203724",
-            "Emplacement":"CHAMBRE",
+            "PkAppareil":4119606,
+            "Numero":"I19JA069139",
+            "Emplacement":"CUISINE",
             "Fluide":"EF",
             "TypeAppareil":"EF",
             "Unite":"m3"
          },
          "Anomalie":{
-            "Index":"0",
+            "Index":"45",
             "Conso":"0",
-            "Observations":"Derni\u00e8re consommation le :\nPoint de comptage non utilis\u00e9"
+            "Observations":"Derni\u00e8re consommation le :"
          }
       },
       {
          "Logement":{
-            "PkLogement":74148,
-            "NumBatiment":"1",
-            "AdrBatiment":"14 rue de le source",
+            "PkLogement":1211094,
+            "NumBatiment":"3",
+            "AdrBatiment":"119 RUE DE L'OUEST",
             "NumEscalier":"1",
             "AdrEscalier":"",
-            "NumEtage":"5",
-            "NumOrdre":"6",
-            "Type":"  "
+            "NumEtage":"2",
+            "NumOrdre":"3",
+            "Type":"T3"
          },
          "Occupant":{
-            "PkOccupant":149751,
+            "PkOccupant":2673022,
             "Nom":"Demo",
-            "Ref":"",
-            "DateArrivee":"1998-01-15T00:00:00",
+            "Ref":"214507H0105",
+            "DateArrivee":"2025-01-14T00:00:00",
             "DateDepart":"2999-12-31T00:00:00"
          },
          "Appareil":{
-            "PkAppareil":2788261,
-            "Numero":"61210298",
-            "Emplacement":"EXTERIEUR",
+            "PkAppareil":6411971,
+            "Numero":"I24IA430256",
+            "Emplacement":"CUISINE",
             "Fluide":"EF",
             "TypeAppareil":"EF",
             "Unite":"m3"
          },
          "Anomalie":{
-            "Index":"0",
+            "Index":"6",
             "Conso":"0",
-            "Observations":"Derni\u00e8re consommation le :\nPoint de comptage non utilis\u00e9"
+            "Observations":"Derni\u00e8re consommation le :"
          }
       }
    ],
    "filters":{
       "batiment":[
-         "1"
+         "1",
+         "3"
       ],
       "escalier":[
          "1"
       ],
-      "etage":[
-         "5"
-      ]
+      "etage":{
+         "1":"2",
+         "0":"3"
+      }
    }
 }
