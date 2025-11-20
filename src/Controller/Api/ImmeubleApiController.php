@@ -124,10 +124,14 @@ class ImmeubleApiController extends AbstractApiController
     #[Route("/{pkImmeuble}", name: "show", methods: ["GET"])]
     public function show(int $pkImmeuble, Request $request, Immeuble $immeubleService): JsonResponse
     {
-        // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.immeubles.pkImmeuble');
-        if ($fakeResponse !== null) {
-            return $fakeResponse;
+        // Check if faker mode is enabled and return fake data (already formatted)
+        if ($this->isFakerMode()) {
+            try {
+                $fakeData = $this->fakeDataService->get('api.immeubles.pkImmeuble');
+                return new JsonResponse($fakeData);
+            } catch (\Exception $e) {
+                return $this->error('Fake data not available: ' . $e->getMessage(), 500);
+            }
         }
 
         $client = $this->getAuthenticatedClientFromHeaders($request);
