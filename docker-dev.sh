@@ -6,6 +6,11 @@ set -e
 echo "📦 Installation des dépendances Symfony..."
 composer install
 
+
+echo "📂 Cpie du dossier techemcore vers /public/bundles..."
+mkdir -p public/bundles
+cp -r public/techemcore public/bundles/
+
 echo "🚀 Démarrage du serveur backend sur le port 8000 en mode développement..."
 php -S 127.0.0.1:8000 -t public &
 
