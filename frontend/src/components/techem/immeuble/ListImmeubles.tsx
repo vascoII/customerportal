@@ -16,20 +16,26 @@ import {
 import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
 import { useImmeubles } from "@/lib/hooks/useImmeubles";
+import { useExport } from "@/lib/hooks/useExport";
 import type { Building } from "@/lib/types/api";
 import EquipementIconsEau from "@/components/techem/images/EquipementIconsEau";
 import EquipementIconsRepartiteur from "@/components/techem/images/EquipementIconsRepartiteur";
 import EquipementIconsCompteur from "@/components/techem/images/EquipementIconsCompteur";
 import ToggleSwitchListImmeubles from "@/components/techem/immeuble/form/ToggleSwitchListImmeubles";
+import Alert from "@/components/ui/alert/Alert";
 
 
 export default function ListImmeubles() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { filterImmeubles, isFiltering } = useImmeubles();
+  const { filterImmeubles, isFiltering, exportImmeubles } = useImmeubles();
   const [immeubles, setImmeubles] = useState<Building[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingError, setLoadingError] = useState<{ title: string; message: string } | null>(null);
   const { isOpen, openModal, closeModal } = useModal();
+  
+  // Use the reusable export hook
+  const { handleExport, isExporting, error: exportError, clearError: clearExportError } = useExport(exportImmeubles);
 
   // Get active filters from URL parameters
   const activeFilters = useMemo(() => {
@@ -157,14 +163,40 @@ export default function ListImmeubles() {
     const loadImmeubles = async () => {
       try {
         setIsLoading(true);
+        setLoadingError(null);
         const response = await filterImmeubles({});
         if (isMounted) {
           setImmeubles(response.immeubles || []);
+          setLoadingError(null);
         }
-      } catch (error) {
-        console.error("Error loading immeubles:", error);
+      } catch (err) {
+        console.error("Error loading immeubles:", err);
         if (isMounted) {
           setImmeubles([]);
+          const errorMessage = err instanceof Error ? err.message : "Une erreur inconnue s'est produite";
+          
+          // Determine error type based on error message or structure
+          let errorTitle = "Erreur de chargement";
+          let errorMsg = errorMessage;
+          
+          if (errorMessage.includes("Network Error") || errorMessage.includes("Failed to fetch")) {
+            errorTitle = "API non disponible";
+            errorMsg = "Impossible de se connecter au serveur. Veuillez vérifier votre connexion et réessayer.";
+          } else if (errorMessage.includes("500") || errorMessage.includes("Internal Server Error")) {
+            errorTitle = "Erreur serveur";
+            errorMsg = "Une erreur s'est produite côté serveur. Veuillez réessayer plus tard.";
+          } else if (errorMessage.includes("404") || errorMessage.includes("Not Found")) {
+            errorTitle = "Ressource introuvable";
+            errorMsg = "La ressource demandée n'a pas été trouvée.";
+          } else if (errorMessage.includes("401") || errorMessage.includes("Unauthorized")) {
+            errorTitle = "Non autorisé";
+            errorMsg = "Vous n'êtes pas autorisé à accéder à cette ressource.";
+          } else if (errorMessage.includes("403") || errorMessage.includes("Forbidden")) {
+            errorTitle = "Accès refusé";
+            errorMsg = "Vous n'avez pas les permissions nécessaires pour accéder à cette ressource.";
+          }
+          
+          setLoadingError({ title: errorTitle, message: errorMsg });
         }
       } finally {
         if (isMounted) {
@@ -241,6 +273,7 @@ export default function ListImmeubles() {
   const getNbCompteursCET = (building: Building): number => {
     return building.nbCompteursCET ?? building.NbCompteursCET ?? 0;
   };
+
   // Show loading state
   if (isLoading || isFiltering) {
     return (
@@ -256,6 +289,38 @@ export default function ListImmeubles() {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
+      {loadingError && (
+        <div className="mb-4">
+          <Alert
+            variant="error"
+            title={loadingError.title}
+            message={loadingError.message}
+            showLink={false}
+          />
+          <button
+            onClick={() => setLoadingError(null)}
+            className="mt-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            Fermer
+          </button>
+        </div>
+      )}
+      {exportError && (
+        <div className="mb-4">
+          <Alert
+            variant={exportError.variant || "error"}
+            title={exportError.title}
+            message={exportError.message}
+            showLink={false}
+          />
+          <button
+            onClick={clearExportError}
+            className="mt-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            Fermer
+          </button>
+        </div>
+      )}
       <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
@@ -322,6 +387,41 @@ export default function ListImmeubles() {
               />
             </svg>
             Filtrer
+          </button>
+          <button 
+            onClick={handleExport}
+            disabled={isExporting || filteredImmeubles.length === 0}
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+          >
+            {isExporting ? (
+              <>
+                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Export en cours...
+              </>
+            ) : (
+              <>
+                <svg
+                  className="stroke-current"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3.33334 13.3333V16.6667C3.33334 17.5871 4.07953 18.3333 5.00001 18.3333H15C15.9205 18.3333 16.6667 17.5871 16.6667 16.6667V13.3333M13.3333 10L10 13.3333M10 13.3333L6.66668 10M10 13.3333V1.66666"
+                    stroke=""
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Export Excel
+              </>
+            )}
           </button>
         </div>
       </div>

@@ -732,6 +732,32 @@ export function useImmeubles() {
   };
 
   /**
+   * Export immeubles list to Excel
+   * GET /api/immeubles/export
+   * Downloads the file automatically
+   * @returns Promise that resolves when download is complete
+   */
+  const exportImmeubles = async (): Promise<void> => {
+    try {
+      const response = await api.get(
+        `/immeubles/export`,
+        {
+          responseType: "blob",
+        }
+      );
+
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      downloadBlob(blob, "export-immeubles.xlsx");
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+      throw new Error(`Failed to export immeubles: ${errorMessage}`);
+    }
+  };
+
+  /**
    * Get intervention report (PDF or Excel)
    * GET /api/immeubles/{pkImmeuble}/intervention
    * Downloads the file automatically
@@ -805,6 +831,7 @@ export function useImmeubles() {
 
     // Export/Download functions
     getReport,
+    exportImmeubles,
     exportAnomalies,
     exportFuites,
     exportInterventions,

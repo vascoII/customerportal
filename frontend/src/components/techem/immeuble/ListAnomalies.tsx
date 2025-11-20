@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import StatusIconsAnomalie from "@/components/techem/images/StatusIconsAnomalie";
 import {
   Table,
@@ -10,6 +10,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useImmeubles } from "@/lib/hooks/useImmeubles";
+import { useExport } from "@/lib/hooks/useExport";
+import Alert from "@/components/ui/alert/Alert";
 import type { Building, Anomaly } from "@/lib/types/api";
 
 interface ListAnomaliesProps {
@@ -22,6 +24,14 @@ export default function ListAnomalies({ pkImmeuble }: ListAnomaliesProps) {
   const [immeuble, setImmeuble] = useState<Building | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Create wrapper function for export
+  const handleExportAnomalies = useCallback(async () => {
+    await exportAnomalies(pkImmeuble);
+  }, [exportAnomalies, pkImmeuble]);
+
+  // Use the reusable export hook
+  const { handleExport, isExporting, error: exportError, clearError: clearExportError } = useExport(handleExportAnomalies);
 
   useEffect(() => {
     let isMounted = true;
@@ -87,6 +97,22 @@ export default function ListAnomalies({ pkImmeuble }: ListAnomaliesProps) {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-4 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
+      {exportError && (
+        <div className="mb-4">
+          <Alert
+            variant={exportError.variant || "error"}
+            title={exportError.title}
+            message={exportError.message}
+            showLink={false}
+          />
+          <button
+            onClick={clearExportError}
+            className="mt-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            Fermer
+          </button>
+        </div>
+      )}
       <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
@@ -137,14 +163,9 @@ export default function ListAnomalies({ pkImmeuble }: ListAnomaliesProps) {
             Filtrer
           </button>
           <button
-            onClick={async () => {
-              try {
-                await exportAnomalies(pkImmeuble);
-              } catch (error) {
-                console.error("Error exporting anomalies:", error);
-              }
-            }}
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+            onClick={handleExport}
+            disabled={isExporting || anomalies.length === 0}
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
           >
             <svg
               className="stroke-current"
@@ -183,7 +204,7 @@ export default function ListAnomalies({ pkImmeuble }: ListAnomaliesProps) {
                 strokeLinejoin="round"
               />
             </svg>
-            Export Excel
+            {isExporting ? "Export en cours..." : "Export Excel"}
           </button>
         </div>
       </div>

@@ -32,7 +32,13 @@ const IMMEUBLE_SECTION_SLUGS = [
   { slug: "interventions", label: "Interventions" },
 ];
 
-const getNavItems = (pkImmeuble?: string, includeImmeubleSections?: boolean, includeLogements?: boolean): NavItem[] => {
+const getNavItems = (
+  pkImmeuble?: string, 
+  includeImmeubleSections?: boolean, 
+  includeLogements?: boolean,
+  pkLogement?: string,
+  includeLogementSections?: boolean
+): NavItem[] => {
   const dashboardSubItems: { name: string; path: string; pro?: boolean; new?: boolean }[] = [
     { name: "Parc", path: "/parc", pro: false },
     { name: "Immeubles", path: "/immeuble", pro: false },
@@ -51,6 +57,21 @@ const getNavItems = (pkImmeuble?: string, includeImmeubleSections?: boolean, inc
       ...IMMEUBLE_SECTION_SLUGS.map(({ slug, label }) => ({
         name: label,
         path: `/immeuble/${pkImmeuble}/${slug}`,
+        pro: false,
+      }))
+    );
+  }
+
+  // Add logement items if we're on a logement page
+  if (pkLogement) {
+    dashboardSubItems.push({ name: "Logement", path: `/logement/${pkLogement}`, pro: false });
+  }
+
+  if (pkLogement && includeLogementSections) {
+    dashboardSubItems.push(
+      ...IMMEUBLE_SECTION_SLUGS.map(({ slug, label }) => ({
+        name: label,
+        path: `/logement/${pkLogement}/${slug}`,
         pro: false,
       }))
     );
@@ -141,10 +162,17 @@ const AppSidebar: React.FC = () => {
   const isOnLogementsPage =
     pkImmeuble && pathname === `/immeuble/${pkImmeuble}/logements`;
 
+  // Extract pkLogement from pathname if we're on a logement detail page
+  const logementMatch = pathname.match(/^\/logement\/([^/]+)/);
+  const pkLogement = logementMatch ? logementMatch[1] : undefined;
+  const isOnLogementSection =
+    pkLogement &&
+    IMMEUBLE_SECTION_SLUGS.some(({ slug }) => pathname === `/logement/${pkLogement}/${slug}`);
+
   // Get dynamic nav items based on current route (memoized to avoid unnecessary re-renders)
   const navItems = useMemo(
-    () => getNavItems(pkImmeuble, !!isOnImmeubleSection, !!isOnLogementsPage),
-    [pkImmeuble, isOnImmeubleSection, isOnLogementsPage]
+    () => getNavItems(pkImmeuble, !!isOnImmeubleSection, !!isOnLogementsPage, pkLogement, !!isOnLogementSection),
+    [pkImmeuble, isOnImmeubleSection, isOnLogementsPage, pkLogement, isOnLogementSection]
   );
 
   // Determine the home link based on user type
@@ -247,7 +275,7 @@ const AppSidebar: React.FC = () => {
               }}
             >
               <ul className="mt-2 space-y-1 ml-9">
-                {nav.subItems.map((subItem, subIndex) => {
+                {nav.subItems.map((subItem) => {
                   // Determine indentation level based on path
                   let indentLevel = 0;
                   if (subItem.path === "/parc") {
@@ -256,11 +284,16 @@ const AppSidebar: React.FC = () => {
                     indentLevel = 1; // Immeubles - level 1 (décalage de 1 par rapport à Parc)
                   } else if (subItem.path.startsWith("/immeuble/") && !subItem.path.includes("/", 11)) {
                     indentLevel = 2; // Immeuble detail - level 2 (décalage de 1 par rapport à Immeubles)
-                  } else if (subItem.path.includes("/logements")) {
-                    indentLevel = 3; // Logements - level 3 (décalage de 1 par rapport à Immeuble)
-                  } else if (subItem.path.includes("/fuites") || subItem.path.includes("/anomalies") || 
-                             subItem.path.includes("/dysfonctionnements") || subItem.path.includes("/interventions")) {
-                    indentLevel = 3; // Sections (Fuites, Anomalies, etc.) - level 3 (même niveau que Logements)
+                  } else if (subItem.path.includes("/logements") && subItem.path.startsWith("/immeuble/")) {
+                    indentLevel = 3; // Logements (dans immeuble) - level 3 (décalage de 1 par rapport à Immeuble)
+                  } else if (subItem.path.startsWith("/immeuble/") && (subItem.path.includes("/fuites") || subItem.path.includes("/anomalies") || 
+                             subItem.path.includes("/dysfonctionnements") || subItem.path.includes("/interventions"))) {
+                    indentLevel = 3; // Sections immeuble (Fuites, Anomalies, etc.) - level 3 (même niveau que Logements)
+                  } else if (subItem.path.startsWith("/logement/") && !subItem.path.includes("/", 12)) {
+                    indentLevel = 2; // Logement detail - level 2 (même niveau que Immeuble detail)
+                  } else if (subItem.path.startsWith("/logement/") && (subItem.path.includes("/fuites") || subItem.path.includes("/anomalies") || 
+                             subItem.path.includes("/dysfonctionnements") || subItem.path.includes("/interventions"))) {
+                    indentLevel = 3; // Sections logement (Fuites, Anomalies, etc.) - level 3 (même niveau que sections immeuble)
                   }
                   
                   return (
