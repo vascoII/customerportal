@@ -402,11 +402,15 @@ class LogementApiController extends AbstractApiController
     #[Route("/filter", name: "filter", methods: ["GET", "POST"])]
     public function filterResult(Request $request, Logement $logementService): JsonResponse
     {
-        // Check if faker mode is enabled and return fake data (only for GET)
-        if ($request->isMethod('GET')) {
-            $fakeResponse = $this->sendFakeData('api.logements.filter');
-            if ($fakeResponse !== null) {
-                return $fakeResponse;
+        // Check if faker mode is enabled and return fake data (for all methods)
+        if ($this->isFakerMode()) {
+            try {
+                $data = $this->fakeDataService->get('api.logements.filter', []);
+                // The JSON file contains the data directly, wrap it in success response
+                return $this->success($data);
+            } catch (\Exception $e) {
+                error_log('Error in logements filter (faker mode): ' . $e->getMessage());
+                return $this->error('Fake data not available: ' . $e->getMessage(), 500);
             }
         }
 

@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
+import ListLogements from "@/components/techem/logement/ListLogements";
 
 export const metadata: Metadata = {
   title: "Logements | TECHEM - Espace client",
@@ -11,9 +13,15 @@ export default function ImmeubleLogementsPage({
   params: { pkImmeuble: string };
 }) {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold">Hello</h1>
-    </div>
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Chargement...
+        </p>
+      </div>
+    }>
+      <ListLogements pkImmeuble={params.pkImmeuble} />
+    </Suspense>
   );
 }
 
