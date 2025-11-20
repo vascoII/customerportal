@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import { useAuth } from "@/lib/hooks/useAuth";
+import { useLogements } from "@/lib/hooks/useLogements";
 import {
   BoxCubeIcon,
   ChevronDownIcon,
@@ -33,48 +34,64 @@ const IMMEUBLE_SECTION_SLUGS = [
 ];
 
 const getNavItems = (
-  pkImmeuble?: string, 
-  includeImmeubleSections?: boolean, 
-  includeLogements?: boolean,
+  pathname: string,
+  pkImmeuble?: string,
   pkLogement?: string,
-  includeLogementSections?: boolean
+  currentSection?: string
 ): NavItem[] => {
-  const dashboardSubItems: { name: string; path: string; pro?: boolean; new?: boolean }[] = [
-    { name: "Parc", path: "/parc", pro: false },
-    { name: "Immeubles", path: "/immeuble", pro: false },
-  ];
+  const dashboardSubItems: { name: string; path: string; pro?: boolean; new?: boolean }[] = [];
 
+  // Pattern 1: /parc → Parc
+  // Pattern 2: /immeuble → Parc et Immeubles
+  // Pattern 3: /immeuble/{pkImmeuble} → Parc et Immeubles et Immeuble
+  // Pattern 4: /immeuble/{pkImmeuble}/anomalies → Parc et Immeubles et Immeuble et les 4 types
+  // Pattern 5: /immeuble/{pkImmeuble}/logements → Parc et Immeubles et Immeuble et Logements
+  // Pattern 6: /logement/{pkLogement} → Parc et Immeubles et Immeuble et Logements et Logement
+  // Pattern 7: /logement/{pkLogement}/anomalies → Parc et Immeubles et Immeuble et Logements et Logement et les 4 types
+
+  // Always show Parc (all patterns)
+  dashboardSubItems.push({ name: "Parc", path: "/parc", pro: false });
+
+  // Show Immeubles if we're on /immeuble or /logement (patterns 2-7)
+  if (pathname.startsWith("/immeuble") || pathname.startsWith("/logement")) {
+    dashboardSubItems.push({ name: "Immeubles", path: "/immeuble", pro: false });
+  }
+
+  // Show Immeuble if we have pkImmeuble (patterns 3-7)
   if (pkImmeuble) {
     dashboardSubItems.push({ name: "Immeuble", path: `/immeuble/${pkImmeuble}`, pro: false });
-  }
 
-  if (pkImmeuble && includeLogements) {
-    dashboardSubItems.push({ name: "Logements", path: `/immeuble/${pkImmeuble}/logements`, pro: false });
-  }
+    // Show all 4 types if we're on an immeuble type page (pattern 4)
+    if (pathname.startsWith(`/immeuble/${pkImmeuble}/`) && currentSection && IMMEUBLE_SECTION_SLUGS.some(s => s.slug === currentSection)) {
+      IMMEUBLE_SECTION_SLUGS.forEach(({ slug, label }) => {
+        dashboardSubItems.push({
+          name: label,
+          path: `/immeuble/${pkImmeuble}/${slug}`,
+          pro: false,
+        });
+      });
+    }
 
-  if (pkImmeuble && includeImmeubleSections) {
-    dashboardSubItems.push(
-      ...IMMEUBLE_SECTION_SLUGS.map(({ slug, label }) => ({
-        name: label,
-        path: `/immeuble/${pkImmeuble}/${slug}`,
-        pro: false,
-      }))
-    );
-  }
+    // Show Logements if we're on logements page or logement detail page (patterns 5-7)
+    if (pathname.includes("/logements") || pkLogement) {
+      dashboardSubItems.push({ name: "Logements", path: `/immeuble/${pkImmeuble}/logements`, pro: false });
 
-  // Add logement items if we're on a logement page
-  if (pkLogement) {
-    dashboardSubItems.push({ name: "Logement", path: `/logement/${pkLogement}`, pro: false });
-  }
+      // Show Logement if we're on a logement page (patterns 6-7)
+      if (pkLogement) {
+        dashboardSubItems.push({ name: "Logement", path: `/logement/${pkLogement}`, pro: false });
 
-  if (pkLogement && includeLogementSections) {
-    dashboardSubItems.push(
-      ...IMMEUBLE_SECTION_SLUGS.map(({ slug, label }) => ({
-        name: label,
-        path: `/logement/${pkLogement}/${slug}`,
-        pro: false,
-      }))
-    );
+        // Show all 4 types if we're on a logement type page (pattern 7)
+        if (pathname.startsWith(`/logement/${pkLogement}/`) && currentSection && IMMEUBLE_SECTION_SLUGS.some(s => s.slug === currentSection)) {
+          IMMEUBLE_SECTION_SLUGS.forEach(({ slug, label }) => {
+            dashboardSubItems.push({
+              name: label,
+              path: `/logement/${pkLogement}/${slug}`,
+              pro: false,
+            });
+          });
+        }
+      }
+    }
   }
 
   return [
@@ -152,27 +169,50 @@ const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
   const { user } = useAuth();
+  const { getLogementQuery } = useLogements();
 
   // Extract pkImmeuble from pathname if we're on an immeuble detail page
   const immeubleMatch = pathname.match(/^\/immeuble\/([^/]+)/);
   const pkImmeuble = immeubleMatch ? immeubleMatch[1] : undefined;
-  const isOnImmeubleSection =
-    pkImmeuble &&
-    IMMEUBLE_SECTION_SLUGS.some(({ slug }) => pathname === `/immeuble/${pkImmeuble}/${slug}`);
-  const isOnLogementsPage =
-    pkImmeuble && pathname === `/immeuble/${pkImmeuble}/logements`;
 
   // Extract pkLogement from pathname if we're on a logement detail page
   const logementMatch = pathname.match(/^\/logement\/([^/]+)/);
   const pkLogement = logementMatch ? logementMatch[1] : undefined;
-  const isOnLogementSection =
-    pkLogement &&
-    IMMEUBLE_SECTION_SLUGS.some(({ slug }) => pathname === `/logement/${pkLogement}/${slug}`);
+
+  // If we're on a logement page, try to get pkImmeuble from the logement data
+  // Always call the hook (React rules), but it will only execute when pkLogement is provided
+  const { data: logementData } = getLogementQuery(pkLogement || "");
+  
+  // Extract current section (fuites, anomalies, etc.) from pathname
+  let currentSection: string | undefined;
+  if (pkImmeuble) {
+    const sectionMatch = pathname.match(/^\/immeuble\/[^/]+\/([^/]+)$/);
+    if (sectionMatch && IMMEUBLE_SECTION_SLUGS.some(s => s.slug === sectionMatch[1])) {
+      currentSection = sectionMatch[1];
+    }
+  }
+  if (pkLogement && !currentSection) {
+    const sectionMatch = pathname.match(/^\/logement\/[^/]+\/([^/]+)$/);
+    if (sectionMatch && IMMEUBLE_SECTION_SLUGS.some(s => s.slug === sectionMatch[1])) {
+      currentSection = sectionMatch[1];
+    }
+  }
+
+  // Get pkImmeuble from logement data if available (for logement pages)
+  const resolvedPkImmeuble = useMemo(() => {
+    if (pkImmeuble) {
+      return pkImmeuble;
+    }
+    if (pkLogement && logementData?.logement?.Immeuble?.PkImmeuble) {
+      return String(logementData.logement.Immeuble.PkImmeuble);
+    }
+    return undefined;
+  }, [pkImmeuble, pkLogement, logementData]);
 
   // Get dynamic nav items based on current route (memoized to avoid unnecessary re-renders)
   const navItems = useMemo(
-    () => getNavItems(pkImmeuble, !!isOnImmeubleSection, !!isOnLogementsPage, pkLogement, !!isOnLogementSection),
-    [pkImmeuble, isOnImmeubleSection, isOnLogementsPage, pkLogement, isOnLogementSection]
+    () => getNavItems(pathname, resolvedPkImmeuble, pkLogement, currentSection),
+    [pathname, resolvedPkImmeuble, pkLogement, currentSection]
   );
 
   // Determine the home link based on user type
@@ -276,24 +316,25 @@ const AppSidebar: React.FC = () => {
             >
               <ul className="mt-2 space-y-1 ml-9">
                 {nav.subItems.map((subItem) => {
-                  // Determine indentation level based on path
+                  // Determine indentation level based on path hierarchy
+                  // Pattern: Parc (0) -> Immeubles (1) -> Immeuble (2) -> Sections/Logements (3) -> Logement (4) -> Sections (5)
                   let indentLevel = 0;
                   if (subItem.path === "/parc") {
                     indentLevel = 0; // Parc - no indent
                   } else if (subItem.path === "/immeuble") {
-                    indentLevel = 1; // Immeubles - level 1 (décalage de 1 par rapport à Parc)
+                    indentLevel = 1; // Immeubles - level 1
                   } else if (subItem.path.startsWith("/immeuble/") && !subItem.path.includes("/", 11)) {
-                    indentLevel = 2; // Immeuble detail - level 2 (décalage de 1 par rapport à Immeubles)
-                  } else if (subItem.path.includes("/logements") && subItem.path.startsWith("/immeuble/")) {
-                    indentLevel = 3; // Logements (dans immeuble) - level 3 (décalage de 1 par rapport à Immeuble)
+                    indentLevel = 2; // Immeuble detail - level 2
                   } else if (subItem.path.startsWith("/immeuble/") && (subItem.path.includes("/fuites") || subItem.path.includes("/anomalies") || 
                              subItem.path.includes("/dysfonctionnements") || subItem.path.includes("/interventions"))) {
-                    indentLevel = 3; // Sections immeuble (Fuites, Anomalies, etc.) - level 3 (même niveau que Logements)
+                    indentLevel = 3; // Sections immeuble (Anomalies, Dysfonctionnements, Fuites, Interventions) - level 3
+                  } else if (subItem.path.includes("/logements") && subItem.path.startsWith("/immeuble/")) {
+                    indentLevel = 3; // Logements (dans immeuble) - level 3
                   } else if (subItem.path.startsWith("/logement/") && !subItem.path.includes("/", 12)) {
-                    indentLevel = 2; // Logement detail - level 2 (même niveau que Immeuble detail)
+                    indentLevel = 4; // Logement detail - level 4
                   } else if (subItem.path.startsWith("/logement/") && (subItem.path.includes("/fuites") || subItem.path.includes("/anomalies") || 
                              subItem.path.includes("/dysfonctionnements") || subItem.path.includes("/interventions"))) {
-                    indentLevel = 3; // Sections logement (Fuites, Anomalies, etc.) - level 3 (même niveau que sections immeuble)
+                    indentLevel = 5; // Sections logement (Anomalies, Dysfonctionnements, Fuites, Interventions) - level 5
                   }
                   
                   return (
@@ -362,16 +403,29 @@ const AppSidebar: React.FC = () => {
     ["main", "others"].forEach((menuType) => {
       const items = menuType === "main" ? navItems : othersItems;
       items.forEach((nav, index) => {
-        if (nav.subItems) {
-          nav.subItems.forEach((subItem) => {
-            if (isActive(subItem.path)) {
-              setOpenSubmenu({
-                type: menuType as "main" | "others",
-                index,
-              });
-              submenuMatched = true;
-            }
-          });
+        if (nav.subItems && nav.subItems.length > 0) {
+          // Check if we're on a page that should open this submenu
+          // For Dashboard, open if we're on /parc, /immeuble, or /logement
+          if (nav.name === "Dashboard" && (pathname.startsWith("/parc") || pathname.startsWith("/immeuble") || pathname.startsWith("/logement"))) {
+            setOpenSubmenu({
+              type: menuType as "main" | "others",
+              index,
+            });
+            submenuMatched = true;
+          } else {
+            // Check if current pathname matches any subItem path
+            nav.subItems.forEach((subItem) => {
+              // Check if current pathname matches the subItem path or starts with it (for dynamic routes)
+              const pathMatches = pathname === subItem.path || pathname.startsWith(subItem.path + "/");
+              if (pathMatches) {
+                setOpenSubmenu({
+                  type: menuType as "main" | "others",
+                  index,
+                });
+                submenuMatched = true;
+              }
+            });
+          }
         }
       });
     });
