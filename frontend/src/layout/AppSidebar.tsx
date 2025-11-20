@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
+import { useAuth } from "@/lib/hooks/useAuth";
 import {
   BoxCubeIcon,
   ChevronDownIcon,
@@ -102,6 +103,7 @@ const othersItems: NavItem[] = [
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
+  const { user } = useAuth();
 
   // Extract pkImmeuble from pathname if we're on an immeuble detail page
   const immeubleMatch = pathname.match(/^\/immeuble\/([^/]+)/);
@@ -109,6 +111,26 @@ const AppSidebar: React.FC = () => {
 
   // Get dynamic nav items based on current route (memoized to avoid unnecessary re-renders)
   const navItems = useMemo(() => getNavItems(pkImmeuble), [pkImmeuble]);
+
+  // Determine the home link based on user type
+  const homeLink = useMemo(() => {
+    if (!user?.UserType) {
+      return "/parc"; // Default fallback
+    }
+    
+    // If UserType is O (Occupant), redirect to /occupant
+    if (user.UserType === "O") {
+      return "/occupant";
+    }
+    
+    // If UserType is C (Client) or G (Gestionnaire), redirect to /parc
+    if (user.UserType === "C" || user.UserType === "G") {
+      return "/parc";
+    }
+    
+    // Default fallback
+    return "/parc";
+  }, [user?.UserType]);
 
   const renderMenuItems = (
     navItems: NavItem[],
@@ -320,7 +342,7 @@ const AppSidebar: React.FC = () => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-        <Link href="/">
+        <Link href={homeLink}>
           {isExpanded || isHovered || isMobileOpen ? (
             <>
               <Image

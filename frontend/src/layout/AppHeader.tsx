@@ -3,14 +3,36 @@ import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import NotificationDropdown from "@/components/header/NotificationDropdown";
 import UserDropdown from "@/components/header/UserDropdown";
 import { useSidebar } from "@/context/SidebarContext";
+import { useAuth } from "@/lib/hooks/useAuth";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState ,useEffect,useRef} from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
+  const { user } = useAuth();
+
+  // Determine the home link based on user type
+  const homeLink = useMemo(() => {
+    if (!user?.UserType) {
+      return "/parc"; // Default fallback
+    }
+    
+    // If UserType is O (Occupant), redirect to /occupant
+    if (user.UserType === "O") {
+      return "/occupant";
+    }
+    
+    // If UserType is C (Client) or G (Gestionnaire), redirect to /parc
+    if (user.UserType === "C" || user.UserType === "G") {
+      return "/parc";
+    }
+    
+    // Default fallback
+    return "/parc";
+  }, [user?.UserType]);
 
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {
@@ -83,7 +105,7 @@ const AppHeader: React.FC = () => {
             {/* Cross Icon */}
           </button>
 
-          <Link href="/" className="lg:hidden">
+          <Link href={homeLink} className="lg:hidden">
             <Image
               width={154}
               height={32}
