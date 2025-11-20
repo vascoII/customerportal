@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useImmeubles } from "@/lib/hooks/useImmeubles";
+import { LoadingSkeleton } from "@/components/ui/loading";
 
 // Fix for default marker icons in Next.js (SSR issue)
 if (typeof window !== "undefined") {
@@ -166,8 +167,8 @@ export default function ImmeubleCard({ pkImmeuble }: ImmeubleCardProps) {
         <div className="space-y-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="space-y-2">
-              <p className="text-xs text-gray-500 dark:text-gray-400">Chargement...</p>
-              <p className="text-sm text-gray-800 dark:text-white/90">...</p>
+              <LoadingSkeleton variant="text" width="120px" height="16px" />
+              <LoadingSkeleton variant="text" width="200px" height="20px" />
             </div>
           ))}
         </div>

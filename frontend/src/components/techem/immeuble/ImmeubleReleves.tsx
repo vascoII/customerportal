@@ -6,6 +6,7 @@ import { useImmeubles } from "@/lib/hooks/useImmeubles";
 import { useExport } from "@/lib/hooks/useExport";
 import Alert from "@/components/ui/alert/Alert";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
+import { LoadingChart } from "@/components/ui/loading";
 
 // Dynamically import the ReactApexChart component
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
@@ -284,15 +285,11 @@ export default function ImmeubleReleves({ pkImmeuble }: ImmeubleRelevesProps) {
   // Show loading state while fetching data
   if (isImmeubleLoading) {
     return (
-      <div className="rounded-2xl border border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-white/[0.03]">
-        <div className="px-5 pt-5 bg-white shadow-default rounded-2xl pb-11 dark:bg-gray-900 sm:px-6 sm:pt-6">
-          <div className="flex items-center justify-center min-h-[330px]">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Chargement des données...
-            </p>
-          </div>
-        </div>
-      </div>
+      <LoadingChart 
+        height={330} 
+        message="Chargement des données..." 
+        variant="radial"
+      />
     );
   }
 

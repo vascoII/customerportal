@@ -12,6 +12,7 @@ import {
 import { useImmeubles } from "@/lib/hooks/useImmeubles";
 import { useExport } from "@/lib/hooks/useExport";
 import Alert from "@/components/ui/alert/Alert";
+import { LoadingTable } from "@/components/ui/loading";
 import type { Building, Anomaly } from "@/lib/types/api";
 
 interface ListAnomaliesProps {
@@ -95,13 +96,10 @@ export default function ListAnomalies({ pkImmeuble }: ListAnomaliesProps) {
 
   if (isLoading) {
     return (
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-6 pt-6 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
-        <div className="flex items-center justify-center min-h-[300px]">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Chargement des anomalies...
-          </p>
-        </div>
-      </div>
+      <LoadingTable 
+        variant="spinner"
+        message="Chargement des anomalies..."
+      />
     );
   }
 
