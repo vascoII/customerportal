@@ -8,6 +8,7 @@ import { MoreDotIcon } from "@/icons";
 import { useState, useMemo } from "react";
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
 import { useParc } from "@/lib/hooks/useParc";
+import { LoadingChart } from "@/components/ui/loading";
 // Dynamically import the ReactApexChart component
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -85,15 +86,12 @@ export default function VosReleves() {
   // Show loading state while fetching data
   if (isParcLoading) {
     return (
-      <div className="rounded-2xl border border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-white/[0.03]">
-        <div className="px-5 pt-5 bg-white shadow-default rounded-2xl pb-11 dark:bg-gray-900 sm:px-6 sm:pt-6">
-          <div className="flex items-center justify-center min-h-[330px]">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Chargement des données...
-            </p>
-          </div>
-        </div>
-      </div>
+      <LoadingChart 
+        height={330} 
+        message="Chargement des données..." 
+        variant="radial"
+        title="Vos Relevés"
+      />
     );
   }
 

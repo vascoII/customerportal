@@ -2,6 +2,7 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { useParc } from "@/lib/hooks/useParc";
+import { LoadingCard } from "@/components/ui/loading";
 
 export default function ParcMainCard() {
   const { parcData, isParcLoading } = useParc();
@@ -33,34 +34,12 @@ export default function ParcMainCard() {
           </h4>
 
           {isParcLoading ? (
-            <div className="space-y-6">
-              {/* First row - 2 columns */}
-              <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
-                {[1, 2].map((i) => (
-                  <div key={i}>
-                    <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                      Chargement...
-                    </p>
-                    <p className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-                      ...
-                    </p>
-                  </div>
-                ))}
-              </div>
-              {/* Second row - 4 columns */}
-              <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i}>
-                    <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                      Chargement...
-                    </p>
-                    <p className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-                      ...
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <LoadingCard 
+              title="Informations du parc" 
+              rows={2} 
+              columns={[2, 4]} 
+              showTitle={false}
+            />
           ) : (
             <div className="space-y-6">
               {/* First row - 2 columns: Immeubles and Nombre d'Appareils */}
