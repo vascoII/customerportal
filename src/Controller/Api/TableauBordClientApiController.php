@@ -19,45 +19,11 @@ class TableauBordClientApiController extends AbstractApiController
     #[Route("", name: "index", methods: ["GET"])]
     public function index(Request $request): JsonResponse
     {
-        // Check if faker mode is enabled and return fake data
+        // Check if faker mode is enabled and return fake data (already formatted)
         if ($this->isFakerMode()) {
             try {
-                $boardData = $this->fakeDataService->get('api.parc');
-                $normalizedData = $this->normalize($boardData);
-                
-                // Extract board stats (handle legacy format without "board" wrapper)
-                $boardStats = $normalizedData['board'] ?? $normalizedData;
-                $boardStats = is_array($boardStats) ? $boardStats : (array) $boardStats;
-                
-                // Calculate installation statistics from fake data
-                $installed = $boardStats['nbCompteursPoses'] ?? $boardStats['NbCompteursPoses'] ?? 0;
-                $total = $boardStats['nbCompteursCommandes'] ?? $boardStats['NbCompteursCommandes'] ?? 0;
-                $remaining = $total - $installed;
-
-                if ($total > 0) {
-                    $installed_percent = (int) (100 * $installed) / $total;
-                    $remaining_percent = (int) (100 * $remaining) / $total;
-                } else {
-                    $installed_percent = 100;
-                    $remaining_percent = 0;
-                }
-
-                $chantier = [
-                    'installed' => $installed,
-                    'installed_percent' => $installed_percent,
-                    'remaining' => $remaining,
-                    'remaining_percent' => $remaining_percent,
-                    'total' => $total,
-                    'date' => null,
-                ];
-
-                // Structure the data the same way as SOAP response
-                $data = [
-                    'board' => $boardStats,
-                    'chantier' => $normalizedData['chantier'] ?? $chantier,
-                ];
-
-                return $this->success($data);
+                $fakeData = $this->fakeDataService->get('api.parc');
+                return new JsonResponse($fakeData);
             } catch (\Exception $e) {
                 return $this->error('Fake data not available: ' . $e->getMessage(), 500);
             }

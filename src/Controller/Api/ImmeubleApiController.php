@@ -58,10 +58,14 @@ class ImmeubleApiController extends AbstractApiController
     #[Route("/filtre", name: "filter", methods: ["GET", "POST"])]
     public function filter(Request $request): JsonResponse
     {
-        // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.immeubles.filtre');
-        if ($fakeResponse !== null) {
-            return $fakeResponse;
+        // Check if faker mode is enabled and return fake data (already formatted)
+        if ($this->isFakerMode()) {
+            try {
+                $fakeData = $this->fakeDataService->get('api.immeubles.filtre');
+                return new JsonResponse($fakeData);
+            } catch (\Exception $e) {
+                return $this->error('Fake data not available: ' . $e->getMessage(), 500);
+            }
         }
 
         $client = $this->getAuthenticatedClientFromHeaders($request);

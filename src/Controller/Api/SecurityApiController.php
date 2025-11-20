@@ -26,10 +26,14 @@ class SecurityApiController extends AbstractApiController
     public function login(Request $request): JsonResponse
     {
 
-        // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.security.login');
-        if ($fakeResponse !== null) {
-            return $fakeResponse;
+        // Check if faker mode is enabled and return fake data (already shaped like a final API response)
+        if ($this->isFakerMode()) {
+            try {
+                $fakeData = $this->fakeDataService->get('api.security.login');
+                return new JsonResponse($fakeData);
+            } catch (\Exception $e) {
+                return $this->error('Fake data not available: ' . $e->getMessage(), 500);
+            }
         }
 
         $data = json_decode($request->getContent(), true);
