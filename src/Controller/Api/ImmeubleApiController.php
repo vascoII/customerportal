@@ -242,9 +242,13 @@ class ImmeubleApiController extends AbstractApiController
     public function listInterventions(int $pkImmeuble, Request $request, Depannage $depannageService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.immeubles.pkImmeuble.interventions');
-        if ($fakeResponse !== null) {
-            return $fakeResponse;
+        if ($this->isFakerMode()) {
+            try {
+                $fakeData = $this->fakeDataService->get('api.immeubles.pkImmeuble.interventions');
+                return new JsonResponse($fakeData);
+            } catch (\Exception $e) {
+                return $this->error('Fake data not available: ' . $e->getMessage(), 500);
+            }
         }
 
         $client = $this->getAuthenticatedClientFromHeaders($request);
@@ -273,9 +277,13 @@ class ImmeubleApiController extends AbstractApiController
     public function listLeaks(int $pkImmeuble, Request $request, Fuite $fuiteService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.immeubles.pkImmeuble.fuites');
-        if ($fakeResponse !== null) {
-            return $fakeResponse;
+        if ($this->isFakerMode()) {
+            try {
+                $fakeData = $this->fakeDataService->get('api.immeubles.pkImmeuble.fuites');
+                return new JsonResponse($fakeData);
+            } catch (\Exception $e) {
+                return $this->error('Fake data not available: ' . $e->getMessage(), 500);
+            }
         }
 
         $client = $this->getAuthenticatedClientFromHeaders($request);
@@ -304,9 +312,13 @@ class ImmeubleApiController extends AbstractApiController
     public function listAnomalies(int $pkImmeuble, Request $request, Anomalie $anomalieService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.immeubles.pkImmeuble.anomalies');
-        if ($fakeResponse !== null) {
-            return $fakeResponse;
+        if ($this->isFakerMode()) {
+            try {
+                $fakeData = $this->fakeDataService->get('api.immeubles.pkImmeuble.anomalies');
+                return new JsonResponse($fakeData);
+            } catch (\Exception $e) {
+                return $this->error('Fake data not available: ' . $e->getMessage(), 500);
+            }
         }
 
         $client = $this->getAuthenticatedClientFromHeaders($request);
@@ -335,9 +347,13 @@ class ImmeubleApiController extends AbstractApiController
     public function listDysfunctions(int $pkImmeuble, Request $request, Dysfonctionnement $dysfonctionnementService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.immeubles.pkImmeuble.dysfonctionnements');
-        if ($fakeResponse !== null) {
-            return $fakeResponse;
+        if ($this->isFakerMode()) {
+            try {
+                $fakeData = $this->fakeDataService->get('api.immeubles.pkImmeuble.dysfonctionnements');
+                return new JsonResponse($fakeData);
+            } catch (\Exception $e) {
+                return $this->error('Fake data not available: ' . $e->getMessage(), 500);
+            }
         }
 
         $client = $this->getAuthenticatedClientFromHeaders($request);
