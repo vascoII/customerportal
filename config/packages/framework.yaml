@@ -14,6 +14,8 @@ framework:
     cookie_secure: auto
     cookie_samesite: lax
 
+  assets:
+    json_manifest_path: '%kernel.project_dir%/public/bundles/techemcore/manifest.json'
   #esi: true
   #fragments: true
   php_errors:
