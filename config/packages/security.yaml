@@ -19,15 +19,11 @@ security:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
 
-    # API firewall - allow OPTIONS requests without authentication
-    # In faker mode, disable security for API routes (controllers will handle fake data)
     api:
       pattern: ^/api
-      stateless: false
+      stateless: true
       lazy: true
-      # Temporarily disable security for API routes in faker mode
-      # TODO: Re-enable proper authentication when not in faker mode
-      security: false
+      security: true
       provider: user_provider
       custom_authenticators:
         - App\Security\ApiHeaderAuthenticator
@@ -49,31 +45,5 @@ security:
     - { path: ^/api, methods: [OPTIONS], roles: PUBLIC_ACCESS }
     # Allow API security endpoints (login, logout) without authentication
     - { path: ^/api/security/(login|logout), roles: PUBLIC_ACCESS }
-    # In faker mode, allow all API routes without authentication
-    # The controllers will check faker mode and return fake data
-    - { path: ^/api, roles: PUBLIC_ACCESS }
-    - {
-        path: ^/(login|logout|login_check|reset-password|create|reset-or-create),
-        roles: PUBLIC_ACCESS,
-      }
-    - { path: ^/(reporttoken|document/receive), roles: PUBLIC_ACCESS }
-    - { path: ^/(en|fr)/(legal-notices|personal-datas), roles: PUBLIC_ACCESS }
-    - { path: ^/(en|fr)/change/locale/(en|fr), roles: PUBLIC_ACCESS }
-    - {
-        path: ^/(en|fr)/(update-password|cgu),
-        roles: [ROLE_OCCUPANT, ROLE_GESTIONNAIRE],
-      }
-    - {
-        path: ^/(en|fr)/depannage/.+/releve,
-        roles: [ROLE_OCCUPANT, ROLE_GESTIONNAIRE],
-      }
-    - {
-        path: ^/(en|fr)/occupant/.+/releve,
-        roles: [ROLE_OCCUPANT, ROLE_GESTIONNAIRE],
-      }
-    - { path: ^/(en|fr)/occupant, roles: [ROLE_OCCUPANT] }
-    - {
-        path: ^/(en|fr)/guide,
-        roles: [ROLE_USER, ROLE_GESTIONNAIRE, ROLE_ADMIN],
-      }
-    - { path: ^/.+, roles: [ROLE_GESTIONNAIRE] }
+    # All other API routes require authentication
+    - { path: ^/api, roles: ROLE_USER }
