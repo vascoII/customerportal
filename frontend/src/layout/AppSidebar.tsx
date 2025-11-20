@@ -25,16 +25,38 @@ type NavItem = {
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
 
-const getNavItems = (pkImmeuble?: string): NavItem[] => [
+const IMMEUBLE_SECTION_SLUGS = [
+  { slug: "fuites", label: "Fuites" },
+  { slug: "anomalies", label: "Anomalies" },
+  { slug: "dysfonctionnements", label: "Dysfonctionnements" },
+  { slug: "interventions", label: "Interventions" },
+];
+
+const getNavItems = (pkImmeuble?: string, includeImmeubleSections?: boolean): NavItem[] => {
+  const dashboardSubItems: { name: string; path: string; pro?: boolean; new?: boolean }[] = [
+    { name: "Parc", path: "/parc", pro: false },
+    { name: "Immeubles", path: "/immeuble", pro: false },
+  ];
+
+  if (pkImmeuble) {
+    dashboardSubItems.push({ name: "Immeuble", path: `/immeuble/${pkImmeuble}`, pro: false });
+  }
+
+  if (pkImmeuble && includeImmeubleSections) {
+    dashboardSubItems.push(
+      ...IMMEUBLE_SECTION_SLUGS.map(({ slug, label }) => ({
+        name: label,
+        path: `/immeuble/${pkImmeuble}/${slug}`,
+        pro: false,
+      }))
+    );
+  }
+
+  return [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [
-      { name: "Parc", path: "/parc", pro: false },
-      { name: "Immeubles", path: "/immeuble", pro: false },
-      ...(pkImmeuble ? [{ name: "Immeuble", path: `/immeuble/${pkImmeuble}`, pro: false }] : [])
-    ],
-    
+    subItems: dashboardSubItems,
   },
   {
     icon: <UserCircleIcon />,
@@ -42,6 +64,7 @@ const getNavItems = (pkImmeuble?: string): NavItem[] => [
     path: "/profile",
   },
 ];
+};
 
 const othersItems: NavItem[] = [
   {
@@ -108,9 +131,15 @@ const AppSidebar: React.FC = () => {
   // Extract pkImmeuble from pathname if we're on an immeuble detail page
   const immeubleMatch = pathname.match(/^\/immeuble\/([^/]+)/);
   const pkImmeuble = immeubleMatch ? immeubleMatch[1] : undefined;
+  const isOnImmeubleSection =
+    pkImmeuble &&
+    IMMEUBLE_SECTION_SLUGS.some(({ slug }) => pathname === `/immeuble/${pkImmeuble}/${slug}`);
 
   // Get dynamic nav items based on current route (memoized to avoid unnecessary re-renders)
-  const navItems = useMemo(() => getNavItems(pkImmeuble), [pkImmeuble]);
+  const navItems = useMemo(
+    () => getNavItems(pkImmeuble, !!isOnImmeubleSection),
+    [pkImmeuble, isOnImmeubleSection]
+  );
 
   // Determine the home link based on user type
   const homeLink = useMemo(() => {
@@ -212,7 +241,21 @@ const AppSidebar: React.FC = () => {
               }}
             >
               <ul className="mt-2 space-y-1 ml-9">
-                {nav.subItems.map((subItem) => (
+                {nav.subItems.map((subItem, subIndex) => {
+                  // Determine indentation level based on path
+                  let indentLevel = 0;
+                  if (subItem.path === "/parc") {
+                    indentLevel = 0; // Parc - no indent
+                  } else if (subItem.path === "/immeuble") {
+                    indentLevel = 1; // Immeubles - level 1
+                  } else if (subItem.path.startsWith("/immeuble/") && !subItem.path.includes("/", 11)) {
+                    indentLevel = 2; // Immeuble detail - level 2
+                  } else if (subItem.path.includes("/fuites") || subItem.path.includes("/anomalies") || 
+                             subItem.path.includes("/dysfonctionnements") || subItem.path.includes("/interventions")) {
+                    indentLevel = 3; // Sections (Fuites, Anomalies, etc.) - level 3
+                  }
+                  
+                  return (
                   <li key={subItem.name}>
                     <Link
                       href={subItem.path}
@@ -221,6 +264,7 @@ const AppSidebar: React.FC = () => {
                           ? "menu-dropdown-item-active"
                           : "menu-dropdown-item-inactive"
                       }`}
+                      style={{ paddingLeft: `${indentLevel * 1.5}rem` }}
                     >
                       {subItem.name}
                       <span className="flex items-center gap-1 ml-auto">
@@ -249,7 +293,8 @@ const AppSidebar: React.FC = () => {
                       </span>
                     </Link>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             </div>
           )}
