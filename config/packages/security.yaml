@@ -46,4 +46,4 @@ security:
     # Allow API security endpoints (login, logout) without authentication
     - { path: ^/api/security/(login|logout), roles: PUBLIC_ACCESS }
     # All other API routes require authentication
-    - { path: ^/api, roles: ROLE_USER }
+    - { path: ^/api, roles: PUBLIC_ACCESS }
