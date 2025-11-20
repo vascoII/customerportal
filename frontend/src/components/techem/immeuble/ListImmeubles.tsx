@@ -414,8 +414,8 @@ export default function ListImmeubles() {
                   if (target.closest('a') || target.closest('button')) {
                     return;
                   }
-                  if (buildingNumero) {
-                    router.push(`/immeuble/${buildingNumero}`);
+                  if (pkImmeuble) {
+                    router.push(`/immeuble/${pkImmeuble}`);
                   }
                 };
 
