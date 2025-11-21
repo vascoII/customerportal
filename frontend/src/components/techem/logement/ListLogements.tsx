@@ -24,6 +24,7 @@ import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
 import AppareilsTable from "./AppareilsTable";
 import ToggleSwitchListLogements from "./form/ToggleSwitchListLogements";
+import { LoadingTable } from "@/components/ui/loading";
 
 interface ListLogementsProps {
   pkImmeuble: string;
@@ -325,13 +326,10 @@ export default function ListLogements({ pkImmeuble }: ListLogementsProps) {
   // Show loading state
   if (isLoading || isFiltering) {
     return (
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Chargement des logements...
-          </p>
-        </div>
-      </div>
+      <LoadingTable 
+        variant="spinner"
+        message="Chargement des logements..."
+      />
     );
   }
 

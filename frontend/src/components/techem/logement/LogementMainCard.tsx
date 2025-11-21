@@ -1,6 +1,7 @@
 "use client";
 import React, { useMemo } from "react";
 import { useLogements } from "@/lib/hooks/useLogements";
+import { LoadingCard } from "@/components/ui/loading";
 
 interface LogementMainCardProps {
   pkLogement: string;
@@ -36,34 +37,12 @@ export default function LogementMainCard({ pkLogement }: LogementMainCardProps) 
           </h4>
 
           {isLogementLoading ? (
-            <div className="space-y-6">
-              {/* First row - 2 columns */}
-              <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
-                {[1, 2].map((i) => (
-                  <div key={i}>
-                    <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                      Chargement...
-                    </p>
-                    <p className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-                      ...
-                    </p>
-                  </div>
-                ))}
-              </div>
-              {/* Second row - 4 columns */}
-              <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i}>
-                    <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                      Chargement...
-                    </p>
-                    <p className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-                      ...
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <LoadingCard 
+              title="Informations du logement" 
+              rows={2} 
+              columns={[1, 4]} 
+              showTitle={false}
+            />
           ) : (
             <div className="space-y-6">
               {/* First row - 1 column: Nombre d'Appareils */}
