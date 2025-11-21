@@ -65,13 +65,13 @@ class SecurityApiController extends AbstractApiController
                     case 'A':
                     case 'S':
                     case 'C':
-                        $roles[] = 'ROLE_CIENT';
+                        $roles[] = 'ROLE_CLIENT';
                         break;
                     case 'G':
                          $roles[] = 'ROLE_GESTIONNAIRE';
                         break;
                     default:
-                        $roles[] = 'ROLE_CIENT';
+                        $roles[] = 'ROLE_CLIENT';
                         break;
                 }
             }
