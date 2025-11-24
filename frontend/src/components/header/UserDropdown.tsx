@@ -8,7 +8,7 @@ import { useAuth } from "@/lib/hooks/useAuth";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, roles } = useAuth();
+  const { user } = useAuth();
 
   // Extract user information
   const displayName = useMemo(() => {
@@ -23,18 +23,10 @@ export default function UserDropdown() {
 
   const email = user?.EMail ?? user?.Email ?? "";
 
-  // Determine the main role (skip ROLE_USER if it's the first role)
-  const mainRole = useMemo(() => {
-    if (!roles || roles.length === 0) return null;
-    // If the first role is ROLE_USER, use the second role instead
-    return roles[0] === "ROLE_USER" && roles.length > 1 
-      ? roles[1] 
-      : roles[0];
-  }, [roles]);
-
-  // Determine which menu items to show based on role
-  const showOccupantGestionnaireMenu = mainRole === "ROLE_OCCUPANT" || mainRole === "ROLE_GESTIONNAIRE";
-  const showClientMenu = mainRole === "ROLE_CLIENT";
+  // Determine which menu items to show based on UserType
+  // Show menu items only if UserType is "C" (Client)
+  // For OCCUPANT or GESTIONNAIRE, only show "Mon compte"
+  const showClientMenu = user?.UserType === "C";
 
 function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   e.stopPropagation();
@@ -116,8 +108,8 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
             </DropdownItem>
           </li>
 
-          {/* Menu items for ROLE_OCCUPANT or ROLE_GESTIONNAIRE */}
-          {showOccupantGestionnaireMenu && (
+          {/* Menu items for ROLE_CLIENT with UserType "C" */}
+          {showClientMenu && (
             <>
               <li>
                 <DropdownItem
