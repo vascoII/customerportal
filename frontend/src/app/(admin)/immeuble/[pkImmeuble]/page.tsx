@@ -18,19 +18,22 @@ export default function ImmeubleDetailsPage({
   params: { pkImmeuble: string };
 }) {
   return (
-    <div className="grid grid-cols-12 gap-4 md:gap-6">
-      <div className="col-span-12 space-y-6 xl:col-span-7">
-        <ImmeubleMainCard pkImmeuble={params.pkImmeuble} />
-        <ImmeubleReleves pkImmeuble={params.pkImmeuble} />
-        <ImmeubleConsommationChart/>
-        <ImmeubleStatisticsConsommationChart/>
+    <div className="space-y-6">
+      <div className="grid grid-cols-12 gap-4 md:gap-6">
+        <div className="col-span-12 space-y-6 xl:col-span-7">
+          <ImmeubleMainCard pkImmeuble={params.pkImmeuble} />
+          <ImmeubleReleves pkImmeuble={params.pkImmeuble} />
+          <ImmeubleStatisticsConsommationChart/>
+        </div>
+
+        <div className="col-span-12 space-y-6 xl:col-span-5">
+          <ImmeubleCard pkImmeuble={params.pkImmeuble} />
+          <ImmeubleMetrics pkImmeuble={params.pkImmeuble} />
+          <ImmeubleRelevesCard pkImmeuble={params.pkImmeuble} />
+        </div>
       </div>
 
-      <div className="col-span-12 space-y-6 xl:col-span-5">
-        <ImmeubleCard pkImmeuble={params.pkImmeuble} />
-        <ImmeubleMetrics pkImmeuble={params.pkImmeuble} />
-        <ImmeubleRelevesCard pkImmeuble={params.pkImmeuble} />
-      </div>
+      <ImmeubleConsommationChart pkImmeuble={params.pkImmeuble} />
     </div>
   );
 }
