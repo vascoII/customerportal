@@ -116,7 +116,7 @@ const getNavItems = (
 
   // Select the appropriate dashboard items based on userType
   const selectedDashboardItems = userType === "O" ? dashboardSubItemsOcupant : dashboardSubItems;
-
+  const isClient = userType === "C" ? true : false;
   // Check if Administration should be shown
   // Show if: (env=prod && userType == "A") OR env=dev
   const isDevelopment = process.env.NODE_ENV === "development";
@@ -135,6 +135,14 @@ const getNavItems = (
       path: "/profile",
     },
   ];
+
+  if (isClient) {
+    navItems.push({
+      icon: <UserCircleIcon />,
+      name: "Gestionnaires",
+      path: "/gestionnaire",
+    });
+  }
 
   // Add Administration item conditionally
   if (showAdministration) {

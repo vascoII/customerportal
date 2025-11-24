@@ -85,41 +85,13 @@ class FactureApiController extends AbstractApiController
   #[Route("", name: "list", methods: ["GET"])]
   public function list(Request $request): JsonResponse
   {
-    // Check if faker mode is enabled and return fake data
+    // Check if faker mode is enabled and return fake data (already formatted)
     if ($this->isFakerMode()) {
       try {
-        $data = $this->fakeDataService->get('api.factures', []);
-        $normalizedData = $this->normalize($data);
-
-        // Extract factures array
-        $facturesArray = $normalizedData['factures'] ?? [];
-
-        // Ensure facturesArray is an array
-        if (!is_array($facturesArray)) {
-          $facturesArray = [];
-        }
-
-        // Normalize each facture
-        $normalizedFactures = [];
-        foreach ($facturesArray as $facture) {
-          try {
-            $normalizedFactures[] = $this->normalizeFacture($facture);
-          } catch (\Exception $e) {
-            // Log error but continue processing other invoices
-            error_log('Error normalizing invoice: ' . $e->getMessage());
-            continue;
-          }
-        }
-
-        return $this->success([
-          'factures' => $normalizedFactures,
-          'count' => count($normalizedFactures),
-        ]);
+        $fakeData = $this->fakeDataService->get('api.factures', []);
+        return new JsonResponse($fakeData);
       } catch (\Exception $e) {
-        error_log('Error in factures list (faker mode): ' . $e->getMessage());
-        error_log('Stack trace: ' . $e->getTraceAsString());
-        error_log('File: ' . $e->getFile() . ' Line: ' . $e->getLine());
-        return $this->error('Fake data not available: ' . $e->getMessage() . ' (File: ' . basename($e->getFile()) . ':' . $e->getLine() . ')', 500);
+        return $this->error('Fake data not available: ' . $e->getMessage(), 500);
       }
     }
 
@@ -165,9 +137,46 @@ class FactureApiController extends AbstractApiController
   public function show(int $pkFacture, Request $request): JsonResponse
   {
     // Check if faker mode is enabled and return fake data
-    $fakeResponse = $this->sendFakeData('api.factures.pkFacture');
-    if ($fakeResponse !== null) {
-      return $fakeResponse;
+    if ($this->isFakerMode()) {
+      try {
+        $data = $this->fakeDataService->get('api.factures', []);
+        $normalizedData = $this->normalize($data);
+
+        // Extract factures array from data structure
+        $facturesArray = $normalizedData['data']['factures'] ?? $normalizedData['factures'] ?? [];
+
+        // Ensure facturesArray is an array
+        if (!is_array($facturesArray)) {
+          $facturesArray = [];
+        }
+
+        // Find the specific invoice by pkFacture
+        $facture = null;
+        foreach ($facturesArray as $f) {
+          $fData = is_array($f) ? $f : (array) $f;
+          $fPkFacture = $fData['pkFacture'] ?? $fData['PKFacture'] ?? null;
+          if ($fPkFacture && (string) $fPkFacture === (string) $pkFacture) {
+            $facture = $f;
+            break;
+          }
+        }
+
+        if (!$facture) {
+          return $this->notFound('Invoice not found');
+        }
+
+        // Normalize the found invoice
+        $normalizedFacture = $this->normalizeFacture($facture);
+        
+        // Return in the same format as the JSON file
+        return new JsonResponse([
+          'success' => true,
+          'status' => 200,
+          'data' => $normalizedFacture,
+        ]);
+      } catch (\Exception $e) {
+        return $this->error('Fake data not available: ' . $e->getMessage(), 500);
+      }
     }
 
     $client = $this->getAuthenticatedClientFromHeaders($request);
