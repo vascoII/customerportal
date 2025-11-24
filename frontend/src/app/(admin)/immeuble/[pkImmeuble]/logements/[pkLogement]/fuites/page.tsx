@@ -1,16 +1,15 @@
 import { Metadata } from "next";
-
 import ListFuites from "@/components/techem/logement/ListFuites";
 
 export const metadata: Metadata = {
   title: "Fuites | TECHEM - Espace client",
-  description: "List of leaks",
+  description: "List of leaks for a logement",
 };
 
 export default function LogementFuitesPage({
   params,
 }: {
-  params: { pkLogement: string };
+  params: { pkImmeuble: string; pkLogement: string };
 }) {
   return (
     <div className="grid grid-cols-12 gap-4 md:gap-6">
@@ -20,4 +19,5 @@ export default function LogementFuitesPage({
     </div>
   );
 }
+
 

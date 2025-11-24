@@ -10,6 +10,7 @@ import { LoadingMetrics } from "@/components/ui/loading";
 
 interface LogementMetricsProps {
   pkLogement: string;
+  pkImmeuble: string;
 }
 
 /**
@@ -19,7 +20,7 @@ interface LogementMetricsProps {
  * - Anomalies (nbAnomalies)
  * - Depannages (nbDepannages)
  */
-export const LogementMetrics = ({ pkLogement }: LogementMetricsProps) => {
+export const LogementMetrics = ({ pkLogement, pkImmeuble }: LogementMetricsProps) => {
   const { getLogementQuery } = useLogements();
   const { data: logementData, isLoading: isLogementLoading } = getLogementQuery(pkLogement);
 
@@ -53,7 +54,7 @@ export const LogementMetrics = ({ pkLogement }: LogementMetricsProps) => {
 
   return (
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-      <Link href={`/logement/${pkLogement}/fuites`}>
+      <Link href={`/immeuble/${pkImmeuble}/logements/${pkLogement}/fuites`}>
       {/* Fuites - Metric Item Start */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
@@ -75,7 +76,7 @@ export const LogementMetrics = ({ pkLogement }: LogementMetricsProps) => {
       {/* Fuites - Metric Item End */}
 
       {/* Alarmes (Dysfonctionnements) - Metric Item Start */}
-      <Link href={`/logement/${pkLogement}/dysfonctionnements`}>
+      <Link href={`/immeuble/${pkImmeuble}/logements/${pkLogement}/dysfonctionnements`}>
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
           <StatusIconsDysfonctionnement size={24} className={dysfonctionnementsColor} color="currentColor" />
@@ -95,7 +96,7 @@ export const LogementMetrics = ({ pkLogement }: LogementMetricsProps) => {
       {/* Alarmes - Metric Item End */}
 
       {/* Anomalies - Metric Item Start */}
-      <Link href={`/logement/${pkLogement}/anomalies`}>
+      <Link href={`/immeuble/${pkImmeuble}/logements/${pkLogement}/anomalies`}>
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
           <StatusIconsAnomalie size={24} className={anomaliesColor} color="currentColor" />
@@ -116,7 +117,7 @@ export const LogementMetrics = ({ pkLogement }: LogementMetricsProps) => {
       {/* Anomalies - Metric Item End */}
 
       {/* Depannages - Metric Item Start */}
-      <Link href={`/logement/${pkLogement}/interventions`}>
+      <Link href={`/immeuble/${pkImmeuble}/logements/${pkLogement}/interventions`}>
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
           <StatusIconsAlerte size={24} className={depannagesColor} color="currentColor" />

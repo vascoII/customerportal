@@ -572,7 +572,7 @@ export default function ListLogements({ pkImmeuble }: ListLogementsProps) {
                     return;
                   }
                   if (pkLogement) {
-                    router.push(`/logement/${String(pkLogement)}`);
+                    router.push(`/immeuble/${pkImmeuble}/logements/${String(pkLogement)}`);
                   }
                 };
 
