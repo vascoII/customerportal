@@ -15,14 +15,33 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), {
 
 interface ImmeubleRelevesProps {
   pkImmeuble: string;
+  selectedTab?: TabType;
+  onTabChange?: (tab: TabType) => void;
 }
 
-type TabType = "eauFroide" | "eauChaude" | "repartiteur" | "compteurEnergie";
+export type TabType =
+  | "eauFroide"
+  | "eauChaude"
+  | "repartiteur"
+  | "compteurEnergie";
 
-export default function ImmeubleReleves({ pkImmeuble }: ImmeubleRelevesProps) {
+export default function ImmeubleReleves({
+  pkImmeuble,
+  selectedTab: controlledTab,
+  onTabChange,
+}: ImmeubleRelevesProps) {
   const { getImmeubleQuery, getReport } = useImmeubles();
   const { data: immeubleData, isLoading: isImmeubleLoading } = getImmeubleQuery(pkImmeuble);
-  const [selectedTab, setSelectedTab] = useState<TabType>("eauFroide");
+  const [uncontrolledTab, setUncontrolledTab] = useState<TabType>("eauFroide");
+
+  const selectedTab = controlledTab ?? uncontrolledTab;
+
+  const handleTabChange = (tab: TabType) => {
+    if (controlledTab === undefined) {
+      setUncontrolledTab(tab);
+    }
+    onTabChange?.(tab);
+  };
 
   // Create wrapper function for PDF export based on selected tab
   const handleExportPdf = useCallback(async () => {
@@ -416,7 +435,7 @@ export default function ImmeubleReleves({ pkImmeuble }: ImmeubleRelevesProps) {
         {/* Tabs */}
         <div className="flex items-center gap-0.5 rounded-lg bg-gray-100 p-0.5 dark:bg-gray-900 mb-6">
           <button
-            onClick={() => setSelectedTab("eauFroide")}
+            onClick={() => handleTabChange("eauFroide")}
             className={`px-3 py-2 font-medium w-full rounded-md text-theme-sm hover:text-gray-900 dark:hover:text-white ${getButtonClass(
               "eauFroide"
             )}`}
@@ -424,7 +443,7 @@ export default function ImmeubleReleves({ pkImmeuble }: ImmeubleRelevesProps) {
             Eau froide
           </button>
           <button
-            onClick={() => setSelectedTab("eauChaude")}
+            onClick={() => handleTabChange("eauChaude")}
             className={`px-3 py-2 font-medium w-full rounded-md text-theme-sm hover:text-gray-900 dark:hover:text-white ${getButtonClass(
               "eauChaude"
             )}`}
@@ -432,7 +451,7 @@ export default function ImmeubleReleves({ pkImmeuble }: ImmeubleRelevesProps) {
             Eau chaude
           </button>
           <button
-            onClick={() => setSelectedTab("repartiteur")}
+            onClick={() => handleTabChange("repartiteur")}
             className={`px-3 py-2 font-medium w-full rounded-md text-theme-sm hover:text-gray-900 dark:hover:text-white ${getButtonClass(
               "repartiteur"
             )}`}
@@ -440,7 +459,7 @@ export default function ImmeubleReleves({ pkImmeuble }: ImmeubleRelevesProps) {
             Répartiteur
           </button>
           <button
-            onClick={() => setSelectedTab("compteurEnergie")}
+            onClick={() => handleTabChange("compteurEnergie")}
             className={`px-3 py-2 font-medium w-full rounded-md text-theme-sm hover:text-gray-900 dark:hover:text-white ${getButtonClass(
               "compteurEnergie"
             )}`}
