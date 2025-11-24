@@ -48,11 +48,13 @@ const getNavItems = (
   pathname: string,
   pkImmeuble?: string,
   pkLogement?: string,
-  currentSection?: string
+  currentSection?: string,
+  userType?: string
 ): NavItem[] => {
   const dashboardSubItems: { name: string; path: string; pro?: boolean; new?: boolean }[] = [];
+  const dashboardSubItemsOcupant: { name: string; path: string; pro?: boolean; new?: boolean }[] = [];
 
-  // Pattern 1: /parc → Parc
+  // Pattern 1: /parc → ParcDashboard
   // Pattern 2: /immeuble → Parc et Immeubles
   // Pattern 3: /immeuble/{pkImmeuble} → Parc et Immeubles et Immeuble
   // Pattern 4: /immeuble/{pkImmeuble}/(fuites|anomalies|...) → Parc et Immeubles et Immeuble et les 4 types
@@ -60,8 +62,11 @@ const getNavItems = (
   // Pattern 6: /immeuble/{pkImmeuble}/logements/{pkLogement} → Parc et Immeubles et Immeuble et Logements et Logement
   // Pattern 7: /immeuble/{pkImmeuble}/logements/{pkLogement}/(fuites|...) → Parc et Immeubles et Immeuble et Logements et Logement et les 4 types
 
-  // Always show Parc (all patterns)
+  // Always show Parc (all patterns) - for non-occupant users
   dashboardSubItems.push({ name: "Parc", path: "/parc", pro: false });
+
+  // Always show Occupant (all patterns) - for occupant users
+  dashboardSubItemsOcupant.push({ name: "Occupant", path: "/occupant", pro: false });
 
   // Show Immeubles if we're on /immeuble or /logement (patterns 2-7)
   if (pathname.startsWith("/immeuble") || pathname.startsWith("/logement")) {
@@ -109,23 +114,38 @@ const getNavItems = (
     }
   }
 
-  return [
-  {
-    icon: <GridIcon />,
-    name: "Dashboard",
-    subItems: dashboardSubItems,
-  },
-  {
-    icon: <UserCircleIcon />,
-    name: "Mon Profile",
-    path: "/profile",
-  },
-  {
-    icon: <UserCircleIcon />,
-    name: "Administration",
-    path: "/admin",
-  },
-];
+  // Select the appropriate dashboard items based on userType
+  const selectedDashboardItems = userType === "O" ? dashboardSubItemsOcupant : dashboardSubItems;
+
+  // Check if Administration should be shown
+  // Show if: (env=prod && userType == "A") OR env=dev
+  const isDevelopment = process.env.NODE_ENV === "development";
+  const isProduction = process.env.NODE_ENV === "production";
+  const showAdministration = (isProduction && userType === "A") || isDevelopment;
+
+  const navItems: NavItem[] = [
+    {
+      icon: <GridIcon />,
+      name: "Dashboard",
+      subItems: selectedDashboardItems,
+    },
+    {
+      icon: <UserCircleIcon />,
+      name: "Mon Profile",
+      path: "/profile",
+    },
+  ];
+
+  // Add Administration item conditionally
+  if (showAdministration) {
+    navItems.push({
+      icon: <UserCircleIcon />,
+      name: "Administration",
+      path: "/admin",
+    });
+  }
+
+  return navItems;
 };
 
 const othersItems: NavItem[] = [
@@ -238,8 +258,8 @@ const AppSidebar: React.FC = () => {
 
   // Get dynamic nav items based on current route (memoized to avoid unnecessary re-renders)
   const navItems = useMemo(
-    () => getNavItems(pathname, resolvedPkImmeuble, pkLogement, currentSection),
-    [pathname, resolvedPkImmeuble, pkLogement, currentSection]
+    () => getNavItems(pathname, resolvedPkImmeuble, pkLogement, currentSection, user?.UserType),
+    [pathname, resolvedPkImmeuble, pkLogement, currentSection, user?.UserType]
   );
 
   // Determine the home link based on user type
@@ -345,9 +365,10 @@ const AppSidebar: React.FC = () => {
                 {nav.subItems.map((subItem) => {
                   // Determine indentation level based on path hierarchy
                   // Pattern: Parc (0) -> Immeubles (1) -> Immeuble (2) -> Sections/Logements (3) -> Logement (4) -> Sections (5)
+                  // Pattern: Occupant (0)
                   let indentLevel = 0;
-                  if (subItem.path === "/parc") {
-                    indentLevel = 0; // Parc - no indent
+                  if (subItem.path === "/parc" || subItem.path === "/occupant") {
+                    indentLevel = 0; // Parc or Occupant - no indent
                   } else if (subItem.path === "/immeuble") {
                     indentLevel = 1; // Immeubles - level 1
                   } else if (IMMEUBLE_DETAIL_REGEX.test(subItem.path)) {
@@ -430,10 +451,10 @@ const AppSidebar: React.FC = () => {
       items.forEach((nav, index) => {
         if (nav.subItems && nav.subItems.length > 0) {
           // Check if we're on a page that should open this submenu
-          // For Dashboard, open if we're on /parc, /immeuble, or /logement
+          // For Dashboard, open if we're on /parc, /immeuble, /occupant, or /logement
           if (
             nav.name === "Dashboard" &&
-            (pathname.startsWith("/parc") || pathname.startsWith("/immeuble"))
+            (pathname.startsWith("/parc") || pathname.startsWith("/immeuble") || pathname.startsWith("/occupant"))
           ) {
             setOpenSubmenu({
               type: menuType as "main" | "others",
