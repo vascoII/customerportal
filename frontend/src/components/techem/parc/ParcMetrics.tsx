@@ -303,7 +303,7 @@ export const ParcMetrics = () => {
             className="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/[0.05]"
           >
             <span>
-              {isSyntheseExporting ? "Export en cours..." : "Synthèse des Interventions"}
+              {isSyntheseExporting ? "Export en cours..." : "Synthèse des Interventions (format Pdf)"}
             </span>
             <svg
               className="h-4 w-4 text-red-500"
@@ -323,7 +323,7 @@ export const ParcMetrics = () => {
             className="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/[0.05]"
           >
             <span>
-              {isDetailPdfExporting ? "Export en cours..." : "Détails des Interventions"}
+              {isDetailPdfExporting ? "Export en cours..." : "Détails des Interventions (format Pdf)"}
             </span>
             <svg
               className="h-4 w-4 text-red-500"
@@ -343,7 +343,7 @@ export const ParcMetrics = () => {
             className="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/[0.05]"
           >
             <span>
-              {isDetailExcelExporting ? "Export en cours..." : "Détails des Interventions"}
+              {isDetailExcelExporting ? "Export en cours..." : "Détails des Interventions (format Excel)"}
             </span>
             <svg
               className="h-4 w-4 text-green-500"
