@@ -585,7 +585,7 @@ export default function ListImmeubles() {
                         {/* Row 1 - Col 1: Dysfonctionnements (Bell) */}
                         {issues.nbDysfonctionnements > 0 ? (
                           <Link 
-                            href={`/immeuble/${buildingNumero}/dysfonctionnements`}
+                            href={`/immeuble/${pkImmeuble}/dysfonctionnements`}
                             className="flex items-center justify-center p-1 hover:opacity-80 transition-opacity cursor-pointer"
                             title={`${issues.nbDysfonctionnements} dysfonctionnement${issues.nbDysfonctionnements > 1 ? 's' : ''}`}
                             onClick={(e) => e.stopPropagation()}
@@ -609,7 +609,7 @@ export default function ListImmeubles() {
                         {/* Row 1 - Col 2: Dépannages (Wrench) */}
                         {issues.nbDepannages > 0 ? (
                           <Link 
-                            href={`/immeuble/${buildingNumero}/interventions`}
+                            href={`/immeuble/${pkImmeuble}/interventions`}
                             className="flex items-center justify-center p-1 hover:opacity-80 transition-opacity cursor-pointer"
                             title={`${issues.nbDepannages} dépannage${issues.nbDepannages > 1 ? 's' : ''}`}
                             onClick={(e) => e.stopPropagation()}
@@ -633,7 +633,7 @@ export default function ListImmeubles() {
                         {/* Row 2 - Col 1: Fuites (Teardrop) */}
                         {issues.nbFuites > 0 ? (
                           <Link 
-                            href={`/immeuble/${buildingNumero}/fuites`}
+                            href={`/immeuble/${pkImmeuble}/fuites`}
                             className="flex items-center justify-center p-1 hover:opacity-80 transition-opacity cursor-pointer"
                             title={`${issues.nbFuites} fuite${issues.nbFuites > 1 ? 's' : ''}`}
                             onClick={(e) => e.stopPropagation()}
@@ -657,7 +657,7 @@ export default function ListImmeubles() {
                         {/* Row 2 - Col 2: Anomalies (Diamond exclamation) */}
                         {issues.nbAnomalies > 0 ? (
                           <Link 
-                            href={`/immeuble/${buildingNumero}/anomalies`}
+                            href={`/immeuble/${pkImmeuble}/anomalies`}
                             className="flex items-center justify-center p-1 hover:opacity-80 transition-opacity cursor-pointer"
                             title={`${issues.nbAnomalies} anomalie${issues.nbAnomalies > 1 ? 's' : ''}`}
                             onClick={(e) => e.stopPropagation()}
