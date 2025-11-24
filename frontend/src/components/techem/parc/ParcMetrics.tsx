@@ -147,6 +147,7 @@ export const ParcMetrics = () => {
 
   return (
     <>
+    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-4 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
       {/* Fuites - Metric Item Start */}
       <Link href="/immeuble?fuites=1">
@@ -242,6 +243,7 @@ export const ParcMetrics = () => {
         </div>
         </Link>
       {/* Depannages - Metric Item End */}
+    </div>
     </div>
     <Modal
       isOpen={livretModal.isOpen}

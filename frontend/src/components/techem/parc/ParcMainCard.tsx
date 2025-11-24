@@ -44,9 +44,29 @@ export default function ParcMainCard() {
             <div className="space-y-6">
               {/* First row - 2 columns: Immeubles and Nombre d'Appareils */}
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
-                <Link href="/immeuble" className="p-4 border border-gray-200 rounded-2xl dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-colors cursor-pointer" style={{ backgroundColor: "#f0f0f0" }}>
+                <Link
+                  href="/immeuble"
+                  className="p-4 border border-gray-200 rounded-2xl dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.05] transition-colors cursor-pointer"
+                  style={{ backgroundColor: "#f0f0f0" }}
+                >
                   <center>
-                    <p className="mb-2 text-2xl leading-normal text-gray-500 dark:text-gray-400">
+                    <p className="mb-2 text-2xl leading-normal text-gray-500 dark:text-gray-400 flex items-center justify-center gap-3">
+                      <svg
+                        className="w-8 h-8 text-gray-400 dark:text-gray-500"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M3 21V3h18v18" />
+                        <path d="M7 21v-4h4v4" />
+                        <path d="M13 21v-6h4v6" />
+                        <path d="M7 7h4v4H7z" />
+                        <path d="M13 7h4v4h-4z" />
+                      </svg>
                       {formatNumber(parcInfo.nbImmeubles)} Immeubles
                     </p>
                   </center>
