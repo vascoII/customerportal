@@ -105,6 +105,11 @@ const getNavItems = (
     name: "Mon Profile",
     path: "/profile",
   },
+  {
+    icon: <UserCircleIcon />,
+    name: "Administration",
+    path: "/admin",
+  },
 ];
 };
 
