@@ -81,8 +81,8 @@ export default function VosChantiers() {
                 Fonctionnalité à venir
               </p>
               <p className="text-sm text-amber-800 dark:text-amber-200/80">
-                La section chantiers est en cours de conception. Revenez
-                prochainement.
+                La section chantiers est en cours de conception. Vous serez 
+                informés par notification lorsque la fonctionnalité sera disponible.
               </p>
             </div>
           </div>
