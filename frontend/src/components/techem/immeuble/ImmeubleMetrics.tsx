@@ -6,6 +6,7 @@ import StatusIconsAlerte from '@/components/techem/images/StatusIconsAlerte';
 import StatusIconsAnomalie from '@/components/techem/images/StatusIconsAnomalie';
 import StatusIconsDysfonctionnement from '@/components/techem/images/StatusIconsDysfonctionnement';
 import StatusIconsFuite from '@/components/techem/images/StatusIconsFuite';
+import { LoadingMetrics } from "@/components/ui/loading";
 
 interface ImmeubleMetricsProps {
   pkImmeuble: string;
@@ -49,22 +50,7 @@ export const ImmeubleMetrics = ({ pkImmeuble }: ImmeubleMetricsProps) => {
 
   // Show loading state
   if (isImmeubleLoading) {
-    return (
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-        {[1, 2, 3, 4].map((i) => (
-          <div
-            key={i}
-            className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6"
-          >
-            <div className="flex items-center justify-center min-h-[100px]">
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Chargement...
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+    return <LoadingMetrics count={4} />;
   }
 
   // Determine icon colors based on values
