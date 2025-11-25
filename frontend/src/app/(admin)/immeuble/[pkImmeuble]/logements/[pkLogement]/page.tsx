@@ -24,6 +24,7 @@ export default function LogementDetailsPage({
     <div className="grid grid-cols-12 gap-4 md:gap-6">
       <div className="col-span-12 space-y-6 xl:col-span-7">
         <LogementMainCard pkLogement={pkLogement} />
+        <LogementMetrics pkLogement={pkLogement} pkImmeuble={pkImmeuble} />
         <LogementReleves pkLogement={pkLogement} />
         <LogementConsommationChart />
         <LogementStatisticsConsommationChart />
@@ -31,7 +32,6 @@ export default function LogementDetailsPage({
 
       <div className="col-span-12 space-y-6 xl:col-span-5">
         <LogementCard pkLogement={pkLogement} />
-        <LogementMetrics pkLogement={pkLogement} pkImmeuble={pkImmeuble} />
         <LogementRelevesCard pkLogement={pkLogement} />
       </div>
     </div>

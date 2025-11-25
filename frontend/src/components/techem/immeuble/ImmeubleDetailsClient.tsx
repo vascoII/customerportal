@@ -27,6 +27,7 @@ export default function ImmeubleDetailsClient({
       <div className="grid grid-cols-12 gap-4 md:gap-6">
         <div className="col-span-12 space-y-6 xl:col-span-7">
           <ImmeubleMainCard pkImmeuble={pkImmeuble} />
+          <ImmeubleMetrics pkImmeuble={pkImmeuble} />
           <ImmeubleReleves
             pkImmeuble={pkImmeuble}
             selectedTab={selectedTab}
@@ -36,7 +37,6 @@ export default function ImmeubleDetailsClient({
 
         <div className="col-span-12 space-y-6 xl:col-span-5">
           <ImmeubleCard pkImmeuble={pkImmeuble} />
-          <ImmeubleMetrics pkImmeuble={pkImmeuble} />
           <ImmeubleRelevesCard pkImmeuble={pkImmeuble} />
         </div>
       </div>
