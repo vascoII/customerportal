@@ -1,10 +1,21 @@
 import { Metadata } from "next";
 import ListInterventions from "@/components/techem/logement/ListInterventions";
 
-export const metadata: Metadata = {
-  title: "Intervention | TECHEM - Espace client",
-  description: "Intervention details for a logement",
-};
+/**
+ * Revalidation ISR : Revalider toutes les 2 heures (données dynamiques)
+ */
+export const revalidate = 2 * 60 * 60; // 2 heures
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { pkImmeuble: string; pkLogement: string; pkIntervention: string };
+}): Promise<Metadata> {
+  return {
+    title: `Intervention ${params.pkIntervention} - Logement ${params.pkLogement} | TECHEM - Espace client`,
+    description: `Détails de l'intervention ${params.pkIntervention} pour le logement ${params.pkLogement}`,
+  };
+}
 
 export default function LogementInterventionDetailsPage({
   params,

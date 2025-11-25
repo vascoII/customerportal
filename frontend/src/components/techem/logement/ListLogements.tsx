@@ -25,6 +25,7 @@ import { useModal } from "@/hooks/useModal";
 import AppareilsTable from "./AppareilsTable";
 import ToggleSwitchListLogements from "./form/ToggleSwitchListLogements";
 import { LoadingTable } from "@/components/ui/loading";
+import { usePrefetchOnHover } from "@/lib/cache/usePrefetch";
 
 interface ListLogementsProps {
   pkImmeuble: string;
@@ -34,6 +35,7 @@ export default function ListLogements({ pkImmeuble }: ListLogementsProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { filterLogements, isFiltering, exportLogements } = useLogements();
+  const { prefetchOnHover } = usePrefetchOnHover();
   const [logements, setLogements] = useState<FilterLogementsResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingError, setLoadingError] = useState<{ title: string; message: string } | null>(null);
@@ -581,6 +583,12 @@ export default function ListLogements({ pkImmeuble }: ListLogementsProps) {
                     key={uniqueKey} 
                     className="hover:bg-gray-50 dark:hover:bg-white/[0.02] cursor-pointer"
                     onClick={handleRowClick}
+                    onMouseEnter={() => {
+                      // Précharger les données au survol de la ligne
+                      if (pkLogement) {
+                        prefetchOnHover(pkLogement);
+                      }
+                    }}
                   >
                     <TableCell className="py-3">
                       <div className="flex items-start gap-3">

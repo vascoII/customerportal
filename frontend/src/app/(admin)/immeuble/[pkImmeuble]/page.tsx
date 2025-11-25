@@ -1,10 +1,21 @@
 import { Metadata } from "next";
 import ImmeubleDetailsClient from "@/components/techem/immeuble/ImmeubleDetailsClient";
 
-export const metadata: Metadata = {
-  title: "Immeuble Details | TECHEM - Espace client",
-  description: "Building details",
-};
+/**
+ * Revalidation ISR : Revalider toutes les 6 heures
+ */
+export const revalidate = 6 * 60 * 60; // 6 heures
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { pkImmeuble: string };
+}): Promise<Metadata> {
+  return {
+    title: `Immeuble ${params.pkImmeuble} | TECHEM - Espace client`,
+    description: `Détails de l'immeuble ${params.pkImmeuble}`,
+  };
+}
 
 export default function ImmeubleDetailsPage({
   params,

@@ -1,10 +1,21 @@
 import { Metadata } from "next";
 import ListFuites from "@/components/techem/logement/ListFuites";
 
-export const metadata: Metadata = {
-  title: "Fuites | TECHEM - Espace client",
-  description: "List of leaks for a logement",
-};
+/**
+ * Revalidation ISR : Revalider toutes les 6 heures
+ */
+export const revalidate = 6 * 60 * 60; // 6 heures
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { pkImmeuble: string; pkLogement: string };
+}): Promise<Metadata> {
+  return {
+    title: `Fuites - Logement ${params.pkLogement} | TECHEM - Espace client`,
+    description: `Liste des fuites pour le logement ${params.pkLogement}`,
+  };
+}
 
 export default function LogementFuitesPage({
   params,

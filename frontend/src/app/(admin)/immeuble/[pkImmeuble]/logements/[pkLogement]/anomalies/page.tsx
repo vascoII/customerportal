@@ -1,10 +1,21 @@
 import { Metadata } from "next";
 import ListAnomalies from "@/components/techem/logement/ListAnomalies";
 
-export const metadata: Metadata = {
-  title: "Anomalies | TECHEM - Espace client",
-  description: "List of anomalies for a logement",
-};
+/**
+ * Revalidation ISR : Revalider toutes les 6 heures
+ */
+export const revalidate = 6 * 60 * 60; // 6 heures
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { pkImmeuble: string; pkLogement: string };
+}): Promise<Metadata> {
+  return {
+    title: `Anomalies - Logement ${params.pkLogement} | TECHEM - Espace client`,
+    description: `Liste des anomalies pour le logement ${params.pkLogement}`,
+  };
+}
 
 export default function LogementAnomaliesPage({
   params,

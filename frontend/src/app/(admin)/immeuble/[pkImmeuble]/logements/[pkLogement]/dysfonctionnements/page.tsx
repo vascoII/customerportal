@@ -1,10 +1,21 @@
 import { Metadata } from "next";
 import ListDysfonctionnements from "@/components/techem/logement/ListDysfonctionnements";
 
-export const metadata: Metadata = {
-  title: "Dysfonctionnements | TECHEM - Espace client",
-  description: "List of dysfunctions for a logement",
-};
+/**
+ * Revalidation ISR : Revalider toutes les 6 heures
+ */
+export const revalidate = 6 * 60 * 60; // 6 heures
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { pkImmeuble: string; pkLogement: string };
+}): Promise<Metadata> {
+  return {
+    title: `Dysfonctionnements - Logement ${params.pkLogement} | TECHEM - Espace client`,
+    description: `Liste des dysfonctionnements pour le logement ${params.pkLogement}`,
+  };
+}
 
 export default function LogementDysfonctionnementsPage({
   params,

@@ -7,11 +7,42 @@ import { LogementMetrics } from "@/components/techem/logement/LogementMetrics";
 import LogementRelevesCard from "@/components/techem/logement/LogementRelevesCard";
 import LogementDetailsClient from "@/components/techem/logement/LogementDetailsClient";
 
-export const metadata: Metadata = {
-  title: "Logement Details | TECHEM - Espace client",
-  description: "Housing unit details",
-};
+/**
+ * Génère les métadonnées pour la page logement
+ * 
+ * Les métadonnées sont dynamiques mais peuvent être mises en cache
+ * par Next.js pour améliorer les performances SEO.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: { pkImmeuble: string; pkLogement: string };
+}): Promise<Metadata> {
+  const { pkLogement } = params;
 
+  return {
+    title: `Logement ${pkLogement} | TECHEM - Espace client`,
+    description: `Détails du logement ${pkLogement}`,
+  };
+}
+
+/**
+ * Revalidation ISR : Revalider toutes les 6 heures
+ * 
+ * Cette configuration permet à Next.js de :
+ * - Servir la page depuis le cache (rapide)
+ * - Revalider en arrière-plan toutes les 6 heures
+ * - Mettre à jour le cache si les données ont changé
+ */
+export const revalidate = 6 * 60 * 60; // 6 heures
+
+/**
+ * Page de détails d'un logement
+ * 
+ * Cette page utilise ISR (Incremental Static Regeneration) pour
+ * optimiser les performances. La page est générée à la demande
+ * et mise en cache pendant 6 heures.
+ */
 export default function LogementDetailsPage({
   params,
 }: {

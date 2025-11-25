@@ -24,12 +24,14 @@ import EquipementIconsCompteur from "@/components/techem/images/EquipementIconsC
 import ToggleSwitchListImmeubles from "@/components/techem/immeuble/form/ToggleSwitchListImmeubles";
 import Alert from "@/components/ui/alert/Alert";
 import { LoadingTable } from "@/components/ui/loading";
+import { usePrefetchOnHover } from "@/lib/cache/usePrefetch";
 
 
 export default function ListImmeubles() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { filterImmeubles, isFiltering, exportImmeubles } = useImmeubles();
+  const { prefetchImmeubleLogements } = usePrefetchOnHover();
   const [immeubles, setImmeubles] = useState<Building[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingError, setLoadingError] = useState<{ title: string; message: string } | null>(null);
@@ -522,6 +524,12 @@ export default function ListImmeubles() {
                     key={pkImmeuble} 
                     className="hover:bg-gray-50 dark:hover:bg-white/[0.02] cursor-pointer"
                     onClick={handleRowClick}
+                    onMouseEnter={() => {
+                      // Précharger les logements de l'immeuble au survol
+                      if (pkImmeuble) {
+                        prefetchImmeubleLogements(pkImmeuble);
+                      }
+                    }}
                   >
                     <TableCell className="py-3">
                       <div className="flex items-start gap-3">
