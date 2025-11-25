@@ -1,22 +1,42 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import LogementReleves, { TabType } from "@/components/techem/logement/LogementReleves";
 import LogementConsommationChartEf from "@/components/techem/logement/releve/LogementConsommationChartEf";
 import LogementStatisticsConsommationChartEf from "@/components/techem/logement/releve/LogementStatisticsConsommationChartEf";
-import LogementStatisticsConsommationChartConsoTabsEf from "@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsEf";
-import LogementStatisticsConsommationChartSerieConsosEf from "@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosEf";
 import LogementConsommationChartEc from "@/components/techem/logement/releve/LogementConsommationChartEc";
 import LogementStatisticsConsommationChartEc from "@/components/techem/logement/releve/LogementStatisticsConsommationChartEc";
-import LogementStatisticsConsommationChartConsoTabsEc from "@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsEc";
-import LogementStatisticsConsommationChartSerieConsosEc from "@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosEc";
 import LogementConsommationChartRepart from "@/components/techem/logement/releve/LogementConsommationChartRepart";
 import LogementStatisticsConsommationChartRepart from "@/components/techem/logement/releve/LogementStatisticsConsommationChartRepart";
-import LogementStatisticsConsommationChartConsoTabsRepart from "@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsRepart";
-import LogementStatisticsConsommationChartSerieConsosRepart from "@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosRepart";
 import LogementConsommationChartCet from "@/components/techem/logement/releve/LogementConsommationChartCet";
 import LogementStatisticsConsommationChartCet from "@/components/techem/logement/releve/LogementStatisticsConsommationChartCet";
-import LogementStatisticsConsommationChartConsoTabsCet from "@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsCet";
-import LogementStatisticsConsommationChartSerieConsosCet from "@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosCet";
+import Accordion from "@/components/ui/accordion/Accordion";
+import { LoadingChart } from "@/components/ui/loading";
+
+// Lazy load des composants lourds
+const LogementStatisticsConsommationChartConsoTabsEf = lazy(
+  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsEf")
+);
+const LogementStatisticsConsommationChartSerieConsosEf = lazy(
+  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosEf")
+);
+const LogementStatisticsConsommationChartConsoTabsEc = lazy(
+  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsEc")
+);
+const LogementStatisticsConsommationChartSerieConsosEc = lazy(
+  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosEc")
+);
+const LogementStatisticsConsommationChartConsoTabsRepart = lazy(
+  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsRepart")
+);
+const LogementStatisticsConsommationChartSerieConsosRepart = lazy(
+  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosRepart")
+);
+const LogementStatisticsConsommationChartConsoTabsCet = lazy(
+  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsCet")
+);
+const LogementStatisticsConsommationChartSerieConsosCet = lazy(
+  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosCet")
+);
 
 interface LogementDetailsClientProps {
   pkLogement: string;
@@ -38,8 +58,36 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
         <>
           <LogementConsommationChartEf pkLogement={pkLogement} />
           <LogementStatisticsConsommationChartEf pkLogement={pkLogement} />
-          <LogementStatisticsConsommationChartConsoTabsEf pkLogement={pkLogement} />
-          <LogementStatisticsConsommationChartSerieConsosEf pkLogement={pkLogement} />
+          
+          <Accordion title="Évolution des consommations (ConsoTabs)">
+            <Suspense
+              fallback={
+                <LoadingChart
+                  variant="line"
+                  height={310}
+                  title="Évolution des consommations"
+                  message="Chargement..."
+                />
+              }
+            >
+              <LogementStatisticsConsommationChartConsoTabsEf pkLogement={pkLogement} />
+            </Suspense>
+          </Accordion>
+
+          <Accordion title="Évolution des consommations (Série)">
+            <Suspense
+              fallback={
+                <LoadingChart
+                  variant="line"
+                  height={310}
+                  title="Évolution des consommations"
+                  message="Chargement..."
+                />
+              }
+            >
+              <LogementStatisticsConsommationChartSerieConsosEf pkLogement={pkLogement} />
+            </Suspense>
+          </Accordion>
         </>
       )}
       
@@ -48,8 +96,36 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
         <>
           <LogementConsommationChartEc pkLogement={pkLogement} />
           <LogementStatisticsConsommationChartEc pkLogement={pkLogement} />
-          <LogementStatisticsConsommationChartConsoTabsEc pkLogement={pkLogement} />
-          <LogementStatisticsConsommationChartSerieConsosEc pkLogement={pkLogement} />
+          
+          <Accordion title="Évolution des consommations (ConsoTabs)">
+            <Suspense
+              fallback={
+                <LoadingChart
+                  variant="line"
+                  height={310}
+                  title="Évolution des consommations"
+                  message="Chargement..."
+                />
+              }
+            >
+              <LogementStatisticsConsommationChartConsoTabsEc pkLogement={pkLogement} />
+            </Suspense>
+          </Accordion>
+
+          <Accordion title="Évolution des consommations (Série)">
+            <Suspense
+              fallback={
+                <LoadingChart
+                  variant="line"
+                  height={310}
+                  title="Évolution des consommations"
+                  message="Chargement..."
+                />
+              }
+            >
+              <LogementStatisticsConsommationChartSerieConsosEc pkLogement={pkLogement} />
+            </Suspense>
+          </Accordion>
         </>
       )}
       
@@ -58,8 +134,36 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
         <>
           <LogementConsommationChartRepart pkLogement={pkLogement} />
           <LogementStatisticsConsommationChartRepart pkLogement={pkLogement} />
-          <LogementStatisticsConsommationChartConsoTabsRepart pkLogement={pkLogement} />
-          <LogementStatisticsConsommationChartSerieConsosRepart pkLogement={pkLogement} />
+          
+          <Accordion title="Évolution des consommations (ConsoTabs)">
+            <Suspense
+              fallback={
+                <LoadingChart
+                  variant="line"
+                  height={310}
+                  title="Évolution des consommations"
+                  message="Chargement..."
+                />
+              }
+            >
+              <LogementStatisticsConsommationChartConsoTabsRepart pkLogement={pkLogement} />
+            </Suspense>
+          </Accordion>
+
+          <Accordion title="Évolution des consommations (Série)">
+            <Suspense
+              fallback={
+                <LoadingChart
+                  variant="line"
+                  height={310}
+                  title="Évolution des consommations"
+                  message="Chargement..."
+                />
+              }
+            >
+              <LogementStatisticsConsommationChartSerieConsosRepart pkLogement={pkLogement} />
+            </Suspense>
+          </Accordion>
         </>
       )}
       
@@ -68,8 +172,36 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
         <>
           <LogementConsommationChartCet pkLogement={pkLogement} />
           <LogementStatisticsConsommationChartCet pkLogement={pkLogement} />
-          <LogementStatisticsConsommationChartConsoTabsCet pkLogement={pkLogement} />
-          <LogementStatisticsConsommationChartSerieConsosCet pkLogement={pkLogement} />
+          
+          <Accordion title="Évolution des consommations (ConsoTabs)">
+            <Suspense
+              fallback={
+                <LoadingChart
+                  variant="line"
+                  height={310}
+                  title="Évolution des consommations"
+                  message="Chargement..."
+                />
+              }
+            >
+              <LogementStatisticsConsommationChartConsoTabsCet pkLogement={pkLogement} />
+            </Suspense>
+          </Accordion>
+
+          <Accordion title="Évolution des consommations (Série)">
+            <Suspense
+              fallback={
+                <LoadingChart
+                  variant="line"
+                  height={310}
+                  title="Évolution des consommations"
+                  message="Chargement..."
+                />
+              }
+            >
+              <LogementStatisticsConsommationChartSerieConsosCet pkLogement={pkLogement} />
+            </Suspense>
+          </Accordion>
         </>
       )}
     </div>
