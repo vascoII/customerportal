@@ -58,7 +58,7 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
         <>
           <LogementConsommationChartEf pkLogement={pkLogement} />
           <LogementStatisticsConsommationChartEf pkLogement={pkLogement} />
-          
+{/*          
           <Accordion title="Évolution des consommations (ConsoTabs)">
             <Suspense
               fallback={
@@ -87,7 +87,7 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
             >
               <LogementStatisticsConsommationChartSerieConsosEf pkLogement={pkLogement} />
             </Suspense>
-          </Accordion>
+          </Accordion>*/}
         </>
       )}
       
@@ -96,7 +96,7 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
         <>
           <LogementConsommationChartEc pkLogement={pkLogement} />
           <LogementStatisticsConsommationChartEc pkLogement={pkLogement} />
-          
+  {/*        
           <Accordion title="Évolution des consommations (ConsoTabs)">
             <Suspense
               fallback={
@@ -125,7 +125,7 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
             >
               <LogementStatisticsConsommationChartSerieConsosEc pkLogement={pkLogement} />
             </Suspense>
-          </Accordion>
+          </Accordion>*/}
         </>
       )}
       
@@ -134,7 +134,7 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
         <>
           <LogementConsommationChartRepart pkLogement={pkLogement} />
           <LogementStatisticsConsommationChartRepart pkLogement={pkLogement} />
-          
+  {/*        
           <Accordion title="Évolution des consommations (ConsoTabs)">
             <Suspense
               fallback={
@@ -163,7 +163,7 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
             >
               <LogementStatisticsConsommationChartSerieConsosRepart pkLogement={pkLogement} />
             </Suspense>
-          </Accordion>
+          </Accordion>*/}
         </>
       )}
       
@@ -172,7 +172,7 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
         <>
           <LogementConsommationChartCet pkLogement={pkLogement} />
           <LogementStatisticsConsommationChartCet pkLogement={pkLogement} />
-          
+  {/*        
           <Accordion title="Évolution des consommations (ConsoTabs)">
             <Suspense
               fallback={
@@ -201,7 +201,7 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
             >
               <LogementStatisticsConsommationChartSerieConsosCet pkLogement={pkLogement} />
             </Suspense>
-          </Accordion>
+          </Accordion>*/}
         </>
       )}
     </div>
