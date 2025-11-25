@@ -157,7 +157,8 @@ export const ImmeubleMetrics = ({ pkImmeuble }: ImmeubleMetricsProps) => {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-4 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
         <Link href={`/immeuble/${pkImmeuble}/fuites`}>
           <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
             <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
@@ -235,6 +236,7 @@ export const ImmeubleMetrics = ({ pkImmeuble }: ImmeubleMetricsProps) => {
             </div>
           </div>
         </Link>
+        </div>
       </div>
     <Modal
       isOpen={livretModal.isOpen}
