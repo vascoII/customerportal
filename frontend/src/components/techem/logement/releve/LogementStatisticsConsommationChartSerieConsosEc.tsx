@@ -15,60 +15,123 @@ interface LogementStatisticsChartProps {
   pkLogement: string;
 }
 
-type RawChartEntry = [string, string | number, string | number];
-
 interface ParsedChartPoint {
   x: string;
   y: number;
   meta: string;
 }
 
-const parseLogementChartValues = (rawValues?: unknown): { categories: string[]; points: ParsedChartPoint[] } => {
-  if (!Array.isArray(rawValues)) {
-    return { categories: [], points: [] };
-  }
-
+const parseValeursXYL = (rawSerie?: string): { categories: string[]; points: ParsedChartPoint[] } => {
   const categories: string[] = [];
   const points: ParsedChartPoint[] = [];
 
-  (rawValues as RawChartEntry[]).forEach((entry) => {
-    if (!Array.isArray(entry) || entry.length < 3) {
-      return;
-    }
+  if (!rawSerie || typeof rawSerie !== "string") {
+    return { categories, points };
+  }
 
-    const [rawDate, rawHover, rawValue] = entry;
-    if (typeof rawDate !== "string") {
-      return;
-    }
+  rawSerie
+    .split(";")
+    .map((segment) => segment.trim())
+    .filter(Boolean)
+    .forEach((segment) => {
+      const parts = segment.split("|").map((item) => item?.trim() ?? "");
+      const [rawDate, rawConso, rawIndex] = parts;
 
-    const numericValue =
-      typeof rawValue === "number" ? rawValue : Number(String(rawValue).replace(",", "."));
+      if (!rawDate) {
+        return;
+      }
 
-    if (Number.isNaN(numericValue)) {
-      return;
-    }
+      // Use the 3rd value (index) for Y-axis
+      const numericIndex =
+        typeof rawIndex === "number" ? rawIndex : Number(String(rawIndex ?? "").replace(",", "."));
 
-    const hoverValue =
-      typeof rawHover === "number" ? rawHover.toString() : String(rawHover ?? "");
+      if (Number.isNaN(numericIndex)) {
+        return;
+      }
 
-    categories.push(rawDate);
-    points.push({
-      x: rawDate,
-      y: numericValue,
-      meta: hoverValue,
+      // Use the 2nd value (conso) for tooltip
+      const consoValue = String(rawConso ?? "").replace(",", ".");
+
+      categories.push(rawDate);
+      points.push({
+        x: rawDate,
+        y: numericIndex,
+        meta: consoValue || String(numericIndex),
+      });
     });
-  });
 
   return { categories, points };
 };
 
-export default function LogementStatisticsConsommationChartEc({ pkLogement }: LogementStatisticsChartProps) {
+const extractValeursXYL = (node?: unknown): string | undefined => {
+  if (!node || typeof node !== "object") {
+    return undefined;
+  }
+
+  const serieConsos =
+    "SerieConsos" in node && typeof (node as Record<string, unknown>).SerieConsos === "object"
+      ? ((node as Record<string, unknown>).SerieConsos as Record<string, unknown>)
+      : null;
+
+  if (serieConsos && "ValeursXYL" in serieConsos && typeof serieConsos.ValeursXYL === "string") {
+    return serieConsos.ValeursXYL;
+  }
+
+  return undefined;
+};
+
+export default function LogementStatisticsConsommationChartSerieConsosEc({ pkLogement }: LogementStatisticsChartProps) {
   const { getLogementQuery } = useLogements();
   const { data: logementData, isLoading, error } = getLogementQuery(pkLogement);
 
   const { categories, points } = useMemo(() => {
-    const rawValues = logementData?.logement?.LogementECValues;
-    return parseLogementChartValues(rawValues);
+    const logement = logementData?.logement as Record<string, unknown> | undefined;
+
+    const directSerie =
+      logement && typeof logement === "object" && "LogementEC" in logement
+        ? extractValeursXYL((logement as Record<string, unknown>).LogementEC)
+        : undefined;
+
+    const nestedLogement =
+      logement && typeof logement === "object" && "Logement" in logement
+        ? ((logement as Record<string, unknown>).Logement as Record<string, unknown> | undefined)
+        : undefined;
+    const nestedSerie =
+      nestedLogement && typeof nestedLogement === "object" && "LogementEC" in nestedLogement
+        ? extractValeursXYL((nestedLogement as Record<string, unknown>).LogementEC)
+        : undefined;
+
+    // Fallback: consoTabs.EC.ListeInfosAppareils.infosAppareilEAU[0].SerieConsos.ValeursXYL
+    const consoTabs =
+      logement && typeof logement === "object" && "consoTabs" in logement
+        ? ((logement as Record<string, unknown>).consoTabs as Record<string, unknown> | undefined)
+        : null;
+
+    const ecTab =
+      consoTabs && typeof consoTabs === "object" && "EC" in consoTabs
+        ? (consoTabs.EC as Record<string, unknown> | undefined)
+        : null;
+
+    const listeInfosAppareils =
+      ecTab && typeof ecTab === "object" && "ListeInfosAppareils" in ecTab
+        ? (ecTab.ListeInfosAppareils as Record<string, unknown> | undefined)
+        : null;
+
+    const infosAppareilEAU =
+      listeInfosAppareils && typeof listeInfosAppareils === "object" && "infosAppareilEAU" in listeInfosAppareils
+        ? (listeInfosAppareils.infosAppareilEAU as Array<Record<string, unknown>> | undefined)
+        : null;
+
+    const firstAppareil =
+      infosAppareilEAU && Array.isArray(infosAppareilEAU) && infosAppareilEAU.length > 0
+        ? infosAppareilEAU[0]
+        : null;
+
+    const fallbackSerie = extractValeursXYL(firstAppareil);
+
+    const valeursXYL = directSerie ?? nestedSerie ?? fallbackSerie;
+
+    return parseValeursXYL(valeursXYL);
   }, [logementData]);
 
   const hasData = points.length > 0;
@@ -201,7 +264,7 @@ export default function LogementStatisticsConsommationChartEc({ pkLogement }: Lo
     return (
       <div className="rounded-2xl border border-gray-200 bg-white px-5 pb-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Evolution des index Compteur Eau chaude
+          Evolution des index Compteur Eau chaude Conso Série
         </h3>
         <div className="mt-4 min-h-[160px] rounded-xl border border-dashed border-gray-200 dark:border-gray-800 flex items-center justify-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -217,7 +280,7 @@ export default function LogementStatisticsConsommationChartEc({ pkLogement }: Lo
       <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
         <div className="w-full">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Evolution des index Compteur Eau chaude
+            Evolution des index Compteur Eau chaude Conso Série
           </h3>
         </div>
       </div>

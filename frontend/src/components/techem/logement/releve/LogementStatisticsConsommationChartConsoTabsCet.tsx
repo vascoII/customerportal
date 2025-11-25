@@ -17,11 +17,47 @@ interface LogementStatisticsChartProps {
 
 type RawChartEntry = [string, string | number, string | number];
 
+interface RawChartObject {
+  label?: string | number;
+  consoRaw?: string | number;
+  conso?: string | number;
+  indexRaw?: string | number;
+  index?: string | number;
+  valueRaw?: string | number;
+  value?: string | number;
+}
+
 interface ParsedChartPoint {
   x: string;
   y: number;
   meta: string;
 }
+
+const toNumber = (value: string | number) =>
+  typeof value === "number" ? value : Number(String(value).replace(",", "."));
+
+const formatDateLabel = (value?: string | number): string => {
+  if (typeof value === "number") {
+    const date = new Date(value);
+    if (!Number.isNaN(date.getTime())) {
+      return date.toLocaleDateString("fr-FR");
+    }
+    return value.toString();
+  }
+
+  if (typeof value === "string") {
+    const numericValue = Number(value);
+    if (!Number.isNaN(numericValue) && value.trim() !== "" && value.trim().length > 8) {
+      const date = new Date(numericValue);
+      if (!Number.isNaN(date.getTime())) {
+        return date.toLocaleDateString("fr-FR");
+      }
+    }
+    return value;
+  }
+
+  return "";
+};
 
 const parseLogementChartValues = (rawValues?: unknown): { categories: string[]; points: ParsedChartPoint[] } => {
   if (!Array.isArray(rawValues)) {
@@ -31,43 +67,69 @@ const parseLogementChartValues = (rawValues?: unknown): { categories: string[]; 
   const categories: string[] = [];
   const points: ParsedChartPoint[] = [];
 
-  (rawValues as RawChartEntry[]).forEach((entry) => {
-    if (!Array.isArray(entry) || entry.length < 3) {
+  (rawValues as Array<RawChartEntry | RawChartObject>).forEach((entry) => {
+    if (Array.isArray(entry)) {
+      if (entry.length < 3) {
+        return;
+      }
+      const [rawDate, rawHover, rawValue] = entry;
+      const numericValue = typeof rawValue === "number" ? rawValue : toNumber(rawValue);
+      if (Number.isNaN(numericValue)) {
+        return;
+      }
+      const hoverValue =
+        typeof rawHover === "number" ? rawHover.toString() : String(rawHover ?? "");
+      const label = formatDateLabel(rawDate);
+      categories.push(label);
+      points.push({
+        x: label,
+        y: numericValue,
+        meta: hoverValue,
+      });
       return;
     }
 
-    const [rawDate, rawHover, rawValue] = entry;
-    if (typeof rawDate !== "string") {
-      return;
+    if (entry && typeof entry === "object") {
+      const { label, consoRaw, conso, valueRaw, value } = entry as RawChartObject;
+      const numericValueSource =
+        conso ?? value ?? (entry as RawChartObject).index ?? (entry as RawChartObject).indexRaw;
+      if (numericValueSource === undefined) {
+        return;
+      }
+      const numericValue =
+        typeof numericValueSource === "number"
+          ? numericValueSource
+          : toNumber(numericValueSource);
+      if (Number.isNaN(numericValue)) {
+        return;
+      }
+      const hoverValueSource = consoRaw ?? valueRaw ?? "";
+      const hoverValue =
+        typeof hoverValueSource === "number"
+          ? hoverValueSource.toString()
+          : String(hoverValueSource);
+      const formattedLabel = formatDateLabel(label);
+      if (!formattedLabel) {
+        return;
+      }
+      categories.push(formattedLabel);
+      points.push({
+        x: formattedLabel,
+        y: numericValue,
+        meta: hoverValue,
+      });
     }
-
-    const numericValue =
-      typeof rawValue === "number" ? rawValue : Number(String(rawValue).replace(",", "."));
-
-    if (Number.isNaN(numericValue)) {
-      return;
-    }
-
-    const hoverValue =
-      typeof rawHover === "number" ? rawHover.toString() : String(rawHover ?? "");
-
-    categories.push(rawDate);
-    points.push({
-      x: rawDate,
-      y: numericValue,
-      meta: hoverValue,
-    });
   });
 
   return { categories, points };
 };
 
-export default function LogementStatisticsConsommationChartEc({ pkLogement }: LogementStatisticsChartProps) {
+export default function LogementStatisticsConsommationChartConsoTabsCet({ pkLogement }: LogementStatisticsChartProps) {
   const { getLogementQuery } = useLogements();
   const { data: logementData, isLoading, error } = getLogementQuery(pkLogement);
 
   const { categories, points } = useMemo(() => {
-    const rawValues = logementData?.logement?.LogementECValues;
+    const rawValues = logementData?.consoTabs?.CET?.EvolutionChartData?.data;
     return parseLogementChartValues(rawValues);
   }, [logementData]);
 
@@ -166,7 +228,7 @@ export default function LogementStatisticsConsommationChartEc({ pkLogement }: Lo
   const series = useMemo(
     () => [
       {
-        name: "Index Compteur",
+        name: "Index Compteur d'énergie",
         data: points,
       },
     ],
@@ -178,7 +240,7 @@ export default function LogementStatisticsConsommationChartEc({ pkLogement }: Lo
       <LoadingChart
         variant="line"
         height={310}
-        title="Evolution des index Compteur Eau chaude"
+        title="Evolution des index Compteur d'énergie"
         message="Chargement des index..."
       />
     );
@@ -201,7 +263,7 @@ export default function LogementStatisticsConsommationChartEc({ pkLogement }: Lo
     return (
       <div className="rounded-2xl border border-gray-200 bg-white px-5 pb-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Evolution des index Compteur Eau chaude
+          Evolution des index Compteur d&apos;énergie Conso
         </h3>
         <div className="mt-4 min-h-[160px] rounded-xl border border-dashed border-gray-200 dark:border-gray-800 flex items-center justify-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -217,7 +279,7 @@ export default function LogementStatisticsConsommationChartEc({ pkLogement }: Lo
       <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
         <div className="w-full">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Evolution des index Compteur Eau chaude
+            Evolution des index Compteur d&apos;énergie Conso
           </h3>
         </div>
       </div>

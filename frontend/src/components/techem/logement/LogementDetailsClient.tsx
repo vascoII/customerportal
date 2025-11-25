@@ -3,12 +3,20 @@ import { useState } from "react";
 import LogementReleves, { TabType } from "@/components/techem/logement/LogementReleves";
 import LogementConsommationChartEf from "@/components/techem/logement/releve/LogementConsommationChartEf";
 import LogementStatisticsConsommationChartEf from "@/components/techem/logement/releve/LogementStatisticsConsommationChartEf";
+import LogementStatisticsConsommationChartConsoTabsEf from "@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsEf";
+import LogementStatisticsConsommationChartSerieConsosEf from "@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosEf";
 import LogementConsommationChartEc from "@/components/techem/logement/releve/LogementConsommationChartEc";
 import LogementStatisticsConsommationChartEc from "@/components/techem/logement/releve/LogementStatisticsConsommationChartEc";
+import LogementStatisticsConsommationChartConsoTabsEc from "@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsEc";
+import LogementStatisticsConsommationChartSerieConsosEc from "@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosEc";
 import LogementConsommationChartRepart from "@/components/techem/logement/releve/LogementConsommationChartRepart";
 import LogementStatisticsConsommationChartRepart from "@/components/techem/logement/releve/LogementStatisticsConsommationChartRepart";
+import LogementStatisticsConsommationChartConsoTabsRepart from "@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsRepart";
+import LogementStatisticsConsommationChartSerieConsosRepart from "@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosRepart";
 import LogementConsommationChartCet from "@/components/techem/logement/releve/LogementConsommationChartCet";
 import LogementStatisticsConsommationChartCet from "@/components/techem/logement/releve/LogementStatisticsConsommationChartCet";
+import LogementStatisticsConsommationChartConsoTabsCet from "@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsCet";
+import LogementStatisticsConsommationChartSerieConsosCet from "@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosCet";
 
 interface LogementDetailsClientProps {
   pkLogement: string;
@@ -30,6 +38,8 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
         <>
           <LogementConsommationChartEf pkLogement={pkLogement} />
           <LogementStatisticsConsommationChartEf pkLogement={pkLogement} />
+          <LogementStatisticsConsommationChartConsoTabsEf pkLogement={pkLogement} />
+          <LogementStatisticsConsommationChartSerieConsosEf pkLogement={pkLogement} />
         </>
       )}
       
@@ -38,6 +48,8 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
         <>
           <LogementConsommationChartEc pkLogement={pkLogement} />
           <LogementStatisticsConsommationChartEc pkLogement={pkLogement} />
+          <LogementStatisticsConsommationChartConsoTabsEc pkLogement={pkLogement} />
+          <LogementStatisticsConsommationChartSerieConsosEc pkLogement={pkLogement} />
         </>
       )}
       
@@ -46,6 +58,8 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
         <>
           <LogementConsommationChartRepart pkLogement={pkLogement} />
           <LogementStatisticsConsommationChartRepart pkLogement={pkLogement} />
+          <LogementStatisticsConsommationChartConsoTabsRepart pkLogement={pkLogement} />
+          <LogementStatisticsConsommationChartSerieConsosRepart pkLogement={pkLogement} />
         </>
       )}
       
@@ -54,6 +68,8 @@ export default function LogementDetailsClient({ pkLogement }: LogementDetailsCli
         <>
           <LogementConsommationChartCet pkLogement={pkLogement} />
           <LogementStatisticsConsommationChartCet pkLogement={pkLogement} />
+          <LogementStatisticsConsommationChartConsoTabsCet pkLogement={pkLogement} />
+          <LogementStatisticsConsommationChartSerieConsosCet pkLogement={pkLogement} />
         </>
       )}
     </div>
