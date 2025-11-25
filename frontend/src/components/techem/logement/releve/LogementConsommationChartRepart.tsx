@@ -7,7 +7,11 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
-export default function CONSOMMATION () {
+interface LogementRelevesProps {
+  pkLogement: string;
+}
+
+export default function LogementConsommationChartRepart({ pkLogement }: LogementRelevesProps) {
   const options: ApexOptions = {
     colors: ["#465fff"],
     chart: {
@@ -98,7 +102,7 @@ export default function CONSOMMATION () {
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Compteurs
+          Compteur Répartiteur
         </h3>
         <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
           Information consommation + variation entre deux relevés

@@ -4,10 +4,8 @@ import ImmeubleCard from "@/components/techem/immeuble/ImmeubleCard";
 
 import LogementMainCard from "@/components/techem/logement/LogementMainCard";
 import { LogementMetrics } from "@/components/techem/logement/LogementMetrics";
-import LogementReleves from "@/components/techem/logement/LogementReleves";
 import LogementRelevesCard from "@/components/techem/logement/LogementRelevesCard";
-import LogementConsommationChart from "@/components/techem/logement/LogementConsommationChart";
-import LogementStatisticsConsommationChart from "@/components/techem/logement/LogementStatisticsConsommationChart";
+import LogementDetailsClient from "@/components/techem/logement/LogementDetailsClient";
 
 export const metadata: Metadata = {
   title: "Logement Details | TECHEM - Espace client",
@@ -26,15 +24,15 @@ export default function LogementDetailsPage({
       <div className="col-span-12 space-y-6 xl:col-span-7">
         <LogementMainCard pkLogement={pkLogement} />
         <LogementMetrics pkLogement={pkLogement} pkImmeuble={pkImmeuble} />
-        <LogementReleves pkLogement={pkLogement} />
-        <LogementConsommationChart />
-        <LogementStatisticsConsommationChart />
+        
       </div>
 
       <div className="col-span-12 space-y-6 xl:col-span-5">
         <ImmeubleCard pkImmeuble={pkImmeuble} />
         <LogementRelevesCard pkLogement={pkLogement} />
       </div>
+      <LogementDetailsClient pkLogement={pkLogement} />
+      
     </div>
   );
 }

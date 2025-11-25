@@ -9,7 +9,11 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
-export default function LogementStatisticsConsommationChart() {
+interface LogementRelevesProps {
+  pkLogement: string;
+}
+
+export default function LogementStatisticsConsommationChartCet({ pkLogement }: LogementRelevesProps) {
   const options: ApexOptions = {
     legend: {
       show: false, // Hide legend
@@ -119,7 +123,7 @@ export default function LogementStatisticsConsommationChart() {
       <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
         <div className="w-full">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Evolution des index
+            Evolution des index Compteur d&apos;énergie
           </h3>
         </div>
       </div>
