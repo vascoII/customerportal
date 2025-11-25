@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 
+import ImmeubleCard from "@/components/techem/immeuble/ImmeubleCard";
+
 import LogementMainCard from "@/components/techem/logement/LogementMainCard";
-import LogementCard from "@/components/techem/logement/LogementCard";
 import { LogementMetrics } from "@/components/techem/logement/LogementMetrics";
 import LogementReleves from "@/components/techem/logement/LogementReleves";
 import LogementRelevesCard from "@/components/techem/logement/LogementRelevesCard";
@@ -31,7 +32,7 @@ export default function LogementDetailsPage({
       </div>
 
       <div className="col-span-12 space-y-6 xl:col-span-5">
-        <LogementCard pkLogement={pkLogement} />
+        <ImmeubleCard pkImmeuble={pkImmeuble} />
         <LogementRelevesCard pkLogement={pkLogement} />
       </div>
     </div>

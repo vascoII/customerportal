@@ -205,10 +205,14 @@ class LogementApiController extends AbstractApiController
     #[Route("/{pkLogement}", name: "show", methods: ["GET"])]
     public function show(int $pkLogement, Request $request, Logement $logementService): JsonResponse
     {
-        // Check if faker mode is enabled and return fake data
-        $fakeResponse = $this->sendFakeData('api.logements.pkLogement');
-        if ($fakeResponse !== null) {
-            return $fakeResponse;
+        // Check if faker mode is enabled and return fake data (already formatted)
+        if ($this->isFakerMode()) {
+            try {
+                $fakeData = $this->fakeDataService->get('api.logements.pkLogement', []);
+                return new JsonResponse($fakeData);
+            } catch (\Exception $e) {
+                return $this->error('Fake data not available: ' . $e->getMessage(), 500);
+            }
         }
 
         $client = $this->getAuthenticatedClientFromHeaders($request);

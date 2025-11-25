@@ -224,25 +224,25 @@ export default function ImmeubleCard({ pkImmeuble }: ImmeubleCardProps) {
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <p className="text-xm font-medium">
+          <p className="text-xm font-medium dark:text-white/90">
             Nom: <span className="text-xm font-medium text-gray-500 dark:text-gray-400">{immeubleInfo.nom}</span>
           </p>
         </div>
 
         <div className="space-y-2">
-          <p className="text-xm font-medium">
+          <p className="text-xm font-medium dark:text-white/90">
             Référence: <span className="text-xm font-medium text-gray-500 dark:text-gray-400">{immeubleInfo.ref}</span>
           </p>
         </div>
 
         <div className="space-y-2">
-          <p className="text-xm font-medium">
+          <p className="text-xm font-medium dark:text-white/90">
             N° d&apos;immeuble: <span className="text-xm font-medium text-gray-500 dark:text-gray-400">{immeubleInfo.numero}</span>
           </p>
         </div>
 
         <div className="space-y-2">
-          <p className="text-xm font-medium">
+          <p className="text-xm font-medium dark:text-white/90">
             Adresse: <span className="text-xm font-medium text-gray-500 dark:text-gray-400">{fullAddress || "—"}</span>
           </p>
         </div>
