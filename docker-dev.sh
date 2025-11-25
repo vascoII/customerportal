@@ -1,23 +1,23 @@
 #!/bin/bash
+set -euo pipefail
 
-# Arrêter le script si une commande échoue
-set -e
+ENV_FILE=".env.local"
+ENV_LABEL="local"
 
-echo "📦 Installation des dépendances Symfony..."
-composer install
+if [ ! -f "$ENV_FILE" ]; then
+  echo "❌ Missing $ENV_FILE. Create it from .env.local.example."
+  exit 1
+fi
 
+COMPOSE_FILES=("-f" "compose.yaml")
+if [ -f "compose.override.yaml" ]; then
+  COMPOSE_FILES+=("-f" "compose.override.yaml")
+fi
 
-echo "📂 Copie du dossier techemcore vers /public/bundles..."
-mkdir -p public/bundles
-cp -r public/techemcore public/bundles/
+COMMAND="${1:-up}"
+if [ $# -gt 0 ]; then
+  shift
+fi
 
-echo "🚀 Démarrage du serveur backend sur le port 8000 en mode développement..."
-php -S 127.0.0.1:8000 -t public &
-
-echo "📦 Installation des dépendances frontend..."
-cd frontend
-npm install
-
-echo "🌐 Démarrage du serveur frontend sur le port 3000 en mode développement..."
-
-npm run dev
+echo "🚀 Starting Docker stack ($ENV_LABEL) using $ENV_FILE"
+exec docker compose "${COMPOSE_FILES[@]}" --env-file "$ENV_FILE" "$COMMAND" "$@"

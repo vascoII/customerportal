@@ -14,8 +14,46 @@ services:
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
 ###< doctrine/doctrine-bundle ###
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      APP_DEBUG: ${APP_DEBUG:-1}
+      BACKEND_PORT: ${BACKEND_PORT:-8000}
+      COMPOSER_INSTALL_FLAGS: ${COMPOSER_INSTALL_FLAGS:---no-interaction --prefer-dist}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://app:!ChangeMe!@database:5432/app?serverVersion=15&charset=utf8}
+    volumes:
+      - .:/app:delegated
+      - backend_vendor:/app/vendor
+      - backend_var:/app/var
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      - database
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      FRONTEND_PORT: ${FRONTEND_PORT:-3000}
+      NEXT_PUBLIC_API_BASE_URL: "${NEXT_PUBLIC_API_BASE_URL:-http://localhost:${BACKEND_PORT:-8000}/api}"
+      CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING:-true}
+    volumes:
+      - ./frontend:/app/frontend:delegated
+      - frontend_node_modules:/app/frontend/node_modules
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - backend
 
 volumes:
 ###> doctrine/doctrine-bundle ###
   database_data:
 ###< doctrine/doctrine-bundle ###
+  backend_vendor:
+  backend_var:
+  frontend_node_modules:

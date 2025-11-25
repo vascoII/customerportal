@@ -1,11 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-ENV_FILE=".env.production"
-ENV_LABEL="production"
+ENV_FILE=".env.demo"
+ENV_LABEL="demo"
 
 if [ ! -f "$ENV_FILE" ]; then
-  echo "❌ Missing $ENV_FILE. Create it from .env.production.example."
+  echo "❌ Missing $ENV_FILE. Create it from .env.demo.example."
   exit 1
 fi
 
