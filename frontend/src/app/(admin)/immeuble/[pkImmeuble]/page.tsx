@@ -13,4 +13,3 @@ export default function ImmeubleDetailsPage({
 }) {
   return <ImmeubleDetailsClient pkImmeuble={params.pkImmeuble} />;
 }
-
