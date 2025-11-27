@@ -1,0 +1,10 @@
+Connexions uniques mensuelles
+Un peu d'explication
+
+La statistique de connexion unique des utilisateurs ci-dessous mesure combien de visiteurs distincts accèdent 
+à leur page logement par mois. Contrairement aux simples "vues de page", qui comptent chaque visite même si un 
+utilisateur revient plusieurs fois, cette statistique essaie de ne compter chaque individu qu’une seule fois par 
+période (1 mois).
+
+
+Statistiques de connexions mensuelles
