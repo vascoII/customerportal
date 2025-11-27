@@ -161,7 +161,7 @@ const getNavItems = (
     navItems.push({
       icon: <UserCircleIcon />,
       name: "Stats de connexion occupants",
-      path: "/stats",
+      path: "/gestionnaire/statistiques",
     });
   }
   // Add Administration item conditionally
