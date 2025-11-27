@@ -162,60 +162,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
                   </svg>
                   Gérer les comptes
                 </DropdownItem>
-              </li>
-              {((hasShowFactures || isDevelopment) && (
-                <li>
-                <DropdownItem
-                  onItemClick={closeDropdown}
-                  tag="a"
-                  href="/factures"
-                  className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                >
-                  <svg
-                    className="fill-gray-500 group-hover:fill-gray-700 dark:fill-gray-400 dark:group-hover:fill-gray-300"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M3.5 4.5C3.5 3.67157 4.17157 3 5 3H19C19.8284 3 20.5 3.67157 20.5 4.5V19.5C20.5 20.3284 19.8284 21 19 21H5C4.17157 21 3.5 20.3284 3.5 19.5V4.5ZM5 4.5V19.5H19V4.5H5ZM7 7.5C7 7.08579 7.33579 6.75 7.75 6.75H16.25C16.6642 6.75 17 7.08579 17 7.5C17 7.91421 16.6642 8.25 16.25 8.25H7.75C7.33579 8.25 7 7.91421 7 7.5ZM7 11.25C7 10.8358 7.33579 10.5 7.75 10.5H16.25C16.6642 10.5 17 10.8358 17 11.25C17 11.6642 16.6642 12 16.25 12H7.75C7.33579 12 7 11.6642 7 11.25ZM7 15C7 14.5858 7.33579 14.25 7.75 14.25H12.25C12.6642 14.25 13 14.5858 13 15C13 15.4142 12.6642 15.75 12.25 15.75H7.75C7.33579 15.75 7 15.4142 7 15Z"
-                      fill=""
-                    />
-                  </svg>
-                  Factures
-                </DropdownItem>
-              </li>
-              ))}
-              
-              <li>
-                <DropdownItem
-                  onItemClick={closeDropdown}
-                  tag="a"
-                  href="/gestionnaire/statistiques"
-                  className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                >
-                  <svg
-                    className="fill-gray-500 group-hover:fill-gray-700 dark:fill-gray-400 dark:group-hover:fill-gray-300"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M3 3C3 2.44772 3.44772 2 4 2H20C20.5523 2 21 2.44772 21 3V21C21 21.5523 20.5523 22 20 22H4C3.44772 22 3 21.5523 3 21V3ZM4.5 3.5V20.5H19.5V3.5H4.5ZM7 7.5C7 7.08579 7.33579 6.75 7.75 6.75H16.25C16.6642 6.75 17 7.08579 17 7.5V16.5C17 16.9142 16.6642 17.25 16.25 17.25H7.75C7.33579 17.25 7 16.9142 7 16.5V7.5ZM8.5 8.25V15.75H15.5V8.25H8.5Z"
-                      fill=""
-                    />
-                  </svg>
-                  Stats connexion occupants
-                </DropdownItem>
-              </li>
+              </li> 
             </>
           )}
 

@@ -129,12 +129,15 @@ const getNavItems = (
       name: "Dashboard",
       subItems: selectedDashboardItems,
     },
-    {
-      icon: <UserCircleIcon />,
-      name: "Mon Profile",
-      path: "/profile",
-    },
   ];
+
+  if (isClient) {
+    navItems.push({
+      icon: <UserCircleIcon />,
+      name: "Tickets",
+      path: "/tickets",
+    });
+  }
 
   if (isClient) {
     navItems.push({
@@ -144,11 +147,26 @@ const getNavItems = (
     });
   }
 
+  if (isClient) {
+    navItems.push({
+      icon: <UserCircleIcon />,
+      name: "Factures",
+      path: "/factures",
+    });
+  }
+
+  if (isClient) {
+    navItems.push({
+      icon: <UserCircleIcon />,
+      name: "Stats de connexion occupants",
+      path: "/stats",
+    });
+  }
   // Add Administration item conditionally
   if (showAdministration) {
     navItems.push({
       icon: <UserCircleIcon />,
-      name: "Administration",
+      name: "Administration (Developpement mode)",
       path: "/admin",
     });
   }
