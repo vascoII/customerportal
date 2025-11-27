@@ -500,8 +500,12 @@ function ShareBuildingsModal({
     refetch: refetchOperator,
   } = getOperatorQuery(operator.PKUser);
 
-  const assignedImmeubles = operatorData?.immeubles ?? [];
-  const availableImmeubles = operatorData?.diffImmeubles ?? [];
+  const assignedImmeubles = Array.isArray(operatorData?.immeubles)
+    ? operatorData!.immeubles
+    : [];
+  const availableImmeubles = Array.isArray(operatorData?.diffImmeubles)
+    ? operatorData!.diffImmeubles
+    : [];
 
   // Reset selections when modal opens/closes or data changes
   useEffect(() => {
