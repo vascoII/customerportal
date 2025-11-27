@@ -590,6 +590,28 @@ function ShareBuildingsModal({
               {operator.FirstName} {operator.UserName}
             </span>
           </p>
+          {operatorData?.user && (
+            <div className="mt-3 grid grid-cols-1 gap-3 text-xs text-gray-600 dark:text-gray-400 sm:grid-cols-3">
+              <div>
+                <p className="font-medium text-gray-700 dark:text-gray-300">
+                  Email
+                </p>
+                <p>{operatorData.user.EMail ?? operatorData.user.LoginID ?? "—"}</p>
+              </div>
+              <div>
+                <p className="font-medium text-gray-700 dark:text-gray-300">
+                  Téléphone
+                </p>
+                <p>{operatorData.user.PhoneNumber ?? "—"}</p>
+              </div>
+              <div>
+                <p className="font-medium text-gray-700 dark:text-gray-300">
+                  Nb. immeubles
+                </p>
+                <p>{operatorData.user.NbImmeubles ?? "—"}</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Error message */}
@@ -631,7 +653,9 @@ function ShareBuildingsModal({
                       const immeuble = building.Immeuble ?? building;
                       const pkImmeuble =
                         immeuble.PkImmeuble ?? immeuble.pkImmeuble ?? "";
-                      const isSelected = selectedToRemove.includes(pkImmeuble);
+                      // Par défaut, les immeubles assignés sont cochés.
+                      // Si l'utilisateur décoche, on les ajoute à selectedToRemove.
+                      const isSelected = !selectedToRemove.includes(pkImmeuble);
 
                       return (
                         <div
