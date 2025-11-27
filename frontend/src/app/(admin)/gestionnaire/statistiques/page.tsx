@@ -23,9 +23,6 @@ export default function StatistiquesPage() {
               fois, cette statistique essaie de ne compter chaque individu
               qu’une seule fois par période (1 mois).
             </p>
-            <p className="font-medium text-gray-700 dark:text-gray-300">
-              Statistiques de connexions mensuelles :
-            </p>
           </div>
         </div>
 
