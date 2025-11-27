@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableBody,
@@ -18,6 +18,20 @@ export default function ListFactures() {
   const [factures, setFactures] = useState<Invoice[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [filterText, setFilterText] = useState<string>("");
+  const [sortConfig, setSortConfig] = useState<{
+    key:
+      | "numero"
+      | "codeGestio"
+      | "adresse"
+      | "ville"
+      | "cp"
+      | "dateEdition"
+      | "montantHT"
+      | "montantTTC"
+      | "montantAPayer";
+    direction: "asc" | "desc";
+  } | null>(null);
 
   // Load factures data
   const {
@@ -32,6 +46,126 @@ export default function ListFactures() {
       setErrorMessage(null);
     }
   }, [facturesData]);
+
+  const handleSort = (
+    key:
+      | "numero"
+      | "codeGestio"
+      | "adresse"
+      | "ville"
+      | "cp"
+      | "dateEdition"
+      | "montantHT"
+      | "montantTTC"
+      | "montantAPayer"
+  ) => {
+    setSortConfig((current) => {
+      if (current?.key === key) {
+        // Inverse le sens ou réinitialise
+        if (current.direction === "asc") {
+          return { key, direction: "desc" };
+        }
+        return null; // troisième clic : tri désactivé
+      }
+      return { key, direction: "asc" };
+    });
+  };
+
+  const getSortableValue = (
+    facture: Invoice,
+    key:
+      | "numero"
+      | "codeGestio"
+      | "adresse"
+      | "ville"
+      | "cp"
+      | "dateEdition"
+      | "montantHT"
+      | "montantTTC"
+      | "montantAPayer"
+  ) => {
+    switch (key) {
+      case "numero":
+        return facture.numero ?? "";
+      case "codeGestio":
+        return facture.codeGestio ?? "";
+      case "adresse":
+        return facture.adresse ?? "";
+      case "ville":
+        return facture.ville ?? "";
+      case "cp":
+        return facture.cp ?? "";
+      case "dateEdition":
+        return facture.dateEdition ?? facture.dateEditionFormatted ?? "";
+      case "montantHT":
+        return facture.montantTotalHT ?? facture.montantTotalHTFormatted ?? "";
+      case "montantTTC":
+        return facture.montantTotalTTC ?? facture.montantTotalTTCFormatted ?? "";
+      case "montantAPayer":
+        return (
+          facture.montantTotalAPayer ?? facture.montantTotalAPayerFormatted ?? ""
+        );
+      default:
+        return "";
+    }
+  };
+
+  const displayedFactures = useMemo(() => {
+    let data = [...factures];
+
+    // Filtre texte global
+    if (filterText.trim()) {
+      const needle = filterText.toLowerCase();
+      data = data.filter((f) => {
+        const numero = (f.numero ?? "").toLowerCase();
+        const codeGestio = (f.codeGestio ?? "").toLowerCase();
+        const adresse = (f.adresse ?? "").toLowerCase();
+        const ville = (f.ville ?? "").toLowerCase();
+        const cp = (f.cp ?? "").toLowerCase();
+        const dateEdition = (
+          f.dateEditionFormatted ?? f.dateEdition ?? ""
+        ).toLowerCase();
+        const montantHT = (
+          f.montantTotalHTFormatted ?? String(f.montantTotalHT ?? "")
+        ).toLowerCase();
+        const montantTTC = (
+          f.montantTotalTTCFormatted ?? String(f.montantTotalTTC ?? "")
+        ).toLowerCase();
+        const montantAPayer = (
+          f.montantTotalAPayerFormatted ??
+          String(f.montantTotalAPayer ?? "")
+        ).toLowerCase();
+
+        return (
+          numero.includes(needle) ||
+          codeGestio.includes(needle) ||
+          adresse.includes(needle) ||
+          ville.includes(needle) ||
+          cp.includes(needle) ||
+          dateEdition.includes(needle) ||
+          montantHT.includes(needle) ||
+          montantTTC.includes(needle) ||
+          montantAPayer.includes(needle)
+        );
+      });
+    }
+
+    // Tri
+    if (sortConfig) {
+      data.sort((a, b) => {
+        const aVal = String(getSortableValue(a, sortConfig.key) ?? "");
+        const bVal = String(getSortableValue(b, sortConfig.key) ?? "");
+        if (aVal === bVal) return 0;
+        const result = aVal.localeCompare(bVal, "fr", {
+          numeric: true,
+          sensitivity: "base",
+        });
+        return sortConfig.direction === "asc" ? result : -result;
+      });
+    }
+
+    return data;
+  }, [factures, filterText, sortConfig]);
 
   // Handle download
   const handleDownload = async (pkFacture: string) => {
@@ -81,11 +215,21 @@ export default function ListFactures() {
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
             Liste des Factures
           </h3>
-          {factures.length > 0 && (
+          {displayedFactures.length > 0 && (
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              {factures.length} facture{factures.length > 1 ? 's' : ''}
+              {displayedFactures.length} facture
+              {displayedFactures.length > 1 ? "s" : ""}
             </p>
           )}
+        </div>
+        <div className="w-full sm:w-64">
+          <input
+            type="text"
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+            placeholder="Filtrer (n° facture, ville, adresse...)"
+            className="h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+          />
         </div>
       </div>
 
@@ -96,7 +240,7 @@ export default function ListFactures() {
         </div>
       )}
 
-      {factures.length === 0 ? (
+      {displayedFactures.length === 0 ? (
         <div className="flex items-center justify-center min-h-[200px] rounded-xl border border-dashed border-gray-200 dark:border-gray-800">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Aucune facture disponible.
@@ -108,57 +252,138 @@ export default function ListFactures() {
             <TableRow>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
               >
-                Numéro de facture
+                <button
+                  type="button"
+                  onClick={() => handleSort("numero")}
+                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  <span>Numéro de facture</span>
+                  {sortConfig?.key === "numero" && (
+                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </button>
               </TableCell>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
               >
-                Code gestionnaire
+                <button
+                  type="button"
+                  onClick={() => handleSort("codeGestio")}
+                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  <span>Code gestionnaire</span>
+                  {sortConfig?.key === "codeGestio" && (
+                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </button>
               </TableCell>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
               >
-                Adresse
+                <button
+                  type="button"
+                  onClick={() => handleSort("adresse")}
+                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  <span>Adresse</span>
+                  {sortConfig?.key === "adresse" && (
+                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </button>
               </TableCell>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
               >
-                Ville
+                <button
+                  type="button"
+                  onClick={() => handleSort("ville")}
+                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  <span>Ville</span>
+                  {sortConfig?.key === "ville" && (
+                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </button>
               </TableCell>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
               >
-                Code postal
+                <button
+                  type="button"
+                  onClick={() => handleSort("cp")}
+                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  <span>Code postal</span>
+                  {sortConfig?.key === "cp" && (
+                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </button>
               </TableCell>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
               >
-                Date d&apos;émission
+                <button
+                  type="button"
+                  onClick={() => handleSort("dateEdition")}
+                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  <span>Date d&apos;émission</span>
+                  {sortConfig?.key === "dateEdition" && (
+                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </button>
               </TableCell>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
               >
-                Montant total HT
+                <button
+                  type="button"
+                  onClick={() => handleSort("montantHT")}
+                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  <span>Montant total HT</span>
+                  {sortConfig?.key === "montantHT" && (
+                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </button>
               </TableCell>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
               >
-                Montant total TTC
+                <button
+                  type="button"
+                  onClick={() => handleSort("montantTTC")}
+                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  <span>Montant total TTC</span>
+                  {sortConfig?.key === "montantTTC" && (
+                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </button>
               </TableCell>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
               >
-                Montant total à payer
+                <button
+                  type="button"
+                  onClick={() => handleSort("montantAPayer")}
+                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  <span>Montant total à payer</span>
+                  {sortConfig?.key === "montantAPayer" && (
+                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </button>
               </TableCell>
               <TableCell
                 isHeader
@@ -170,7 +395,7 @@ export default function ListFactures() {
           </TableHeader>
 
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-            {factures.map((facture) => {
+            {displayedFactures.map((facture) => {
               const pkFacture = facture.pkFacture;
               const numero = facture.numero ?? "—";
               const codeGestio = facture.codeGestio ?? "—";
