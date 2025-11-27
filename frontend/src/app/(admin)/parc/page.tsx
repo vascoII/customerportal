@@ -4,6 +4,7 @@ import VosReleves from "@/components/techem/parc/VosReleves";
 import VosChantiers from "@/components/techem/parc/VosChantiers";
 import { ParcMetrics } from "@/components/techem/parc/ParcMetrics";
 import ParcMainCard from "@/components/techem/parc/ParcMainCard";
+import FicheClient from "@/components/techem/parc/FicheClient";
 
 export const metadata: Metadata = {
   title: "Parc | TECHEM - Espace client",
@@ -16,11 +17,10 @@ export default function ParcPage() {
       <div className="col-span-12 space-y-6 xl:col-span-7">
         <ParcMainCard />
         <ParcMetrics />
-        
-
       </div>
 
       <div className="col-span-12 space-y-6 xl:col-span-5">
+        <FicheClient />
         <VosReleves />
         <VosChantiers />
       </div>
