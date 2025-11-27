@@ -1204,7 +1204,15 @@ class Client extends BaseClient
         die;
     }
 
+    public function checkTicketsInterEnabled(string $pkUser, string $sessionId)
+    {
+        $request = (object) [
+            'SessionID' => $sessionId,
+            'PkUser'    => (int) $pkUser,
+        ];
 
+        return $this->sendRequest('CheckTicketsInterEnabled', $request);
+    }
 
     public function getTicketsInterEnabled()
     {

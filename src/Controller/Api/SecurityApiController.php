@@ -53,6 +53,11 @@ class SecurityApiController extends AbstractApiController
                 return $this->error('Invalid credentials', 401);
             }
 
+            //Get client's Tickets permissions
+            $hasTicketPermission = $client->checkTicketsInterEnabled(
+                $loginData['pk_user'], $loginData['session_id']
+            );
+            
             $currentUser = $loginData['user'];
             $roles = ['ROLE_USER'];
 
@@ -76,11 +81,20 @@ class SecurityApiController extends AbstractApiController
                 }
             }
 
+            $currentUserNormalized = $this->normalize($currentUser);
+
+            //Get client's Tickets permissions
+            $hasTicketPermission = $client->checkTicketsInterEnabled(
+                $loginData['pk_user'], $loginData['session_id']
+            );
+            $currentUserNormalized['hasHicketPermission'] = $hasTicketPermission;
+
             // Return session_id and pk_user for stateless API
             // Frontend will send these in headers for subsequent requests
             return $this->success([
-                'user' => $this->normalize($currentUser),
+                'user' => $currentUserNormalized,
                 'roles' => $roles,
+                'has_ticket_permission' => $hasTicketPermission,
                 'session_id' => $loginData['session_id'],
                 'pk_user' => $loginData['pk_user'],
             ], 'Login successful');

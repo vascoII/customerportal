@@ -49,7 +49,8 @@ const getNavItems = (
   pkImmeuble?: string,
   pkLogement?: string,
   currentSection?: string,
-  userType?: string
+  userType?: string,
+  hasHicketPermission?: boolean
 ): NavItem[] => {
   const dashboardSubItems: { name: string; path: string; pro?: boolean; new?: boolean }[] = [];
   const dashboardSubItemsOcupant: { name: string; path: string; pro?: boolean; new?: boolean }[] = [];
@@ -117,6 +118,7 @@ const getNavItems = (
   // Select the appropriate dashboard items based on userType
   const selectedDashboardItems = userType === "O" ? dashboardSubItemsOcupant : dashboardSubItems;
   const isClient = userType === "C" ? true : false;
+
   // Check if Administration should be shown
   // Show if: (env=prod && userType == "A") OR env=dev
   const isDevelopment = process.env.NODE_ENV === "development";
@@ -131,7 +133,7 @@ const getNavItems = (
     },
   ];
 
-  if (isClient) {
+  if (hasHicketPermission && isClient) {
     navItems.push({
       icon: <UserCircleIcon />,
       name: "Tickets",
@@ -286,8 +288,8 @@ const AppSidebar: React.FC = () => {
 
   // Get dynamic nav items based on current route (memoized to avoid unnecessary re-renders)
   const navItems = useMemo(
-    () => getNavItems(pathname, resolvedPkImmeuble, pkLogement, currentSection, user?.UserType),
-    [pathname, resolvedPkImmeuble, pkLogement, currentSection, user?.UserType]
+    () => getNavItems(pathname, resolvedPkImmeuble, pkLogement, currentSection, user?.UserType, user?.hasHicketPermission),
+    [pathname, resolvedPkImmeuble, pkLogement, currentSection, user?.UserType, user?.hasHicketPermission]
   );
 
   // Determine the home link based on user type
@@ -616,7 +618,7 @@ const AppSidebar: React.FC = () => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Others (On developpement mode)"
+                  "Others (developpement mode)"
                 ) : (
                   <HorizontaLDots />
                 )}
