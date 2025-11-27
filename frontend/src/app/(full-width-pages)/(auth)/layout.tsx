@@ -31,7 +31,7 @@ export default function AuthLayout({
                   />
                 </Link>
                 <p className="text-center text-gray-600 dark:text-white/60">
-                  Tableau de bord Client Techem
+                  Portail Client Techem
                 </p>
               </div>
             </div>
