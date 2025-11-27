@@ -140,10 +140,21 @@ export function useOperators() {
       }
 
       const response = await api.post("/operators", requestData);
-      return extractApiData(response);
+      const apiResponse = response.data;
+
+      if (apiResponse.success) {
+        return {
+          success: true,
+          message: apiResponse.message,
+        };
+      }
+
+      throw new Error(
+        apiResponse.message || "Une erreur s'est produite lors de la création du gestionnaire."
+      );
     },
     onSuccess: () => {
-      // Invalidate operators list
+      // Invalidate operators list so /gestionnaire is refreshed
       queryClient.invalidateQueries({ queryKey: ["operators"] });
     },
   });
@@ -262,7 +273,18 @@ export function useOperators() {
       }
 
       const response = await api.put(`/operators/${id}`, requestData);
-      return extractApiData(response);
+      const apiResponse = response.data;
+
+      if (apiResponse.success) {
+        return {
+          success: true,
+          message: apiResponse.message,
+        };
+      }
+
+      throw new Error(
+        apiResponse.message || "Une erreur s'est produite lors de la mise à jour du gestionnaire."
+      );
     },
     onSuccess: (_, variables) => {
       // Invalidate operator details and list

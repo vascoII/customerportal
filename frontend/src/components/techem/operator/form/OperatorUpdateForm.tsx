@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useOperators } from "@/lib/hooks/useOperators";
@@ -10,7 +10,7 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import Button from "@/components/ui/button/Button";
 import Alert from "@/components/ui/alert/Alert";
-import { ChevronDownIcon, ChevronLeftIcon } from "@/icons";
+import { ChevronLeftIcon } from "@/icons";
 import Link from "next/link";
 
 /**
@@ -48,15 +48,6 @@ const updateOperatorSchema = z
 
 type UpdateOperatorFormData = z.infer<typeof updateOperatorSchema>;
 
-// Options pour le champ Fonction
-const jobOptions = [
-  { value: "Gestionnaire", label: "Gestionnaire" },
-  { value: "Administrateur", label: "Administrateur" },
-  { value: "Technicien", label: "Technicien" },
-  { value: "Responsable", label: "Responsable" },
-  { value: "Coordinateur", label: "Coordinateur" },
-];
-
 interface OperatorUpdateFormProps {
   operatorId: string | number;
 }
@@ -68,7 +59,6 @@ export default function OperatorUpdateForm({ operatorId }: OperatorUpdateFormPro
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors, isSubmitting },
     setError,
     watch,
@@ -253,39 +243,18 @@ export default function OperatorUpdateForm({ operatorId }: OperatorUpdateFormPro
                     <Label htmlFor="job">
                       Fonction <span className="text-error-500">*</span>
                     </Label>
-                    <div className="relative">
-                      <Controller
-                        name="job"
-                        control={control}
-                        render={({ field }) => (
-                          <select
-                            id="job"
-                            {...field}
-                            className={`h-11 w-full appearance-none rounded-lg border border-gray-300 px-4 py-2.5 pr-11 text-sm shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 ${
-                              field.value
-                                ? "text-gray-800 dark:text-white/90"
-                                : "text-gray-400 dark:text-gray-400"
-                            } ${errors.job ? "border-error-500 focus:ring-error-500/10 dark:border-error-500" : ""}`}
-                          >
-                            <option value="" disabled className="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
-                              Sélectionner une fonction
-                            </option>
-                            {jobOptions.map((option) => (
-                              <option
-                                key={option.value}
-                                value={option.value}
-                                className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
-                              >
-                                {option.label}
-                              </option>
-                            ))}
-                          </select>
-                        )}
-                      />
-                      <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
-                        <ChevronDownIcon />
-                      </span>
-                    </div>
+                    <Input
+                      id="job"
+                      type="text"
+                      placeholder="Fonction"
+                      {...(() => {
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        const { ref, onChange, onBlur, min, max, ...rest } = register("job");
+                        return { onChange, onBlur, ref, ...rest };
+                      })()}
+                      error={!!errors.job}
+                      hint={errors.job?.message}
+                    />
                     {errors.job && (
                       <p className="mt-1.5 text-xs text-error-500">
                         {errors.job.message}
