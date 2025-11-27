@@ -595,26 +595,12 @@ function ShareBuildingsModal({
             </span>
           </p>
           {operatorData?.user && (
-            <div className="mt-3 grid grid-cols-1 gap-3 text-xs text-gray-600 dark:text-gray-400 sm:grid-cols-3">
-              <div>
-                <p className="font-medium text-gray-700 dark:text-gray-300">
-                  Email
-                </p>
-                <p>{operatorData.user.EMail ?? operatorData.user.LoginID ?? "—"}</p>
-              </div>
-              <div>
-                <p className="font-medium text-gray-700 dark:text-gray-300">
-                  Téléphone
-                </p>
-                <p>{operatorData.user.PhoneNumber ?? "—"}</p>
-              </div>
-              <div>
-                <p className="font-medium text-gray-700 dark:text-gray-300">
-                  Nb. immeubles
-                </p>
-                <p>{operatorData.user.NbImmeubles ?? "—"}</p>
-              </div>
-            </div>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            Nombre actuel d&apos;immeubles: 
+            <span className="font-medium text-gray-800 dark:text-white/90">
+              {assignedImmeubles.length}
+            </span>
+          </p>
           )}
         </div>
 
