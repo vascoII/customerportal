@@ -135,7 +135,7 @@ const getNavItems = (
 
   if (hasHicketPermission && isClient) {
     navItems.push({
-      icon: <UserCircleIcon />,
+      icon: <ListIcon />,
       name: "Tickets",
       path: "/tickets",
     });
@@ -151,7 +151,7 @@ const getNavItems = (
 
   if (isClient) {
     navItems.push({
-      icon: <UserCircleIcon />,
+      icon: <TableIcon />,
       name: "Factures",
       path: "/factures",
     });
