@@ -500,12 +500,34 @@ function ShareBuildingsModal({
     refetch: refetchOperator,
   } = getOperatorQuery(operator.PKUser);
 
+  // Debug: log the raw operatorData to see what we're getting
+  // eslint-disable-next-line no-console
+  console.log("[ShareBuildingsModal] operatorData:", operatorData);
+  // eslint-disable-next-line no-console
+  console.log("[ShareBuildingsModal] operatorData?.immeubles:", operatorData?.immeubles);
+  // eslint-disable-next-line no-console
+  console.log("[ShareBuildingsModal] operatorData?.diffImmeubles:", operatorData?.diffImmeubles);
+
+  // immeubles is an array, diffImmeubles can be an object with numeric keys or an array
   const assignedImmeubles = Array.isArray(operatorData?.immeubles)
     ? operatorData!.immeubles
     : [];
-  const availableImmeubles = Array.isArray(operatorData?.diffImmeubles)
-    ? operatorData!.diffImmeubles
-    : [];
+  
+  // Handle diffImmeubles: it can be an array or an object with numeric keys
+  let availableImmeubles: Building[] = [];
+  if (operatorData?.diffImmeubles) {
+    if (Array.isArray(operatorData.diffImmeubles)) {
+      availableImmeubles = operatorData.diffImmeubles;
+    } else if (typeof operatorData.diffImmeubles === 'object') {
+      // Convert object to array: { "68": {...}, "85": {...} } -> [{...}, {...}]
+      availableImmeubles = Object.values(operatorData.diffImmeubles) as Building[];
+    }
+  }
+
+  // eslint-disable-next-line no-console
+  console.log("[ShareBuildingsModal] assignedImmeubles:", assignedImmeubles);
+  // eslint-disable-next-line no-console
+  console.log("[ShareBuildingsModal] availableImmeubles:", availableImmeubles);
 
   // Reset selections when modal opens/closes or data changes
   useEffect(() => {
