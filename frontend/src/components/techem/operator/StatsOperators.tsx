@@ -40,17 +40,23 @@ export default function StatsOperators() {
 
     const loadStats = async () => {
       try {
+        console.log("[StatsOperators] Loading statistics...");
         setIsLoading(true);
         setErrorMessage(null);
 
         const response = await api.get<OperatorsStatsApiResponse>(
           "/operators/statistiques"
         );
+        console.log("[StatsOperators] Raw API response:", response.data);
+
         const apiData = extractApiData<OperatorsStatsApiResponse>(response);
+        console.log("[StatsOperators] Extracted API data:", apiData);
+
         const graphPoints: GraphPoint[] =
           apiData.data?.stats?.GraphPoint ?? [];
 
         if (isMounted) {
+          console.log("[StatsOperators] GraphPoint stored in state:", graphPoints);
           setPoints(graphPoints);
         }
       } catch (error) {
@@ -100,6 +106,9 @@ export default function StatsOperators() {
       cats.push(label);
       vals.push(numericValue);
     });
+
+    console.log("[StatsOperators] Computed categories:", cats);
+    console.log("[StatsOperators] Computed values:", vals);
 
     return { categories: cats, values: vals };
   }, [points]);
