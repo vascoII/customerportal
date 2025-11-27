@@ -211,6 +211,7 @@ export function useOperators() {
    * Get operator details query
    * GET /api/operators/{id}
    * @param id - Operator ID
+   * Note: No cache enabled (staleTime: 0) to always fetch fresh data
    */
   const getOperatorQuery = (id: string | number) => {
     return useQuery({
@@ -223,7 +224,8 @@ export function useOperators() {
       },
       enabled: !!id,
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: 0, // No cache - always fetch fresh data
+      gcTime: 0, // Don't keep in cache after unmount
     });
   };
 
@@ -231,6 +233,7 @@ export function useOperators() {
    * Get operator details
    * @param id - Operator ID
    * @returns Promise with operator details
+   * Note: No cache enabled (staleTime: 0) to always fetch fresh data
    */
   const getOperator = async (
     id: string | number
@@ -244,7 +247,8 @@ export function useOperators() {
         return extractApiData<OperatorDetailsResponse>(response);
       },
       retry: false,
-      staleTime: 2 * 60 * 1000,
+      staleTime: 0, // No cache - always fetch fresh data
+      gcTime: 0, // Don't keep in cache after unmount
     });
     return result;
   };
