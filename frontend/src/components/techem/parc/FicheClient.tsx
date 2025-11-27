@@ -71,8 +71,8 @@ export default function FicheClient() {
                   Fonctionnalité à venir
                 </p>
                 <p className="text-sm text-sky-800 dark:text-sky-200/80">
-                  La fiche client détaillée sera bientôt disponible. Vous serez
-                  informé dès que l&apos;édition sera activée.
+                  La fiche client détaillée sera bientôt disponible.
+                  Vous serez informés par notification lorsque la fonctionnalité sera disponible.
                 </p>
               </div>
             </div>
