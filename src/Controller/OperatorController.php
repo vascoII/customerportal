@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class OperatorController extends  AbstractTechemController
 {
 
-    #[Route("/gestionnaire", name: "TechemCoreBundle_Operator_index")]
+    //#[Route("/gestionnaire", name: "TechemCoreBundle_Operator_index")]
     public function indexAction(Request $request)
     {
         $client = $this->getClient();
@@ -57,7 +57,7 @@ class OperatorController extends  AbstractTechemController
         return $this->render('Operator/index.html.twig', $locals);
     }
 
-    #[Route("/gestionnaire/nouveau", name: "TechemCoreBundle_Operator_create")]
+    //#[Route("/gestionnaire/nouveau", name: "TechemCoreBundle_Operator_create")]
     public function createAction(Request $request)
     {
         $client = $this->getClient();
@@ -93,7 +93,7 @@ class OperatorController extends  AbstractTechemController
         return $this->render('Operator/create.html.twig', $locals);
     }
 	
-	#[Route("/gestionnaire/statistiques", name: "TechemCoreBundle_Operator_statsoccupants")]
+	//#[Route("/gestionnaire/statistiques", name: "TechemCoreBundle_Operator_statsoccupants")]
     public function otatsoccupantsAction(Request $request)
     {
         $client = $this->getClient();
@@ -112,7 +112,7 @@ class OperatorController extends  AbstractTechemController
 
     }
 
-    #[Route("/gestionnaire/{id}", name: "TechemCoreBundle_Operator_view")]
+    //#[Route("/gestionnaire/{id}", name: "TechemCoreBundle_Operator_view")]
     public function viewAction(Request $request, $id)
     {
         $client = $this->getClient();
@@ -143,7 +143,7 @@ class OperatorController extends  AbstractTechemController
         return $this->render('Operator/view.html.twig', $locals);
     }
 
-    #[Route("/gestionnaire/{id}/edit", name: "TechemCoreBundle_Operator_edit")]
+    //#[Route("/gestionnaire/{id}/edit", name: "TechemCoreBundle_Operator_edit")]
     public function editAction(Request $request, $id)
     {
         $client = $this->getClient();
@@ -196,7 +196,7 @@ class OperatorController extends  AbstractTechemController
         return $this->render('Operator/edit.html.twig', $locals);
     }
 
-    #[Route("/gestionnaire/{id}/password", name: "TechemCoreBundle_Operator_password")]
+    //#[Route("/gestionnaire/{id}/password", name: "TechemCoreBundle_Operator_password")]
     public function editPasswordAction(Request $request, $id)
     {
         $client = $this->getClient();
@@ -231,7 +231,7 @@ class OperatorController extends  AbstractTechemController
         return $this->render('Operator/editPassword.html.twig', $locals);
     }
 
-    #[Route("/gestionnaire/{id}/immeuble/ajouter", name: "TechemCoreBundle_Operator_add_building")]
+    //#[Route("/gestionnaire/{id}/immeuble/ajouter", name: "TechemCoreBundle_Operator_add_building")]
     public function addBuildingAction(Request $request, $id)
     {
         if (!$request->isXmlHttpRequest()) {
@@ -288,7 +288,7 @@ class OperatorController extends  AbstractTechemController
         return $response;
     }
 
-    #[Route("/gestionnaire/{id}/immeuble/supprimer", name: "TechemCoreBundle_Operator_remove_building")]
+    //#[Route("/gestionnaire/{id}/immeuble/supprimer", name: "TechemCoreBundle_Operator_remove_building")]
     public function removeBuildingAction(Request $request, $id)
     {
         if (!$request->isXmlHttpRequest()) {
@@ -349,7 +349,7 @@ class OperatorController extends  AbstractTechemController
         return $response;
     }
 
-    #[Route("/gestionnaire/{id}/supprimer", name: "TechemCoreBundle_Operator_delete")]
+    //#[Route("/gestionnaire/{id}/supprimer", name: "TechemCoreBundle_Operator_delete")]
     public function deleteAction(Request $request, $id)
     {
         // if (!$request->isXmlHttpRequest()) {

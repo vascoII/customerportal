@@ -52,7 +52,7 @@ class GestionParcController extends  AbstractTechemController
      *
      * @return string
      */
-    #[Route('/gestionParc/filtre', name: 'TechemCoreBundle_gestionParc_result')]
+    //#[Route('/gestionParc/filtre', name: 'TechemCoreBundle_gestionParc_result')]
     public function filterResultAction(Request $request)
     {
         $client = $this->getClient();

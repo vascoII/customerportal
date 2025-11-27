@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class FactureController extends  AbstractTechemController
 {
-    #[Route('/factures', name: 'TechemCoreBundle_facture_index', requirements: ['_locale' => 'en|fr'])]
+    //#[Route('/factures', name: 'TechemCoreBundle_facture_index', requirements: ['_locale' => 'en|fr'])]
     public function indexAction()
     {
         $client = $this->getClient();
@@ -51,7 +51,7 @@ class FactureController extends  AbstractTechemController
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/factures/download/{pkFacture}', name: 'TechemCoreBundle_facture_report')]
+    //#[Route('/factures/download/{pkFacture}', name: 'TechemCoreBundle_facture_report')]
     public function reportAction($pkFacture)
     {
 

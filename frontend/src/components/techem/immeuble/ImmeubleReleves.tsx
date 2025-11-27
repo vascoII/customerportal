@@ -215,15 +215,15 @@ export default function ImmeubleReleves({
         percentage: pcEauFroide,
         releves: nbCompteursEFReleves,
         aRelever: nbCompteursEFARelever,
-        consosGrandes: consosGrandesEF.slice(0, 5), // Limit to 5 items
-        consosPetites: consosPetitesEF.slice(0, 5), // Limit to 5 items
+        consosGrandes: Array.isArray(consosGrandesEF) ? consosGrandesEF.slice(0, 5) : [], // Limit to 5 items
+        consosPetites: Array.isArray(consosPetitesEF) ? consosPetitesEF.slice(0, 5) : [], // Limit to 5 items
       },
       eauChaude: {
         percentage: pcEauChaude,
         releves: nbCompteursECReleves,
         aRelever: nbCompteursECARelever,
-        consosGrandes: consosGrandesEC.slice(0, 5), // Limit to 5 items
-        consosPetites: consosPetitesEC.slice(0, 5), // Limit to 5 items
+        consosGrandes: Array.isArray(consosGrandesEC) ? consosGrandesEC.slice(0, 5) : [],
+        consosPetites: Array.isArray(consosPetitesEC) ? consosPetitesEC.slice(0, 5) : [], // Limit to 5 items
       },
       repartiteur: {
         percentage: pcRepartiteur,

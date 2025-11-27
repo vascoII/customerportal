@@ -18,7 +18,7 @@ use App\Service\Client;
 class TableauBordClientController extends  AbstractTechemController
 {
 
-    #[Route('/parc', name: 'TechemCoreBundle_TableauBordClient_index', requirements: ['_locale' => 'en|fr'])]
+    //#[Route('/parc', name: 'TechemCoreBundle_TableauBordClient_index', requirements: ['_locale' => 'en|fr'])]
     public function indexAction(Request $request)
     {
         $client = $this->getClient();
@@ -65,65 +65,7 @@ class TableauBordClientController extends  AbstractTechemController
         return $this->render('TableauBordClient/index.html.twig', $locals);
     }
 
-    #[Route('/parc/intervention', name: 'TechemCoreBundle_TableauBordClient_intervention')]
-    public function interventionAction(Request $request)
-    {
-        $client = $this->getClient();
-        if (is_null($client)) {
-            return $this->redirectToRoute('logout');
-        }
 
-        $docType   = $request->query->get('doc-type');
-        $dateBegin = $request->query->get('date-begin');
-        $dateEnd   = $request->query->get('date-end');
-
-        if ($this->validateDate($dateBegin, 'd/m/Y') && $this->validateDate($dateEnd, 'd/m/Y')) {
-            $params         = new GetReportParams();
-            $params->PKUSER = $client->getPkUser();
-            $params->DATE1  = $dateBegin;
-            $params->DATE2  = $dateEnd;
-
-            if ($docType == 'synthese-inte') {
-                $report = $client->getReport('LIVRET_INTER_SYNTHESE', $params);
-            } elseif ($docType == 'detail-inte') {
-                $report = $client->getReport('LIVRET_INTER_DETAIL', $params);
-            } elseif ($docType == 'detail-excel-inte') {
-                $report = $client->getExcel('LIVRET_INTER_LISTE', $params);
-            } else {
-
-                throw new NotFoundHttpException();
-            }
-
-            if (empty($report)) {
-                throw new NotFoundHttpException();
-            }
-
-            $response = new Response($report);
-            if ($docType == 'detail-excel-inte') {
-                $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                $response->headers->set(
-                    'Content-Disposition',
-                    'inline; filename=' . $docType . '-' . $dateBegin . '-' . $dateEnd . '.xlsx'
-                );
-            } else {
-                $response->headers->set('Content-Type', 'application/pdf');
-                $response->headers->set(
-                    'Content-Disposition',
-                    'inline; filename=' . $docType . '-' . $dateBegin . '-' . $dateEnd . '.pdf'
-                );
-            }
-
-            $response->headers->set('Content-Transfer-Encoding', 'binary');
-            $response->headers->set('Expires', 0);
-            $response->headers->set('Cache-Control', 'no-cache');
-            $response->headers->set('Pragma', 'no-cache');
-            $response->headers->set('Content-Length', strlen($report));
-
-            return $response;
-        } else {
-            throw new NotFoundHttpException();
-        }
-    }
 
     public function validateDate($date, $format = 'Y-m-d H:i:s')
     {

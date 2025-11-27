@@ -36,8 +36,8 @@ class LogementController extends  AbstractTechemController
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-     #[Route('/immeuble/{pkImmeuble}/logements', name: 'TechemCoreBundle_Logement_index')]
-     #[Route('/gestionParc/{pkImmeuble}', name: 'TechemCoreBundle_GestionParc_logement', defaults:[ 'gestion' => true])]
+     //#[Route('/immeuble/{pkImmeuble}/logements', name: 'TechemCoreBundle_Logement_index')]
+     //#[Route('/gestionParc/{pkImmeuble}', name: 'TechemCoreBundle_GestionParc_logement', defaults:[ 'gestion' => true])]
     public function indexAction($pkImmeuble, $gestion = false)
     {
         $client = $this->getClient();
@@ -67,7 +67,7 @@ class LogementController extends  AbstractTechemController
         return $this->render('Logement/index.html.twig', $locals);
     }
 
-    #[Route('/logement/{pkLogement}/createticket', name: 'TechemCoreBundle_Create_Ticket_Show')]
+    //#[Route('/logement/{pkLogement}/createticket', name: 'TechemCoreBundle_Create_Ticket_Show')]
     public function createTicketAction(Request $request, LoggerInterface $logger)
     {
         if (!$request->isXmlHttpRequest()) {
@@ -135,7 +135,7 @@ class LogementController extends  AbstractTechemController
         }
     }
 
-    #[Route('/immeuble/{pkImmeuble}/logements/ticketowner', name: 'TechemCoreBundle_Ticket_Owner')]
+    //#[Route('/immeuble/{pkImmeuble}/logements/ticketowner', name: 'TechemCoreBundle_Ticket_Owner')]
     public function getTicketOnwerAction(Request $request)
     {
         if (!$request->isXmlHttpRequest()) {
@@ -156,7 +156,7 @@ class LogementController extends  AbstractTechemController
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/logements/recherche', name: 'TechemCoreBundle_Logement_search')]
+    //#[Route('/logements/recherche', name: 'TechemCoreBundle_Logement_search')]
     public function searchAction()
     {
         $client = $this->getClient();
@@ -176,7 +176,7 @@ class LogementController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    #[Route('/infos-appareils', name: 'TechemCoreBundle_Logement_infos_appareils')]
+    //#[Route('/infos-appareils', name: 'TechemCoreBundle_Logement_infos_appareils')]
     public function getInfosAppareilAction(Request $request)
     {
         $types = [
@@ -212,7 +212,7 @@ class LogementController extends  AbstractTechemController
         return $this->render('Logement/_infos_appareils_' . strtolower($type) . '.html.twig', $locals);
     }
 
-    #[Route('/gestionParc/{pkLogement}/edit', name: 'TechemCoreBundle_Logement_edit')]
+    //#[Route('/gestionParc/{pkLogement}/edit', name: 'TechemCoreBundle_Logement_edit')]
     public function editAction($pkLogement, Request $request, Logement $logementService)
     {
         $client = $this->getClient();
@@ -291,9 +291,9 @@ class LogementController extends  AbstractTechemController
         return $this->render('Logement/edit.html.twig', $locals);
     }
 
-    #[Route('/gestionParc/{pkLogement}/show', name: 'TechemCoreBundle_GestionParc_show',defaults: ['gestion' => true])]
-    #[Route('/gestionParc/{pkLogement}/declareOccupant', name: 'TechemCoreBundle_GestionParc_declareOccupant',defaults: ['declareOccupant' => true])]
-    #[Route('/logement/{pkLogement}', name: 'TechemCoreBundle_Logement_show', defaults: ['gestion' => false])]
+    //#[Route('/gestionParc/{pkLogement}/show', name: 'TechemCoreBundle_GestionParc_show',defaults: ['gestion' => true])]
+    //#[Route('/gestionParc/{pkLogement}/declareOccupant', name: 'TechemCoreBundle_GestionParc_declareOccupant',defaults: ['declareOccupant' => true])]
+    //#[Route('/logement/{pkLogement}', name: 'TechemCoreBundle_Logement_show', defaults: ['gestion' => false])]
     public function showAction($pkLogement, Request $request, Logement $logementService, LoggerInterface $logger , $gestion = false, $declareOccupant = false)
     {
         $client = $this->getClient();
@@ -378,7 +378,7 @@ class LogementController extends  AbstractTechemController
         return $this->render('Logement/show.html.twig', $locals);
     }
 
-    #[Route('/logements/{pkImmeuble}/logement/{pkLogement}/releve_repart', name: 'TechemCoreBundle_Logement_repart_releve')]
+    //#[Route('/logements/{pkImmeuble}/logement/{pkLogement}/releve_repart', name: 'TechemCoreBundle_Logement_repart_releve')]
     public function showRepartReleveAction(Request $request, $pkImmeuble, $pkLogement)
     {
         $client = $this->getClient();
@@ -414,7 +414,7 @@ class LogementController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/logement/{pkLogement}/interventions/{pkIntervention}', name: 'TechemCoreBundle_Logement_showintervention')]
+    //#[Route('/logement/{pkLogement}/interventions/{pkIntervention}', name: 'TechemCoreBundle_Logement_showintervention')]
     public function showInterventionAction($pkLogement, $pkIntervention)
     {
         $client = $this->getClient();
@@ -438,7 +438,7 @@ class LogementController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/logement/{pkLogement}/interventions', name: 'TechemCoreBundle_Logement_listinterventions')]
+    //#[Route('/logement/{pkLogement}/interventions', name: 'TechemCoreBundle_Logement_listinterventions')]
     public function listInterventionsAction($pkLogement, Depannage $depannageService)
     {
         $client = $this->getClient();
@@ -544,7 +544,7 @@ class LogementController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/logement/{pkLogement}/fuites', name: 'TechemCoreBundle_Logement_listleaks')]
+    //#[Route('/logement/{pkLogement}/fuites', name: 'TechemCoreBundle_Logement_listleaks')]
     public function listLeaksAction(Request $request, $pkLogement, Fuite $fuiteService)
     {
         $client = $this->getClient();
@@ -569,7 +569,7 @@ class LogementController extends  AbstractTechemController
         return $this->render('Logement/listLeaks.html.twig', $locals);
     }
 
-    #[Route('/logement/{pkLogement}/dysfonctionnements', name: 'TechemCoreBundle_Logement_listdysfunctions')]
+    //#[Route('/logement/{pkLogement}/dysfonctionnements', name: 'TechemCoreBundle_Logement_listdysfunctions')]
     public function listDysfunctionsAction($pkLogement, Dysfonctionnement $dysfonctionnementService)
     {
         $client = $this->getClient();
@@ -595,7 +595,7 @@ class LogementController extends  AbstractTechemController
         return $this->render('Logement/listDysfunctions.html.twig', $locals);
     }
 
-    #[Route('/logement/{pkLogement}/anomalies', name: 'TechemCoreBundle_Logement_listanomalies')]
+    //#[Route('/logement/{pkLogement}/anomalies', name: 'TechemCoreBundle_Logement_listanomalies')]
     public function listAnomaliesAction(Request $request, $pkLogement, Anomalie $anomalieService)
     {
         $client = $this->getClient();
@@ -670,7 +670,7 @@ class LogementController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/immeuble/{pkImmeuble}/logements/export', name: 'TechemCoreBundle_Logement_export')]
+    //#[Route('/immeuble/{pkImmeuble}/logements/export', name: 'TechemCoreBundle_Logement_export')]
     public function exportAction(Request $request, $pkImmeuble, ExcelHelper $excelHelper)
     {
         ini_set('max_execution_time', 120);
@@ -808,7 +808,7 @@ class LogementController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/logement/{pkLogement}/anomalies/export', name: 'TechemCoreBundle_Logement_export_anomalies')]
+    //#[Route('/logement/{pkLogement}/anomalies/export', name: 'TechemCoreBundle_Logement_export_anomalies')]
     public function exportAnomaliesAction($pkLogement, Anomalie $anomalieService)
     {
         ini_set('max_execution_time', 120);
@@ -848,7 +848,7 @@ class LogementController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/logement/{pkLogement}/fuites/export', name: 'TechemCoreBundle_Logement_export_leaks')]
+    //#[Route('/logement/{pkLogement}/fuites/export', name: 'TechemCoreBundle_Logement_export_leaks')]
     public function exportLeaksAction($pkLogement, Fuite $fuiteService)
     {
         ini_set('max_execution_time', 120);
@@ -887,7 +887,7 @@ class LogementController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/logement/{pkLogement}/interventions/export', name: 'TechemCoreBundle_Logement_export_interventions')]
+    //#[Route('/logement/{pkLogement}/interventions/export', name: 'TechemCoreBundle_Logement_export_interventions')]
     public function exportInterventionsAction($pkLogement, Depannage $depannageService)
     {
         ini_set('max_execution_time', 120);
@@ -925,7 +925,7 @@ class LogementController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/logement/{pkLogement}/dysfonctionnements/export', name: 'TechemCoreBundle_Logement_export_dysfunctions')]
+    //#[Route('/logement/{pkLogement}/dysfonctionnements/export', name: 'TechemCoreBundle_Logement_export_dysfunctions')]
     public function exportDysfunctionsAction(Dysfonctionnement $dysfonctionnementService, $pkLogement)
     {
         ini_set('max_execution_time', 120);
@@ -962,7 +962,7 @@ class LogementController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/guide/{file}', name: 'TechemCoreBundle_Logement_guide')]
+    //#[Route('/guide/{file}', name: 'TechemCoreBundle_Logement_guide')]
     public function guideAction($file )
     {
 		$file = 'GuideOccupant.pdf';
@@ -990,7 +990,7 @@ class LogementController extends  AbstractTechemController
 		return $this->file(file:'../public/guideoccupant.pdf');
     }
 
-    #[Route('/logement/{pkImmeuble}/createticket', name: 'TechemCoreBundle_Create_Ticket')]
+    //#[Route('/logement/{pkImmeuble}/createticket', name: 'TechemCoreBundle_Create_Ticket')]
     public function createTicketImmeubleAction(Request $request, $pkImmeuble)
     {
         if (!$request->isXmlHttpRequest()) {

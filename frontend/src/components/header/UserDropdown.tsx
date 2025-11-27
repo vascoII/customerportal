@@ -22,6 +22,8 @@ export default function UserDropdown() {
   }, [user]);
 
   const email = user?.EMail ?? user?.Email ?? "";
+  const hasShowFactures = user?.showFactures ?? false;
+  const isDevelopment = process.env.NODE_ENV === "development" ? true : false;
 
   // Determine which menu items to show based on UserType
   // Show menu items only if UserType is "C" (Client)
@@ -161,7 +163,8 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
                   Gérer les comptes
                 </DropdownItem>
               </li>
-              <li>
+              {((hasShowFactures || isDevelopment) && (
+                <li>
                 <DropdownItem
                   onItemClick={closeDropdown}
                   tag="a"
@@ -186,6 +189,8 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
                   Factures
                 </DropdownItem>
               </li>
+              ))}
+              
               <li>
                 <DropdownItem
                   onItemClick={closeDropdown}

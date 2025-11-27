@@ -38,7 +38,7 @@ class FrontController extends  AbstractTechemController
 		return $this->redirect($url);
     }
 
-    #[Route("/legal-notices", name: "TechemCoreBundle_Front_legal_notices")]
+    //#[Route("/legal-notices", name: "TechemCoreBundle_Front_legal_notices")]
     public function legalNoticesAction()
     {
         $locals = array();
@@ -54,7 +54,7 @@ class FrontController extends  AbstractTechemController
         return $this->render('Front/legal_notices.html.twig', $locals);
     }
 
-    #[Route("/personal-datas", name: "TechemCoreBundle_Front_Personal_dadas")]
+    //#[Route("/personal-datas", name: "TechemCoreBundle_Front_Personal_dadas")]
     public function personalDatasAction(Client $client)
     {
 		$client = $this->getClient($client);
@@ -70,7 +70,7 @@ class FrontController extends  AbstractTechemController
         return $this->render('Front/personal_datas.html.twig', $locals);
     }
 
-    #[Route("/cgu", name: "TechemCoreBundle_Front_cgu_validate")]
+    //#[Route("/cgu", name: "TechemCoreBundle_Front_cgu_validate")]
     public function cguAction(\Symfony\Component\HttpFoundation\Request $request, Client $client)
     {
         $client = $this->getClient($client);

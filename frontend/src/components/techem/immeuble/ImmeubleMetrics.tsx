@@ -120,24 +120,74 @@ export const ImmeubleMetrics = ({ pkImmeuble }: ImmeubleMetricsProps) => {
   };
 
   // Extract metrics from API response
+  type ImmeubleMetrics = {
+    NbFuites?: number;
+    nbFuites?: number;
+    NbDysfonctionnements?: number;
+    nbDysfonctionnements?: number;
+    NbAnomalies?: number;
+    nbAnomalies?: number;
+    NbDepannages?: number;
+    nbDepannages?: number;
+    DegresFuites?: number;
+    degresFuites?: number;
+    DegresDysfonctionnements?: number;
+    degresDysfonctionnements?: number;
+    DegresAnomalies?: number;
+    degresAnomalies?: number;
+    DegresDepannages?: number;
+    degresDepannages?: number;
+  };
+
+  const sanitizeMetric = (value?: number) => Math.max(value ?? 0, 0);
+
   const metrics = useMemo(() => {
-    const immeuble = immeubleData?.immeuble;
-    // Handle both nested ImmeubleEC object and direct properties
-    const immeubleEC = (immeuble && typeof immeuble === 'object' && 'ImmeubleEC' in immeuble)
-      ? (immeuble as { ImmeubleEC?: Record<string, unknown> }).ImmeubleEC
-      : null;
-    
+    const immeuble: ImmeubleMetrics = immeubleData?.immeuble ?? {};
+    const immeubleEC: ImmeubleMetrics | null =
+      immeuble && typeof immeuble === "object" && "ImmeubleEC" in immeuble
+        ? (immeuble as { ImmeubleEC?: ImmeubleMetrics }).ImmeubleEC ?? null
+        : null;
+
     return {
-      fuites: (immeubleEC?.NbFuites ?? immeubleEC?.nbFuites ?? immeuble?.NbFuites ?? immeuble?.nbFuites ?? 0) as number,
-      alarmes: (immeuble?.NbDysfonctionnements ?? immeuble?.nbDysfonctionnements ?? 0) as number,
-      anomalies: (immeubleEC?.NbAnomalies ?? immeubleEC?.nbAnomalies ?? immeuble?.NbAnomalies ?? immeuble?.nbAnomalies ?? 0) as number,
-      depannages: (immeuble?.NbDepannages ?? immeuble?.nbDepannages ?? 0) as number,
-      degresFuites: (immeubleEC?.DegresFuites ?? immeubleEC?.degresFuites ?? immeuble?.DegresFuites ?? immeuble?.degresFuites ?? 0) as number,
-      degresDysfonctionnements: (immeuble?.DegresDysfonctionnements ?? immeuble?.degresDysfonctionnements ?? 0) as number,
-      degresAnomalies: (immeubleEC?.DegresAnomalies ?? immeubleEC?.degresAnomalies ?? immeuble?.DegresAnomalies ?? immeuble?.degresAnomalies ?? 0) as number,
-      degresDepannages: (immeuble?.DegresDepannages ?? immeuble?.degresDepannages ?? 0) as number,
+      fuites: sanitizeMetric(
+        immeubleEC?.NbFuites ??
+          immeubleEC?.nbFuites ??
+          immeuble.NbFuites ??
+          immeuble.nbFuites
+      ),
+      alarmes: sanitizeMetric(
+        immeuble.NbDysfonctionnements ?? immeuble.nbDysfonctionnements
+      ),
+      anomalies: sanitizeMetric(
+        immeubleEC?.NbAnomalies ??
+          immeubleEC?.nbAnomalies ??
+          immeuble.NbAnomalies ??
+          immeuble.nbAnomalies
+      ),
+      depannages: sanitizeMetric(
+        immeuble.NbDepannages ?? immeuble.nbDepannages
+      ),
+      degresFuites: sanitizeMetric(
+        immeubleEC?.DegresFuites ??
+          immeubleEC?.degresFuites ??
+          immeuble.DegresFuites ??
+          immeuble.degresFuites
+      ),
+      degresDysfonctionnements: sanitizeMetric(
+        immeuble.DegresDysfonctionnements ?? immeuble.degresDysfonctionnements
+      ),
+      degresAnomalies: sanitizeMetric(
+        immeubleEC?.DegresAnomalies ??
+          immeubleEC?.degresAnomalies ??
+          immeuble.DegresAnomalies ??
+          immeuble.degresAnomalies
+      ),
+      degresDepannages: sanitizeMetric(
+        immeuble.DegresDepannages ?? immeuble.degresDepannages
+      ),
     };
   }, [immeubleData]);
+
 
   // Format number with thousands separator
   const formatNumber = (num: number): string => {

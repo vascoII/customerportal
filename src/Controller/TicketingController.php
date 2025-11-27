@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class TicketingController extends  AbstractTechemController
 {
-    #[Route('/tickets', name: 'TechemCoreBundle_Ticket_List')]
+    //#[Route('/tickets', name: 'TechemCoreBundle_Ticket_List')]
     public function ticketListAction(Request $request)
     {
         $client = $this->getClient();
@@ -242,7 +242,7 @@ class TicketingController extends  AbstractTechemController
         return $this->render('Ticketing/add_menu_tickets.html.twig', $locals);
     }
 
-    #[Route('/tickets/close/{pkTicket}', name: 'TechemCoreBundle_Ticket_Close')]
+    //#[Route('/tickets/close/{pkTicket}', name: 'TechemCoreBundle_Ticket_Close')]
     public function closeTicketAction(Request $request, $pkTicket)
     {
         if ($request->isXMLHttpRequest()) {
@@ -306,7 +306,7 @@ class TicketingController extends  AbstractTechemController
         return $this->render('Ticketing/create-ticket.html.twig', $locals);
     }
 
-    #[Route('/tickets/attachment/{pkTicket}', name: 'TechemCoreBundle:Ticketing:attachmentTicket')]
+    //#[Route('/tickets/attachment/{pkTicket}', name: 'TechemCoreBundle:Ticketing:attachmentTicket')]
     public function attachmentTicketAction(Request $request)
     {
 

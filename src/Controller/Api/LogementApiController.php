@@ -424,6 +424,9 @@ class LogementApiController extends AbstractApiController
         }
 
         try {
+            $parameters = json_decode($request->getContent(), true);
+            $pkImmeuble = $parameters['pkImmeuble'];
+
             $params = new GetLogementsParams();
             $params->NBANOMALIES = true;
             $params->NBDEPANNAGES = true;
@@ -436,7 +439,7 @@ class LogementApiController extends AbstractApiController
             $nom = $request->get('nom') ?? $request->query->get('nom');
             $tout = $request->get('tout') ?? $request->query->get('tout');
             $adresse = $request->get('adresse') ?? $request->query->get('adresse');
-            $pkImmeuble = $request->get('pkImmeuble', -1) ?? $request->query->get('pkImmeuble', -1);
+            //$pkImmeuble = $request->get('pkImmeuble', -1) ?? $request->query->get('pkImmeuble', -1);
             $search = $request->get('search', false) ?? $request->query->get('search', false);
             $gestion = $request->get('gestion', false) ?? $request->query->get('gestion', false);
 

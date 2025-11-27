@@ -219,6 +219,8 @@ const AppSidebar: React.FC = () => {
   const { user } = useAuth();
   const { getLogementQuery } = useLogements();
 
+  const isDevelopment = process.env.NODE_ENV === "development";
+
   // Extract pkImmeuble from pathname if we're on an immeuble detail page
   const immeubleMatch = pathname.match(/^\/immeuble\/([^/]+)/);
   const pkImmeuble = immeubleMatch ? immeubleMatch[1] : undefined;
@@ -586,7 +588,7 @@ const AppSidebar: React.FC = () => {
               </h2>
               {renderMenuItems(navItems, "main")}
             </div>
-
+            {isDevelopment && (    
             <div className="">
               <h2
                 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
@@ -596,13 +598,13 @@ const AppSidebar: React.FC = () => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Others"
+                  "Others (On developpement mode)"
                 ) : (
                   <HorizontaLDots />
                 )}
               </h2>
               {renderMenuItems(othersItems, "others")}
-            </div>
+            </div>)}
           </div>
         </nav>
         

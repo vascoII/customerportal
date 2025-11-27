@@ -115,19 +115,34 @@ export const ParcMetrics = () => {
   };
 
   // Extract metrics from API response
+  type BoardMetrics = {
+    nbFuites?: number;
+    nbDysfonctionnements?: number;
+    nbAnomalies?: number;
+    nbDepannages?: number;
+    degresFuites?: number;
+    degresDysfonctionnements?: number;
+    degresAnomalies?: number;
+    degresDepannages?: number;
+  };
+
   const metrics = useMemo(() => {
-    const board = parcData?.board;
+    const board: BoardMetrics = parcData?.board ?? {};
+
+    const sanitizeMetric = (value?: number) => Math.max(value ?? 0, 0);
+
     return {
-      fuites: board?.nbFuites ?? 0,
-      alarmes: board?.nbDysfonctionnements ?? 0,
-      anomalies: board?.nbAnomalies ?? 0,
-      depannages: board?.nbDepannages ?? 0,
-      degresFuites: board?.degresFuites ?? 0,
-      degresDysfonctionnements: board?.degresDysfonctionnements ?? 0,
-      degresAnomalies: board?.degresAnomalies ?? 0,
-      degresDepannages: board?.degresDepannages ?? 0,
+      fuites: sanitizeMetric(board.nbFuites),
+      alarmes: sanitizeMetric(board.nbDysfonctionnements),
+      anomalies: sanitizeMetric(board.nbAnomalies),
+      depannages: sanitizeMetric(board.nbDepannages),
+      degresFuites: sanitizeMetric(board.degresFuites),
+      degresDysfonctionnements: sanitizeMetric(board.degresDysfonctionnements),
+      degresAnomalies: sanitizeMetric(board.degresAnomalies),
+      degresDepannages: sanitizeMetric(board.degresDepannages),
     };
   }, [parcData]);
+
 
   // Format number with thousands separator
   const formatNumber = (num: number): string => {

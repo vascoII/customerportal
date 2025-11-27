@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class TranslationController extends  AbstractTechemController
 {
 
-    #[Route('/change/locale/{language}', name: 'TechemCoreBundle_Translation_set_locale')]
+    //#[Route('/change/locale/{language}', name: 'TechemCoreBundle_Translation_set_locale')]
     public function changeLocaleAction($language, Request $request)
     {
         //  Custom function for patch internal error

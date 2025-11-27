@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class InterventionController extends  AbstractTechemController
 {
-    #[Route('/depannage/{pkDepannage}', name: 'TechemCoreBundle_Intervention_report')]
+    //#[Route('/depannage/{pkDepannage}', name: 'TechemCoreBundle_Intervention_report')]
     public function reportAction($pkDepannage)
     {
         $client = $this->getClient();

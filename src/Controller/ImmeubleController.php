@@ -25,8 +25,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class ImmeubleController extends  AbstractTechemController
 {
 
-    #[Route('/immeuble', name: 'TechemCoreBundle_Immeuble_index')]
-    #[Route('/gestionParc', name: 'TechemCoreBundle_GestionParc_index', defaults: ['gestion' => true])]
+    //#[Route('/immeuble', name: 'TechemCoreBundle_Immeuble_index')]
+    //#[Route('/gestionParc', name: 'TechemCoreBundle_GestionParc_index', defaults: ['gestion' => true])]
     public function indexAction($gestion = false)
     {
         $client = $this->getClient();
@@ -55,7 +55,7 @@ class ImmeubleController extends  AbstractTechemController
      *
      * @return string
      */
-    #[Route('/immeuble/filtre', name: 'TechemCoreBundle_Immeuble_result')]
+    //#[Route('/immeuble/filtre', name: 'TechemCoreBundle_Immeuble_result')]
     public function filterResultAction(Request $request, $gestion = false)
     {
         $client = $this->getClient();
@@ -118,7 +118,7 @@ class ImmeubleController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/immeuble/{pkImmeuble}', name: 'TechemCoreBundle_Immeuble_show')]
+    //#[Route('/immeuble/{pkImmeuble}', name: 'TechemCoreBundle_Immeuble_show')]
     public function showAction($pkImmeuble, Immeuble $immeuble_service)
     {
         $client = $this->getClient();
@@ -187,7 +187,7 @@ class ImmeubleController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/immeuble/{pkImmeuble}/interventions/{pkIntervention}', name: 'TechemCoreBundle_Immeuble_showintervention')]
+    //#[Route('/immeuble/{pkImmeuble}/interventions/{pkIntervention}', name: 'TechemCoreBundle_Immeuble_showintervention')]
     public function showInterventionAction($pkImmeuble, $pkIntervention)
     {
         $client = $this->getClient();
@@ -213,7 +213,7 @@ class ImmeubleController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/immeuble/{pkImmeuble}/interventions', name: 'TechemCoreBundle_Immeuble_listinterventions')]
+    //#[Route('/immeuble/{pkImmeuble}/interventions', name: 'TechemCoreBundle_Immeuble_listinterventions')]
     public function listInterventionsAction($pkImmeuble, Depannage $depannageService)
     {
         $client = $this->getClient();
@@ -233,7 +233,7 @@ class ImmeubleController extends  AbstractTechemController
         return $this->render('Immeuble/listInterventions.html.twig', $locals);
     }
 
-    #[Route('/immeuble/{pkImmeuble}/fuites', name: 'TechemCoreBundle_Immeuble_listleaks')]
+    //#[Route('/immeuble/{pkImmeuble}/fuites', name: 'TechemCoreBundle_Immeuble_listleaks')]
     public function listLeaksAction($pkImmeuble, Fuite $fuiteService)
     {
         $client = $this->getClient();
@@ -253,7 +253,7 @@ class ImmeubleController extends  AbstractTechemController
         return $this->render('Immeuble/listLeaks.html.twig', $locals);
     }
 
-    #[Route('/immeuble/report/{pkImmeuble}/{type}/{energie}', name: 'TechemCoreBundle_Immeuble_report')]
+    //#[Route('/immeuble/report/{pkImmeuble}/{type}/{energie}', name: 'TechemCoreBundle_Immeuble_report')]
     public function reportAction($pkImmeuble, $type, $energie, Request $request)
     {
         $client = $this->getClient();
@@ -309,7 +309,7 @@ class ImmeubleController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/immeuble/{pkImmeuble}/anomalies', name: 'TechemCoreBundle_Immeuble_listanomalies')]
+    //#[Route('/immeuble/{pkImmeuble}/anomalies', name: 'TechemCoreBundle_Immeuble_listanomalies')]
     public function listAnomaliesAction($pkImmeuble, Anomalie $anomalieService)
     {
         $client = $this->getClient();
@@ -336,7 +336,7 @@ class ImmeubleController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/immeuble/{pkImmeuble}/dysfonctionnements', name: 'TechemCoreBundle_Immeuble_listdysfunctions')]
+    //#[Route('/immeuble/{pkImmeuble}/dysfonctionnements', name: 'TechemCoreBundle_Immeuble_listdysfunctions')]
     public function listDysfunctionsAction($pkImmeuble, Dysfonctionnement $dysfonctionnementService)
     {
         $client = $this->getClient();
@@ -363,7 +363,7 @@ class ImmeubleController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/immeuble/{pkImmeuble}/anomalies-export', name: 'TechemCoreBundle_Immeuble_export_anomalies')]
+    //#[Route('/immeuble/{pkImmeuble}/anomalies-export', name: 'TechemCoreBundle_Immeuble_export_anomalies')]
     public function exportAnomaliesAction($pkImmeuble, Anomalie $anomalieService,ExcelHelper $excelHelper)
     {
         ini_set('max_execution_time', 120);
@@ -396,7 +396,7 @@ class ImmeubleController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/immeuble/{pkImmeuble}/fuites-export', name: 'TechemCoreBundle_Immeuble_export_leaks')]
+    //#[Route('/immeuble/{pkImmeuble}/fuites-export', name: 'TechemCoreBundle_Immeuble_export_leaks')]
     public function exportLeaksAction($pkImmeuble, Fuite $fuiteService,ExcelHelper $excelHelper)
     {
         ini_set('max_execution_time', 120);
@@ -430,7 +430,7 @@ class ImmeubleController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/immeuble/{pkImmeuble}/interventions-export', name: 'TechemCoreBundle_Immeuble_export_interventions')]
+    //#[Route('/immeuble/{pkImmeuble}/interventions-export', name: 'TechemCoreBundle_Immeuble_export_interventions')]
     public function exportInterventionsAction($pkImmeuble, Depannage $depannageService, ExcelHelper $excelHelper)
     {
         ini_set('max_execution_time', 120);
@@ -463,7 +463,7 @@ class ImmeubleController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/immeuble/{pkImmeuble}/dysfonctionnements-export', name: 'TechemCoreBundle_Immeuble_export_dysfunctions')]
+    //#[Route('/immeuble/{pkImmeuble}/dysfonctionnements-export', name: 'TechemCoreBundle_Immeuble_export_dysfunctions')]
     public function exportDysfunctionsAction(Dysfonctionnement $dysfonctionnementService, $pkImmeuble,ExcelHelper $excelHelper)
     {
         ini_set('max_execution_time', 120);
@@ -493,7 +493,7 @@ class ImmeubleController extends  AbstractTechemController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route('/immeuble/{pkImmeuble}/intervention', name: 'TechemCoreBundle_Immeuble_intervention')]
+    //#[Route('/immeuble/{pkImmeuble}/intervention', name: 'TechemCoreBundle_Immeuble_intervention')]
     public function interventionAction(Request $request, $pkImmeuble)
     {
         $client = $this->getClient();

@@ -122,7 +122,7 @@ class SecurityController extends  AbstractController
         return $this->redirect($this->generateUrl('app_login'));
     }
 
-    #[Route('/reset-password', name: 'reset_password')]
+    //#[Route('/reset-password', name: 'reset_password')]
     public function resetPasswordAction(Request $request)
     {
 		
@@ -150,7 +150,7 @@ class SecurityController extends  AbstractController
         return $this->render('Security/reset-password.html.twig', $locals);
     }
 
-    #[Route('/update-password', name: 'update_password')]
+    //#[Route('/update-password', name: 'update_password')]
     public function updatePasswordAction(Request $request, AuthorizationCheckerInterface $authorizationChecker)
     {
         /** @var SoapSessionToken $token */
@@ -204,7 +204,7 @@ class SecurityController extends  AbstractController
         }
     }
 
-    #[Route('/create', name: 'create')]
+    //#[Route('/create', name: 'create')]
     public function createAction(Request $request)
     {
         if ($request->isMethod('post')) {
@@ -213,7 +213,7 @@ class SecurityController extends  AbstractController
         return $this->render('Security/create.html.twig');
     }
 
-    #[Route('/reset-or-create', name: 'reset_or_create')]
+    //#[Route('/reset-or-create', name: 'reset_or_create')]
     public function resetOrCreateAction()
     {
         return $this->render('Security/reset-or-create.html.twig');

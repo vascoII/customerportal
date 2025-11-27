@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class SearchController extends  AbstractTechemController
 {
 
-    #[Route("/recherche", name: "TechemCoreBundle_Search_index")]
+    //#[Route("/recherche", name: "TechemCoreBundle_Search_index")]
     public function indexAction(Request $request)
     {
         $client = $this->getClient();

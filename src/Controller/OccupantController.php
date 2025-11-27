@@ -25,7 +25,7 @@ class OccupantController extends  AbstractTechemController
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/occupant", name: "TechemCoreBundle_Occupant_show")]
+    //#[Route("/occupant", name: "TechemCoreBundle_Occupant_show")]
     public function showAction(Logement $logementService)
     {
         $client = $this->getClient();
@@ -64,7 +64,7 @@ class OccupantController extends  AbstractTechemController
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/occupant/simulateur", name: "TechemCoreBundle_Occupant_Simulateur")]
+    //#[Route("/occupant/simulateur", name: "TechemCoreBundle_Occupant_Simulateur")]
     public function SimulateurAction(Logement $logementService)
     {
         $client = $this->getClient();
@@ -98,7 +98,7 @@ class OccupantController extends  AbstractTechemController
         return $this->render('Occupant/simulateur.html.twig',$locals);
     }
 
-    #[Route("/occupant/interventions/{pkIntervention}", name: "TechemCoreBundle_Occupant_showintervention")]
+    //#[Route("/occupant/interventions/{pkIntervention}", name: "TechemCoreBundle_Occupant_showintervention")]
     public function showInterventionAction($pkIntervention)
     {
         $client = $this->getClient();
@@ -120,7 +120,7 @@ class OccupantController extends  AbstractTechemController
         return $this->render('Occupant/showIntervention.html.twig', $locals);
     }
 
-    #[Route("/occupant/interventions", name: "TechemCoreBundle_Occupant_listinterventions")]
+    //#[Route("/occupant/interventions", name: "TechemCoreBundle_Occupant_listinterventions")]
     public function listInterventionsAction(Depannage $depannageService)
     {
         $client = $this->getClient();
@@ -146,7 +146,7 @@ class OccupantController extends  AbstractTechemController
         return $this->render('Occupant/listInterventions.html.twig', $locals);
     }
 
-    #[Route("/occupant/fuites", name: "TechemCoreBundle_Occupant_listleaks")]
+    //#[Route("/occupant/fuites", name: "TechemCoreBundle_Occupant_listleaks")]
     public function listLeaksAction(Request $request, Fuite $fuiteService)
     {
         $client = $this->getClient();
@@ -173,7 +173,7 @@ class OccupantController extends  AbstractTechemController
         return $this->render('Occupant/listLeaks.html.twig', $locals);
     }
 
-    #[Route("/occupant/dysfonctionnements", name: "TechemCoreBundle_Occupant_listdysfunctions")]
+    //#[Route("/occupant/dysfonctionnements", name: "TechemCoreBundle_Occupant_listdysfunctions")]
     public function listDysfunctionsAction(Dysfonctionnement $dysfonctionnementService)
     {
         $client = $this->getClient();
@@ -199,7 +199,7 @@ class OccupantController extends  AbstractTechemController
         return $this->render('Occupant/listDysfunctions.html.twig', $locals);
     }
 
-    #[Route("/occupant/anomalies", name: "TechemCoreBundle_Occupant_listanomalies")]
+    //#[Route("/occupant/anomalies", name: "TechemCoreBundle_Occupant_listanomalies")]
     public function listAnomaliesAction(Request $request, Anomalie $anomalieService)
     {
         $client = $this->getClient();
@@ -226,7 +226,7 @@ class OccupantController extends  AbstractTechemController
         return $this->render('Occupant/listAnomalies.html.twig', $locals);
     }
 
-    #[Route("/occupant/anomalies/export", name: "TechemCoreBundle_Occupant_export_anomalies")]
+    //#[Route("/occupant/anomalies/export", name: "TechemCoreBundle_Occupant_export_anomalies")]
     public function exportAnomaliesAction(Anomalie $anomalieService)
     {
         ini_set('max_execution_time', 120);
@@ -258,7 +258,7 @@ class OccupantController extends  AbstractTechemController
         return $response;
     }
 
-    #[Route("/occupant/fuites/export", name: "TechemCoreBundle_Occupant_export_leaks")]
+    //#[Route("/occupant/fuites/export", name: "TechemCoreBundle_Occupant_export_leaks")]
     public function exportLeaksAction(Fuite $fuiteService)
     {
         ini_set('max_execution_time', 120);
@@ -295,7 +295,7 @@ class OccupantController extends  AbstractTechemController
         return $response;
     }
 
-    #[Route("/occupant/interventions/export", name: "TechemCoreBundle_Occupant_export_interventions")]
+    //#[Route("/occupant/interventions/export", name: "TechemCoreBundle_Occupant_export_interventions")]
     public function exportInterventionsAction(Depannage $depannageService)
     {
         ini_set('max_execution_time', 120);
@@ -327,7 +327,7 @@ class OccupantController extends  AbstractTechemController
         return $response;
     }
 
-    #[Route("/occupant/dysfonctionnements/export", name: "TechemCoreBundle_Occupant_export_dysfunctions")]
+    //#[Route("/occupant/dysfonctionnements/export", name: "TechemCoreBundle_Occupant_export_dysfunctions")]
     public function exportDysfunctionsAction(Dysfonctionnement $dysfonctionnementService)
     {
         ini_set('max_execution_time', 120);
@@ -359,7 +359,7 @@ class OccupantController extends  AbstractTechemController
         return $response;
     }
 
-    #[Route("/occupant/{pkOccupant}/releve_eau", name: "TechemCoreBundle_Occupant_eau_releve")]
+    //#[Route("/occupant/{pkOccupant}/releve_eau", name: "TechemCoreBundle_Occupant_eau_releve")]
     
 	public function showEauReleveAction(Request $request, $pkOccupant)
     {
@@ -388,7 +388,7 @@ class OccupantController extends  AbstractTechemController
         return $response;
     }
 
-    #[Route("/occupant/{pkOccupant}/releve_repart/{pkImmeuble}", name: "TechemCoreBundle_Occupant_repart_releve")]
+    //#[Route("/occupant/{pkOccupant}/releve_repart/{pkImmeuble}", name: "TechemCoreBundle_Occupant_repart_releve")]
     public function showRepartReleveAction(Request $request, $pkImmeuble, $pkOccupant, $energie = false)
     {
         $client = $this->getClient();
@@ -417,7 +417,7 @@ class OccupantController extends  AbstractTechemController
         return $response;
     }
 
-    #[Route("/occupant/{pkOccupant}/releve_note/{pkImmeuble}/{energie}", name: "TechemCoreBundle_Occupant_note_releve")]
+    //#[Route("/occupant/{pkOccupant}/releve_note/{pkImmeuble}/{energie}", name: "TechemCoreBundle_Occupant_note_releve")]
     public function showNoteReleveAction(Request $request, $pkImmeuble, $pkOccupant, $energie)
     {
 
@@ -457,7 +457,7 @@ class OccupantController extends  AbstractTechemController
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/occupant/myAccount", name: "TechemCoreBundle_Occupant_myAccount")]
+    //#[Route("/occupant/myAccount", name: "TechemCoreBundle_Occupant_myAccount")]
     public function myAccountAction(Logement $logementService, Request $request, LoggerInterface $logger )
     {
         $client = $this->getClient();
@@ -503,7 +503,7 @@ class OccupantController extends  AbstractTechemController
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/occupant/alertes", name: "TechemCoreBundle_Occupant_alertes")]
+    //#[Route("/occupant/alertes", name: "TechemCoreBundle_Occupant_alertes")]
     public function alertesAction(Request $request, Logement $logementService)
     {
         $client = $this->getClient();
