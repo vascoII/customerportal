@@ -6,7 +6,7 @@ import { ApexOptions } from "apexcharts";
 
 import { LoadingChart } from "@/components/ui/loading";
 import Alert from "@/components/ui/alert/Alert";
-import { api, extractApiData, handleApiError } from "@/lib/api/client";
+import { api, handleApiError } from "@/lib/api/client";
 
 // Dynamically import the ReactApexChart component
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
@@ -24,12 +24,6 @@ interface OperatorsStatsInnerData {
   };
 }
 
-interface OperatorsStatsApiResponse {
-  success: boolean;
-  status: number;
-  data?: OperatorsStatsInnerData;
-}
-
 export default function StatsOperators() {
   const [points, setPoints] = useState<GraphPoint[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,16 +38,26 @@ export default function StatsOperators() {
         setIsLoading(true);
         setErrorMessage(null);
 
-        const response = await api.get<OperatorsStatsApiResponse>(
+        const response = await api.get<unknown>(
           "/operators/statistiques"
         );
         console.log("[StatsOperators] Raw API response:", response.data);
 
-        const apiData = extractApiData<OperatorsStatsApiResponse>(response);
-        console.log("[StatsOperators] Extracted API data:", apiData);
+        // Response is ApiResponse<...> – we inspect nested data manually to be
+        // compatible with both fake and real backends.
+        const apiEnvelope = response.data as unknown as {
+          data?: unknown;
+          [key: string]: unknown;
+        };
+        const inner = apiEnvelope.data as {
+          data?: OperatorsStatsInnerData;
+          stats?: { GraphPoint?: GraphPoint[] };
+        } | undefined;
 
         const graphPoints: GraphPoint[] =
-          apiData.data?.stats?.GraphPoint ?? [];
+          inner?.stats?.GraphPoint ??
+          inner?.data?.stats?.GraphPoint ??
+          [];
 
         if (isMounted) {
           console.log("[StatsOperators] GraphPoint stored in state:", graphPoints);
