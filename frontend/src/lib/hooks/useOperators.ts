@@ -1,4 +1,5 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useCallback } from "react";
 import { api, extractApiData, handleApiError } from "@/lib/api/client";
 import type {
   Operator,
@@ -191,7 +192,7 @@ export function useOperators() {
    * Get operator statistics
    * @returns Promise with statistics
    */
-  const getStatistics = async (): Promise<OperatorsStatsResponse> => {
+  const getStatistics = useCallback(async (): Promise<OperatorsStatsResponse> => {
     const result = await queryClient.fetchQuery({
       queryKey: ["operators", "statistiques"],
       queryFn: async (): Promise<OperatorsStatsResponse> => {
@@ -204,7 +205,7 @@ export function useOperators() {
       staleTime: 5 * 60 * 1000,
     });
     return result;
-  };
+  }, [queryClient]);
 
   /**
    * Get operator details query
