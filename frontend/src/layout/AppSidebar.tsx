@@ -258,9 +258,22 @@ const AppSidebar: React.FC = () => {
   // Extract current section (fuites, anomalies, etc.) from pathname
   let currentSection: string | undefined;
   if (pkImmeuble) {
-    const sectionMatch = pathname.match(/^\/immeuble\/[^/]+\/([^/]+)$/);
-    if (sectionMatch && IMMEUBLE_SECTION_SLUGS.some(s => s.slug === sectionMatch[1])) {
+    // Match direct section URL: /immeuble/{pkImmeuble}/{section}
+    let sectionMatch = pathname.match(/^\/immeuble\/[^/]+\/([^/]+)$/);
+    if (
+      sectionMatch &&
+      IMMEUBLE_SECTION_SLUGS.some((s) => s.slug === sectionMatch[1])
+    ) {
       currentSection = sectionMatch[1];
+    } else {
+      // Match nested URLs like /immeuble/{pkImmeuble}/{section}/{pkIntervention}
+      sectionMatch = pathname.match(/^\/immeuble\/[^/]+\/([^/]+)\/[^/]+$/);
+      if (
+        sectionMatch &&
+        IMMEUBLE_SECTION_SLUGS.some((s) => s.slug === sectionMatch[1])
+      ) {
+        currentSection = sectionMatch[1];
+      }
     }
   }
   if (pkLogement && !currentSection) {

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import StatusIconsAlerte from "@/components/techem/images/StatusIconsAlerte";
 import {
@@ -147,7 +148,13 @@ export default function ListInterventions({
       <div className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
         {numero && (
           <p className="text-gray-900 font-semibold dark:text-white">
-            N° intervention : <span>{numero}</span>
+            N° intervention :{" "}
+            <Link
+              href={`/immeuble/${pkImmeuble}/interventions/${numero}`}
+              className="text-brand-600 hover:underline dark:text-brand-400"
+            >
+              {numero}
+            </Link>
           </p>
         )}
         <p>
@@ -391,25 +398,25 @@ export default function ListInterventions({
             <TableRow>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="w-2/5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
                 Intervention
               </TableCell>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="w-1/6 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
                 Date
               </TableCell>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="w-1/4 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
                 Motif
               </TableCell>
               <TableCell
                 isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                className="w-1/5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
                 Observation
               </TableCell>
@@ -421,7 +428,7 @@ export default function ListInterventions({
               const key = getInterventionNumber(depannage) || `depannage-${index}`;
               return (
                 <TableRow key={key} className="align-top">
-                  <TableCell className="py-4">
+                  <TableCell className="w-2/5 py-4">
                     <div className="flex gap-3">
                       <div className="flex-shrink-0 rounded-xl bg-amber-50 p-3 dark:bg-amber-500/10">
                         <StatusIconsAlerte
@@ -432,13 +439,13 @@ export default function ListInterventions({
                       {renderInterventionInfo(depannage)}
                     </div>
                   </TableCell>
-                  <TableCell className="py-4 align-top text-sm text-gray-700 dark:text-gray-200">
+                  <TableCell className="w-1/6 py-4 align-top text-sm text-gray-700 dark:text-gray-200">
                     {formatDate(depannage.Depannage?.Date)}
                   </TableCell>
-                  <TableCell className="py-4 align-top">
+                  <TableCell className="w-1/4 py-4 align-top">
                     {renderMotif(depannage)}
                   </TableCell>
-                  <TableCell className="py-4 align-top">
+                  <TableCell className="w-1/5 py-4 align-top max-w-xs">
                     {renderObservation(depannage)}
                   </TableCell>
                 </TableRow>
