@@ -2,46 +2,18 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import { useAuth } from "@/lib/hooks/useAuth";
-import {
-  HorizontaLDots,
-  ListIcon,
-} from "../icons/index";
-
-type NavItem = {
-  name: string;
-  icon: React.ReactNode;
-  path?: string;
-  subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
-};
-
-const getNavItems = (): NavItem[] => {
-  return [
-    {
-      icon: <ListIcon />,
-      name: "Mentions légales",
-      path: "/legal-notices",
-    },
-    {
-      icon: <ListIcon />,
-      name: "Cgu",
-      path: "/cgu",
-    },
-  ];
-};
 
 const AppSidebarLess: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
-  const pathname = usePathname();
   const { user, isAuthenticated } = useAuth();
 
   // Determine the home link based on user type
   const homeLink = useMemo(() => {
-    // If not authenticated, default to home or login
+    // If not authenticated, redirect to login
     if (!isAuthenticated || !user?.UserType) {
-      return "/"; // Default fallback for non-logged users
+      return "/login"; // Redirect to login for non-logged users
     }
     
     // If UserType is O (Occupant), redirect to /occupant
@@ -57,41 +29,6 @@ const AppSidebarLess: React.FC = () => {
     // Default fallback
     return "/parc";
   }, [isAuthenticated, user?.UserType]);
-
-  // Get navigation items
-  const navItems = useMemo(() => getNavItems(), []);
-
-  const isActive = (path: string) => path === pathname;
-
-  const renderMenuItems = (navItems: NavItem[]) => (
-    <ul className="flex flex-col gap-4">
-      {navItems.map((nav) => (
-        <li key={nav.name}>
-          {nav.path && (
-            <Link
-              href={nav.path}
-              className={`menu-item group ${
-                isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
-              }`}
-            >
-              <span
-                className={`${
-                  isActive(nav.path)
-                    ? "menu-item-icon-active"
-                    : "menu-item-icon-inactive"
-                }`}
-              >
-                {nav.icon}
-              </span>
-              {(isExpanded || isHovered || isMobileOpen) && (
-                <span className={`menu-item-text`}>{nav.name}</span>
-              )}
-            </Link>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
 
   return (
     <aside
@@ -142,27 +79,7 @@ const AppSidebarLess: React.FC = () => {
         </Link>
       </div>
       <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
-        <nav className="mb-6">
-          <div className="flex flex-col gap-4">
-            <div>
-              <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                  !isExpanded && !isHovered
-                    ? "lg:justify-center"
-                    : "justify-start"
-                }`}
-              >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "Menu"
-                ) : (
-                  <HorizontaLDots />
-                )}
-              </h2>
-              {isAuthenticated && renderMenuItems(navItems)}
-            </div>
-          </div>
-        </nav>
-        
+        {/* Menu section removed */}
       </div>
     </aside>
   );

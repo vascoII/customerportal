@@ -2,10 +2,14 @@
 
 import { useSidebar } from "@/context/SidebarContext";
 import AppHeaderLess from "@/layout/AppHeaderLess";
+import AppHeader from "@/layout/AppHeader";
 import AppSidebarLess from "@/layout/AppSidebarLess";
+import AppSidebar from "@/layout/AppSidebar";
 import AppFooterLess from "@/layout/AppFooterLess";
+import AppFooter from "@/layout/AppFooter";
 import Backdrop from "@/layout/Backdrop";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/lib/hooks/useAuth";
 import React from "react";
 
 export default function AdminLayout({
@@ -15,7 +19,9 @@ export default function AdminLayout({
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
   const pathname = usePathname();
+  const { isAuthenticated } = useAuth();
   const isLoginPage = pathname === "/login";
+  const isLegalNoticesPage = pathname === "/legal-notices";
 
   // Dynamic class for main content margin based on sidebar state
   const mainContentMargin = isMobileOpen
@@ -39,6 +45,33 @@ export default function AdminLayout({
     );
   }
 
+  // If legal-notices page and authenticated, use AppSidebar and AppHeader
+  if (isLegalNoticesPage && isAuthenticated) {
+    return (
+      <div className="min-h-screen xl:flex">
+        {/* Sidebar and Backdrop */}
+        <AppSidebar />
+        <Backdrop />
+        {/* Main Content Area */}
+        <div
+          className={`flex-1 transition-all  duration-300 ease-in-out ${mainContentMargin}`}
+        >
+          {/* Header */}
+          <AppHeader />
+          {/* Page Content */}
+          <div className="flex flex-col min-h-[calc(100vh-4rem)]">
+            <div className="flex-1 p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+              {children}
+            </div>
+            {/* Footer */}
+            <AppFooter />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Default: use AppSidebarLess and AppHeaderLess (for non-authenticated or other pages)
   return (
     <div className="min-h-screen xl:flex">
       {/* Sidebar and Backdrop */}
