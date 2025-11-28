@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import StatusIconsAlerte from "@/components/techem/images/StatusIconsAlerte";
 import {
@@ -65,6 +65,7 @@ export default function ListInterventions({
   pkImmeuble,
 }: ListInterventionsProps) {
   const { getInterventions, exportInterventions } = useImmeubles();
+  const router = useRouter();
   const [depannages, setDepannages] = useState<DepannageRecord[]>([]);
   const [immeuble, setImmeuble] = useState<Building | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -148,13 +149,7 @@ export default function ListInterventions({
       <div className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
         {numero && (
           <p className="text-gray-900 font-semibold dark:text-white">
-            N° intervention :{" "}
-            <Link
-              href={`/immeuble/${pkImmeuble}/interventions/${numero}`}
-              className="text-brand-600 hover:underline dark:text-brand-400"
-            >
-              {numero}
-            </Link>
+            N° intervention : <span>{numero}</span>
           </p>
         )}
         <p>
@@ -425,9 +420,20 @@ export default function ListInterventions({
 
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
             {depannages.map((depannage, index) => {
-              const key = getInterventionNumber(depannage) || `depannage-${index}`;
+              const numeroIntervention = getInterventionNumber(depannage);
+              const key = numeroIntervention || `depannage-${index}`;
               return (
-                <TableRow key={key} className="align-top">
+                <TableRow
+                  key={key}
+                  className="align-top cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/40"
+                  onClick={() => {
+                    if (numeroIntervention) {
+                      router.push(
+                        `/immeuble/${pkImmeuble}/interventions/${numeroIntervention}`
+                      );
+                    }
+                  }}
+                >
                   <TableCell className="w-2/5 py-4">
                     <div className="flex gap-3">
                       <div className="flex-shrink-0 rounded-xl bg-amber-50 p-3 dark:bg-amber-500/10">
