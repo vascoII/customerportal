@@ -45,7 +45,8 @@ export default function ListTickets() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [filterText, setFilterText] = useState<string>("");
-  const [selectedStatus, setSelectedStatus] = useState<string>("Tous");
+  // Onglet par défaut: "Actif"
+  const [selectedStatus, setSelectedStatus] = useState<string>("Actif");
   const [sortConfig, setSortConfig] = useState<{
     key: SortKey;
     direction: "asc" | "desc";
@@ -211,6 +212,9 @@ export default function ListTickets() {
   const isLoading =
     selectedStatus === "Tous" ? ticketsTousIsLoading : ticketsActifIsLoading;
 
+  const currentTicketsError =
+    selectedStatus === "Tous" ? ticketsTousError : ticketsActifError;
+
   // Show loading state
   if (isLoading) {
     return (
@@ -225,12 +229,12 @@ export default function ListTickets() {
   }
 
   // Show error state
-  if (errorMessage || ticketsError) {
+  if (errorMessage || currentTicketsError) {
     const errorMsg =
       errorMessage ||
-      (typeof ticketsError === "string"
-        ? ticketsError
-        : ticketsError?.message) ||
+      (typeof currentTicketsError === "string"
+        ? currentTicketsError
+        : (currentTicketsError as any)?.message) ||
       "Impossible de charger les tickets.";
     return (
       <div className="overflow-hidden rounded-2xl border border-red-200 bg-red-50 px-4 py-6 dark:border-red-900/60 dark:bg-red-950/40 sm:px-6">
