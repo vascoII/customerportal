@@ -1,19 +1,6 @@
 import { api, handleApiError } from "@/lib/api/client";
 
 /**
- * Helper function to download a blob file
- */
-function downloadBlob(blob: Blob, filename: string, contentType: string): void {
-  const url = window.URL.createObjectURL(new Blob([blob], { type: contentType }));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  document.body.removeChild(link);
-  window.URL.revokeObjectURL(url);
-}
-
-/**
  * Custom hook for Interventions (Depannages) API endpoints.
  *
  * Provides functionality to download intervention reports (PDF).
@@ -57,15 +44,20 @@ export function useInterventions() {
         }
       );
 
-      const contentType =
-        response.headers["content-type"] || "application/pdf";
-      const filename =
-        response.headers["content-disposition"]?.split("filename=")[1]?.replace(/['"]/g, "") ||
-        `relevé-intervention-${pkDepannage}-${new Date()
-          .toLocaleDateString("fr-FR")
-          .replace(/\//g, "-")}.pdf`;
+      const blob = response.data;
 
-      downloadBlob(response.data, filename, contentType);
+      const filename = `releve-intervention-${pkDepannage}-${new Date()
+        .toLocaleDateString("fr-FR")
+        .replace(/\//g, "-")}.pdf`;
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       throw new Error(handleApiError(error));
     }
