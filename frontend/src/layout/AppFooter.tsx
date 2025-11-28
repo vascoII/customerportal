@@ -25,6 +25,14 @@ const AppFooter: React.FC = () => {
                 Données personnelles
               </Link>
             </li>
+            <li>
+              <Link
+                href="/rgpd"
+                className="hover:text-gray-900 dark:hover:text-gray-200"
+              >
+                Protection des données (RGPD)
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>
