@@ -439,7 +439,7 @@ export default function ListTickets() {
                       onClick={() => handleSort("occupant")}
                       className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
                     >
-                      <span>Nom de l&apos;occupant</span>
+                      <span>Nom occupant</span>
                       {sortConfig?.key === "occupant" && (
                         <span>
                           {sortConfig.direction === "asc" ? "▲" : "▼"}
@@ -562,9 +562,6 @@ export default function ListTickets() {
                       </TableCell>
                       <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
                         {immeuble}
-                      </TableCell>
-                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                        {statut}
                       </TableCell>
                       <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
                         {occupant}
