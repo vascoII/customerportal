@@ -1,4 +1,5 @@
 Mentions légales
+
 1. Dénomination de l'éditeur du site internet
 TECHEM SAS
 Téléphone: +33(0)1 46015970
@@ -7,6 +8,8 @@ E-mail: commercial@techem.fr
 Registre de commerce: 43929068500023
 Capital social: 4 560 100 Euros
 Nº TVA: FR 94439290685
+
+
 2. Directeur de la publication du site internet
 Eric CHAUMONT, Managing Director.
 
@@ -15,16 +18,16 @@ Eric CHAUMONT, Managing Director.
 Nom : Techem Gmbh
 Adresse :
 Téléphone :
+
+
 4. Limite de responsabilité
 Les informations consultables sur ce site internet ne valent pas offre de services et ne sont données qu’à titre d’information.
 
 TECHEM ne garantit en aucune manière que les informations présentes sur son site sont exactes, complètes et à jour, et ne fournit aucune garantie expresse ou tacite concernant tout ou partie de son site Internet.
-
 TECHEM décline toute responsabilité directe ou indirecte, concernant l'utilisation et l'accès des informations contenues sur le présent site, ce que l’utilisateur du site accepte expressément.
-
 Les données affichées sur le site ne sont pas opposables en l'état aux données utilisées par les gestionnaires pour quittancer les fluides dont le comptage est confié à TECHEM. Elles ne sauraient être considérées comme constituant une offre contractuelle et ne sont données qu'à titre indicatif.
-
 TECHEM s'efforce de mettre à disposition des utilisateurs les informations les plus exactes et les plus complètes possibles. Cependant, elle ne garantit pas que les informations affichées sur le site soient actualisées, justes et exhaustives.
+
 
 5. Propriété Intellectuelle
 TECHEM SAS
@@ -34,5 +37,7 @@ E-mail: data@techem.fr
 Registre de commerce: 43929068500023
 Capital social: 4 560 100 Euros
 Nº TVA: FR 94439290685
+
+
 Utilisation de l’Espace Client
 Il est précisé que certains clients peuvent accéder à leur compte personnel sur le site internet accessible à l’adresse URL https://client.techem.fr. Pour créer ce compte personnel, l’utilisateur devra être titulaire d’un bail et avoir reçu de son bailleur un identifiant et un mot de passe destinés à accéder à un compte personnel, et avoir accepté les Conditions Générales d'Utilisation.

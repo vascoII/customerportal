@@ -3,6 +3,7 @@
 import { useSidebar } from "@/context/SidebarContext";
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
+import AppFooter from "@/layout/AppFooter";
 import Backdrop from "@/layout/Backdrop";
 // TEMPORARILY DISABLED: Authentication imports
 // import { useAuth } from "@/lib/hooks/useAuth";
@@ -90,7 +91,13 @@ export default function AdminLayout({
         {/* Header */}
         <AppHeader />
         {/* Page Content */}
-        <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">{children}</div>
+        <div className="flex flex-col min-h-[calc(100vh-4rem)]">
+          <div className="flex-1 p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+            {children}
+          </div>
+          {/* Footer */}
+          <AppFooter />
+        </div>
       </div>
     </div>
   );

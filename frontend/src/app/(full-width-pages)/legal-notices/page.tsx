@@ -1,15 +1,12 @@
 import { Metadata } from "next";
+import LegalNotices from "@/components/legal/LegalNotices";
 
 export const metadata: Metadata = {
-  title: "Legal Notices | TECHEM - Espace client",
-  description: "Legal notices",
+  title: "Mentions légales | TECHEM - Espace client",
+  description: "Mentions légales du site TECHEM",
 };
 
 export default function LegalNoticesPage() {
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold">Hello</h1>
-    </div>
-  );
+  return <LegalNotices />;
 }
 
