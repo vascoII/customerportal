@@ -70,11 +70,19 @@ export default function ListTickets() {
 
   const allStatuses = useMemo(() => {
     const set = new Set<string>();
+
     tickets.forEach((t) => {
-      if (t.Statut && String(t.Statut).trim().length > 0) {
-        set.add(String(t.Statut));
+      const raw = (t.Statut ?? "").toString().trim();
+      if (!raw) return;
+
+      // Regrouper tous les statuts commençant par "Clos" dans un seul onglet
+      if (raw.toLowerCase().startsWith("clos")) {
+        set.add("Clos");
+      } else {
+        set.add(raw);
       }
     });
+
     const list = Array.from(set);
     list.sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
     return ["Tous", ...list];
@@ -118,11 +126,15 @@ export default function ListTickets() {
   const displayedTickets = useMemo(() => {
     let data = [...tickets];
 
-    // Onglet par statut
+    // Onglet par statut (avec fusion des statuts "Clos ...")
     if (selectedStatus !== "Tous") {
-      data = data.filter(
-        (t) => (t.Statut ?? "").toString() === selectedStatus
-      );
+      data = data.filter((t) => {
+        const raw = (t.Statut ?? "").toString().trim();
+        if (selectedStatus === "Clos") {
+          return raw.toLowerCase().startsWith("clos");
+        }
+        return raw === selectedStatus;
+      });
     }
 
     // Filtre texte global
