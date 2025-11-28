@@ -205,7 +205,7 @@ class ImmeubleApiController extends AbstractApiController
      * Get intervention details
      *     */
     #[Route("/{pkImmeuble}/interventions/{pkIntervention}", name: "show_intervention", methods: ["GET"])]
-    public function showIntervention(int $pkImmeuble, int $pkIntervention, Request $request): JsonResponse
+    public function showIntervention(int $pkImmeuble, string $pkIntervention, Request $request): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
         $fakeResponse = $this->sendFakeData('api.immeubles.pkImmeuble.interventions.pkIntervention');
