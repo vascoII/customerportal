@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -15,13 +16,15 @@ import { useExport } from "@/lib/hooks/useExport";
 
 type SortKey =
   | "caseNumber"
+  | "dateDemande"
+  | "demandeur"
+  | "objet"
+  | "immeuble"
+  | "occupant"
   | "refLogement"
-  | "nom"
-  | "email"
-  | "tel"
   | "statut"
-  | "date"
-  | "lastUpdate";
+  | "lastUpdate"
+  | "depannage";
 
 export default function ListTickets() {
   const {
@@ -69,23 +72,30 @@ export default function ListTickets() {
   }, [filterText, selectedStatus, sortConfig, tickets.length]);
 
   const allStatuses = useMemo(() => {
-    const set = new Set<string>();
+    let hasNouveau = false;
+    let hasClos = false;
+    let hasInterventionPlanifie = false;
 
     tickets.forEach((t) => {
-      const raw = (t.Statut ?? "").toString().trim();
+      const raw = (t.Statut ?? "").toString().trim().toLowerCase();
       if (!raw) return;
 
-      // Regrouper tous les statuts commençant par "Clos" dans un seul onglet
-      if (raw.toLowerCase().startsWith("clos")) {
-        set.add("Clos");
-      } else {
-        set.add(raw);
+      if (raw.startsWith("nouveau")) {
+        hasNouveau = true;
+      }
+      if (raw.startsWith("clos")) {
+        hasClos = true;
+      }
+      if (raw.startsWith("intervention planif")) {
+        hasInterventionPlanifie = true;
       }
     });
 
-    const list = Array.from(set);
-    list.sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
-    return ["Tous", ...list];
+    const result: string[] = ["Tous"];
+    if (hasNouveau) result.push("Nouveau");
+    if (hasClos) result.push("Clos");
+    if (hasInterventionPlanifie) result.push("Intervention planifiés");
+    return result;
   }, [tickets]);
 
   const handleSort = (key: SortKey) => {
@@ -104,20 +114,24 @@ export default function ListTickets() {
     switch (key) {
       case "caseNumber":
         return ticket.CaseNumber ?? "";
+      case "dateDemande":
+        return ticket.TicketDate ?? "";
+      case "demandeur":
+        return `${ticket.WebUser_Nom ?? ""} ${ticket.WebUser_Prenom ?? ""}`.trim();
+      case "objet":
+        return ticket.ObjetRetour ?? "";
+      case "immeuble":
+        return ticket.Imm_Id ?? "";
+      case "occupant":
+        return ticket.Nom ?? "";
       case "refLogement":
         return ticket.RefLogement ?? "";
-      case "nom":
-        return ticket.Nom ?? "";
-      case "email":
-        return ticket.Email ?? "";
-      case "tel":
-        return ticket.TelFixe ?? ticket.TelMobile ?? "";
       case "statut":
         return ticket.Statut ?? "";
-      case "date":
-        return ticket.TicketDate ?? "";
       case "lastUpdate":
         return ticket.LastUpdateDate ?? "";
+      case "depannage":
+        return ticket.NumIntervention ?? "";
       default:
         return "";
     }
@@ -126,12 +140,20 @@ export default function ListTickets() {
   const displayedTickets = useMemo(() => {
     let data = [...tickets];
 
-    // Onglet par statut (avec fusion des statuts "Clos ...")
+    // Onglet par statut (avec fusion des statuts "Clos ..." et mapping simple)
     if (selectedStatus !== "Tous") {
       data = data.filter((t) => {
         const raw = (t.Statut ?? "").toString().trim();
+        const lower = raw.toLowerCase();
+
         if (selectedStatus === "Clos") {
-          return raw.toLowerCase().startsWith("clos");
+          return lower.startsWith("clos");
+        }
+        if (selectedStatus === "Nouveau") {
+          return lower.startsWith("nouveau");
+        }
+        if (selectedStatus === "Intervention planifiés") {
+          return lower.startsWith("intervention planif");
         }
         return raw === selectedStatus;
       });
@@ -346,62 +368,96 @@ export default function ListTickets() {
                   >
                     <button
                       type="button"
+                      onClick={() => handleSort("dateDemande")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Date de demande</span>
+                      {sortConfig?.key === "dateDemande" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("demandeur")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Demandeur</span>
+                      {sortConfig?.key === "demandeur" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("objet")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Objet</span>
+                      {sortConfig?.key === "objet" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("immeuble")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Immeuble</span>
+                      {sortConfig?.key === "immeuble" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("occupant")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Nom de l&apos;occupant</span>
+                      {sortConfig?.key === "occupant" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
                       onClick={() => handleSort("refLogement")}
                       className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
                     >
                       <span>Réf. logement</span>
                       {sortConfig?.key === "refLogement" && (
-                        <span>
-                          {sortConfig.direction === "asc" ? "▲" : "▼"}
-                        </span>
-                      )}
-                    </button>
-                  </TableCell>
-                  <TableCell
-                    isHeader
-                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleSort("nom")}
-                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                    >
-                      <span>Nom occupant</span>
-                      {sortConfig?.key === "nom" && (
-                        <span>
-                          {sortConfig.direction === "asc" ? "▲" : "▼"}
-                        </span>
-                      )}
-                    </button>
-                  </TableCell>
-                  <TableCell
-                    isHeader
-                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleSort("email")}
-                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                    >
-                      <span>Email</span>
-                      {sortConfig?.key === "email" && (
-                        <span>
-                          {sortConfig.direction === "asc" ? "▲" : "▼"}
-                        </span>
-                      )}
-                    </button>
-                  </TableCell>
-                  <TableCell
-                    isHeader
-                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleSort("tel")}
-                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                    >
-                      <span>Téléphone</span>
-                      {sortConfig?.key === "tel" && (
                         <span>
                           {sortConfig.direction === "asc" ? "▲" : "▼"}
                         </span>
@@ -431,11 +487,11 @@ export default function ListTickets() {
                   >
                     <button
                       type="button"
-                      onClick={() => handleSort("date")}
+                      onClick={() => handleSort("lastUpdate")}
                       className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
                     >
-                      <span>Date de création</span>
-                      {sortConfig?.key === "date" && (
+                      <span>Dernière modification</span>
+                      {sortConfig?.key === "lastUpdate" && (
                         <span>
                           {sortConfig.direction === "asc" ? "▲" : "▼"}
                         </span>
@@ -448,11 +504,11 @@ export default function ListTickets() {
                   >
                     <button
                       type="button"
-                      onClick={() => handleSort("lastUpdate")}
+                      onClick={() => handleSort("depannage")}
                       className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
                     >
-                      <span>Dernière mise à jour</span>
-                      {sortConfig?.key === "lastUpdate" && (
+                      <span>Dépannage</span>
+                      {sortConfig?.key === "depannage" && (
                         <span>
                           {sortConfig.direction === "asc" ? "▲" : "▼"}
                         </span>
@@ -465,17 +521,27 @@ export default function ListTickets() {
               <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {paginatedTickets.map((ticket) => {
                   const caseNumber = ticket.CaseNumber ?? "—";
-                  const refLogement = ticket.RefLogement ?? "—";
-                  const nom = ticket.Nom ?? "—";
-                  const email = ticket.Email ?? "—";
-                  const tel = ticket.TelFixe ?? ticket.TelMobile ?? "—";
-                  const statut = ticket.Statut ?? "—";
                   const ticketDate = ticket.TicketDate
                     ? new Date(ticket.TicketDate).toLocaleString("fr-FR")
                     : "—";
                   const lastUpdate = ticket.LastUpdateDate
                     ? new Date(ticket.LastUpdateDate).toLocaleString("fr-FR")
                     : "—";
+                  const demandeur = `${
+                    ticket.WebUser_Nom ?? ""
+                  } ${ticket.WebUser_Prenom ?? ""}`.trim() || "—";
+                  const objet = ticket.ObjetRetour ?? "—";
+                  const immeuble = ticket.Imm_Id ?? "—";
+                  const occupant = ticket.Nom ?? "—";
+                  const refLogement = ticket.RefLogement ?? "—";
+                  const statut = ticket.Statut ?? "—";
+                  const numIntervention =
+                    ticket.NumIntervention &&
+                    ticket.NumIntervention !== "''" &&
+                    ticket.NumIntervention.trim().length > 0
+                      ? ticket.NumIntervention
+                      : null;
+                  const fkImmeuble = ticket.FkImmeuble;
 
                   return (
                     <TableRow
@@ -486,25 +552,43 @@ export default function ListTickets() {
                         {caseNumber}
                       </TableCell>
                       <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                        {refLogement}
+                        {ticketDate}
                       </TableCell>
                       <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                        {nom}
+                        {demandeur}
                       </TableCell>
                       <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                        {email}
+                        {objet}
                       </TableCell>
                       <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                        {tel}
+                        {immeuble}
                       </TableCell>
                       <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
                         {statut}
                       </TableCell>
                       <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                        {ticketDate}
+                        {occupant}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {refLogement}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {statut}
                       </TableCell>
                       <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
                         {lastUpdate}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {numIntervention && fkImmeuble ? (
+                          <Link
+                            href={`/immeuble/${fkImmeuble}/interventions/${numIntervention}`}
+                            className="text-brand-600 hover:underline dark:text-brand-400"
+                          >
+                            {numIntervention}
+                          </Link>
+                        ) : (
+                          "—"
+                        )}
                       </TableCell>
                     </TableRow>
                   );
