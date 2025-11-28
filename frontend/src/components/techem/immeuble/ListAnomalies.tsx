@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import StatusIconsAnomalie from "@/components/techem/images/StatusIconsAnomalie";
 import {
   Table,
@@ -20,6 +21,7 @@ interface ListAnomaliesProps {
 }
 
 export default function ListAnomalies({ pkImmeuble }: ListAnomaliesProps) {
+  const router = useRouter();
   const { getAnomalies, exportAnomalies } = useImmeubles();
   const [anomalies, setAnomalies] = useState<Anomaly[]>([]);
   const [immeuble, setImmeuble] = useState<Building | null>(null);
@@ -312,6 +314,7 @@ export default function ListAnomalies({ pkImmeuble }: ListAnomaliesProps) {
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
             {anomalies.map((anomalie, index) => {
               const key = anomalie.PkAnomalie ?? anomalie.Appareil?.Numero ?? `anomalie-${index}`;
+              const pkLogement = anomalie.Logement?.PkLogement;
               const indexValue = anomalie.Anomalie?.Index ?? "—";
               const conso = anomalie.Anomalie?.Conso ?? "—";
               const observations = anomalie.Anomalie?.Observations ?? "—";
@@ -324,7 +327,15 @@ export default function ListAnomalies({ pkImmeuble }: ListAnomaliesProps) {
                   : rawFluide || "—";
 
               return (
-                <TableRow key={key} className="align-top">
+                <TableRow
+                  key={key}
+                  className="align-top cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/40"
+                  onClick={() => {
+                    if (pkLogement) {
+                      router.push(`/immeuble/${pkImmeuble}/logements/${pkLogement}`);
+                    }
+                  }}
+                >
                   <TableCell className="py-4">
                     <div className="flex gap-3">
                       <div className="flex-shrink-0 rounded-xl bg-amber-50 p-3 dark:bg-amber-500/10">

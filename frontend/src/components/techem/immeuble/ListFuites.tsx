@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import StatusIconsFuite from "@/components/techem/images/StatusIconsFuite";
 import {
   Table,
@@ -36,6 +37,7 @@ const getLeakCount = (fuite: Leak): number => {
 };
 
 export default function ListFuites({ pkImmeuble }: ListFuitesProps) {
+  const router = useRouter();
   const { getFuites, exportFuites } = useImmeubles();
   const [fuites, setFuites] = useState<Leak[]>([]);
   const [immeuble, setImmeuble] = useState<Building | null>(null);
@@ -334,6 +336,7 @@ export default function ListFuites({ pkImmeuble }: ListFuitesProps) {
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
             {fuites.map((fuite, index) => {
               const key = fuite.PkFuite ?? fuite.Appareil?.Numero ?? `fuite-${index}`;
+              const pkLogement = fuite.Logement?.PkLogement;
               const compteur = fuite.Appareil?.Numero ?? "—";
               const emplacement = fuite.Appareil?.Emplacement ?? "—";
               const rawFluide = fuite.Appareil?.Fluide ?? "";
@@ -346,7 +349,15 @@ export default function ListFuites({ pkImmeuble }: ListFuitesProps) {
               const nbJours = fuite.Fuite?.NbJours ?? fuite.Fuite?.Duree ?? null;
 
               return (
-                <TableRow key={key} className="align-top">
+                <TableRow
+                  key={key}
+                  className="align-top cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/40"
+                  onClick={() => {
+                    if (pkLogement) {
+                      router.push(`/immeuble/${pkImmeuble}/logements/${pkLogement}`);
+                    }
+                  }}
+                >
                   <TableCell className="py-4">
                     <div className="flex gap-3">
                       <div className="flex-shrink-0 rounded-xl bg-blue-50 p-3 dark:bg-blue-500/10">

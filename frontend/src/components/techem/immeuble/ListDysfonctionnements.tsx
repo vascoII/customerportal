@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import StatusIconsDysfonctionnement from "@/components/techem/images/StatusIconsDysfonctionnement";
 import {
   Table,
@@ -33,6 +34,7 @@ const getDysfunctionCount = (dysfonctionnement: Dysfunction): number => {
 };
 
 export default function ListDysfonctionnements({ pkImmeuble }: ListDysfonctionnementsProps) {
+  const router = useRouter();
   const { getDysfonctionnements, exportDysfonctionnements } = useImmeubles();
   const [dysfonctionnements, setDysfonctionnements] = useState<Dysfunction[]>([]);
   const [immeuble, setImmeuble] = useState<Building | null>(null);
@@ -340,6 +342,7 @@ export default function ListDysfonctionnements({ pkImmeuble }: ListDysfonctionne
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
             {dysfonctionnements.map((dysfonctionnement, index) => {
               const key = dysfonctionnement.PkDysfonctionnement ?? dysfonctionnement.Appareil?.Numero ?? `dysfonctionnement-${index}`;
+              const pkLogement = dysfonctionnement.Logement?.PkLogement;
               const compteur = dysfonctionnement.Appareil?.Numero ?? "—";
               const emplacement = dysfonctionnement.Appareil?.Emplacement ?? "—";
               const rawFluide = dysfonctionnement.Appareil?.Fluide ?? "";
@@ -353,7 +356,15 @@ export default function ListDysfonctionnements({ pkImmeuble }: ListDysfonctionne
               const nbJours = dysfonctionnement.Dysfonctionnement?.NbJours ?? dysfonctionnement.Dysfonctionnement?.Duree ?? null;
 
               return (
-                <TableRow key={key} className="align-top">
+                <TableRow
+                  key={key}
+                  className="align-top cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/40"
+                  onClick={() => {
+                    if (pkLogement) {
+                      router.push(`/immeuble/${pkImmeuble}/logements/${pkLogement}`);
+                    }
+                  }}
+                >
                   <TableCell className="py-4">
                     <div className="flex gap-3">
                       <div className="flex-shrink-0 rounded-xl bg-red-50 p-3 dark:bg-red-500/10">
