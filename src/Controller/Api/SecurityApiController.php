@@ -55,9 +55,10 @@ class SecurityApiController extends AbstractApiController
 
             //Get client's Tickets permissions
             $hasTicketPermission = $client->checkTicketsInterEnabled(
-                $loginData['pk_user'], $loginData['session_id']
+                $loginData['pk_user'],
+                $loginData['session_id']
             );
-            
+
             $currentUser = $loginData['user'];
             $roles = ['ROLE_USER'];
 
@@ -73,7 +74,7 @@ class SecurityApiController extends AbstractApiController
                         $roles[] = 'ROLE_CLIENT';
                         break;
                     case 'G':
-                         $roles[] = 'ROLE_GESTIONNAIRE';
+                        $roles[] = 'ROLE_GESTIONNAIRE';
                         break;
                     default:
                         $roles[] = 'ROLE_CLIENT';
@@ -85,9 +86,10 @@ class SecurityApiController extends AbstractApiController
 
             //Get client's Tickets permissions
             $hasTicketPermission = $client->checkTicketsInterEnabled(
-                $loginData['pk_user'], $loginData['session_id']
+                $loginData['pk_user'],
+                $loginData['session_id']
             );
-            $currentUserNormalized['hasHicketPermission'] = $hasTicketPermission;
+            $currentUserNormalized['hasTicketPermission'] = $hasTicketPermission;
 
             // Return session_id and pk_user for stateless API
             // Frontend will send these in headers for subsequent requests

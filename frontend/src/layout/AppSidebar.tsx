@@ -50,7 +50,7 @@ const getNavItems = (
   pkLogement?: string,
   currentSection?: string,
   userType?: string,
-  hasHicketPermission?: boolean
+  hasTicketPermission?: boolean
 ): NavItem[] => {
   const dashboardSubItems: { name: string; path: string; pro?: boolean; new?: boolean }[] = [];
   const dashboardSubItemsOcupant: { name: string; path: string; pro?: boolean; new?: boolean }[] = [];
@@ -133,7 +133,7 @@ const getNavItems = (
     },
   ];
 
-  if (hasHicketPermission && isClient) {
+  if (hasTicketPermission && isClient) {
     navItems.push({
       icon: <ListIcon />,
       name: "Tickets",
@@ -288,8 +288,8 @@ const AppSidebar: React.FC = () => {
 
   // Get dynamic nav items based on current route (memoized to avoid unnecessary re-renders)
   const navItems = useMemo(
-    () => getNavItems(pathname, resolvedPkImmeuble, pkLogement, currentSection, user?.UserType, user?.hasHicketPermission),
-    [pathname, resolvedPkImmeuble, pkLogement, currentSection, user?.UserType, user?.hasHicketPermission]
+    () => getNavItems(pathname, resolvedPkImmeuble, pkLogement, currentSection, user?.UserType, user?.hasTicketPermission),
+    [pathname, resolvedPkImmeuble, pkLogement, currentSection, user?.UserType, user?.hasTicketPermission]
   );
 
   // Determine the home link based on user type
