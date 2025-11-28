@@ -38,6 +38,8 @@ export default function ListTickets() {
     key: SortKey;
     direction: "asc" | "desc";
   } | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const pageSize = 20;
 
   // Excel export placeholder
   const exportExcelFn = async () => {
@@ -60,6 +62,11 @@ export default function ListTickets() {
       setErrorMessage(null);
     }
   }, [ticketsData]);
+
+  // Reset pagination when filters, status or sorting change
+  useEffect(() => {
+    setPage(1);
+  }, [filterText, selectedStatus, sortConfig, tickets.length]);
 
   const allStatuses = useMemo(() => {
     const set = new Set<string>();
@@ -280,186 +287,262 @@ export default function ListTickets() {
         </div>
       )}
 
-      {displayedTickets.length === 0 ? (
-        <div className="flex items-center justify-center min-h-[200px] rounded-xl border border-dashed border-gray-200 dark:border-gray-800">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Aucun ticket disponible.
-          </p>
-        </div>
-      ) : (
-        <Table>
-          <TableHeader className="border-y border-gray-100 dark:border-gray-800">
-            <TableRow>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("caseNumber")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Numéro de ticket</span>
-                  {sortConfig?.key === "caseNumber" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("refLogement")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Réf. logement</span>
-                  {sortConfig?.key === "refLogement" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("nom")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Nom occupant</span>
-                  {sortConfig?.key === "nom" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("email")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Email</span>
-                  {sortConfig?.key === "email" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("tel")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Téléphone</span>
-                  {sortConfig?.key === "tel" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("statut")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Statut</span>
-                  {sortConfig?.key === "statut" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("date")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Date de création</span>
-                  {sortConfig?.key === "date" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("lastUpdate")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Dernière mise à jour</span>
-                  {sortConfig?.key === "lastUpdate" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-            </TableRow>
-          </TableHeader>
+      {/* Pagination + table */}
+      {(() => {
+        const totalItems = displayedTickets.length;
+        const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+        const currentPage = Math.min(page, totalPages);
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const paginatedTickets = displayedTickets.slice(startIndex, endIndex);
 
-          <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-            {displayedTickets.map((ticket) => {
-              const caseNumber = ticket.CaseNumber ?? "—";
-              const refLogement = ticket.RefLogement ?? "—";
-              const nom = ticket.Nom ?? "—";
-              const email = ticket.Email ?? "—";
-              const tel = ticket.TelFixe ?? ticket.TelMobile ?? "—";
-              const statut = ticket.Statut ?? "—";
-              const ticketDate = ticket.TicketDate
-                ? new Date(ticket.TicketDate).toLocaleString("fr-FR")
-                : "—";
-              const lastUpdate = ticket.LastUpdateDate
-                ? new Date(ticket.LastUpdateDate).toLocaleString("fr-FR")
-                : "—";
+        if (totalItems === 0) {
+          return (
+            <div className="flex items-center justify-center min-h-[200px] rounded-xl border border-dashed border-gray-200 dark:border-gray-800">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Aucun ticket disponible.
+              </p>
+            </div>
+          );
+        }
 
-              return (
-                <TableRow key={caseNumber + String(ticket.CaseId)} className="align-top">
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {caseNumber}
+        return (
+          <>
+            <Table>
+              <TableHeader className="border-y border-gray-100 dark:border-gray-800">
+                <TableRow>
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("caseNumber")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Numéro de ticket</span>
+                      {sortConfig?.key === "caseNumber" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {refLogement}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("refLogement")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Réf. logement</span>
+                      {sortConfig?.key === "refLogement" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {nom}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("nom")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Nom occupant</span>
+                      {sortConfig?.key === "nom" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {email}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("email")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Email</span>
+                      {sortConfig?.key === "email" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {tel}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("tel")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Téléphone</span>
+                      {sortConfig?.key === "tel" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {statut}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("statut")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Statut</span>
+                      {sortConfig?.key === "statut" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {ticketDate}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("date")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Date de création</span>
+                      {sortConfig?.key === "date" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {lastUpdate}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("lastUpdate")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Dernière mise à jour</span>
+                      {sortConfig?.key === "lastUpdate" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
                 </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      )}
+              </TableHeader>
+
+              <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
+                {paginatedTickets.map((ticket) => {
+                  const caseNumber = ticket.CaseNumber ?? "—";
+                  const refLogement = ticket.RefLogement ?? "—";
+                  const nom = ticket.Nom ?? "—";
+                  const email = ticket.Email ?? "—";
+                  const tel = ticket.TelFixe ?? ticket.TelMobile ?? "—";
+                  const statut = ticket.Statut ?? "—";
+                  const ticketDate = ticket.TicketDate
+                    ? new Date(ticket.TicketDate).toLocaleString("fr-FR")
+                    : "—";
+                  const lastUpdate = ticket.LastUpdateDate
+                    ? new Date(ticket.LastUpdateDate).toLocaleString("fr-FR")
+                    : "—";
+
+                  return (
+                    <TableRow
+                      key={caseNumber + String(ticket.CaseId)}
+                      className="align-top"
+                    >
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {caseNumber}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {refLogement}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {nom}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {email}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {tel}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {statut}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {ticketDate}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {lastUpdate}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+
+            {/* Pagination controls */}
+            <div className="mt-4 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+              <span>
+                Affichage{" "}
+                <span className="font-medium">
+                  {startIndex + 1}-
+                  {Math.min(endIndex, totalItems)}
+                </span>{" "}
+                sur <span className="font-medium">{totalItems}</span>
+              </span>
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  type="button"
+                  disabled={currentPage === 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                >
+                  Précédent
+                </Button>
+                <span>
+                  Page{" "}
+                  <span className="font-medium">
+                    {currentPage}
+                  </span>{" "}
+                  / {totalPages}
+                </span>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  type="button"
+                  disabled={currentPage === totalPages}
+                  onClick={() =>
+                    setPage((p) => Math.min(totalPages, p + 1))
+                  }
+                >
+                  Suivant
+                </Button>
+              </div>
+            </div>
+          </>
+        );
+      })()}
     </div>
   );
 }

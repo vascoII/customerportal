@@ -133,20 +133,6 @@ export function useTickets() {
   };
 
   /**
-   * Get ticket menu/statistics query
-   * GET /api/tickets/menu
-   */
-  const getTicketsMenuQuery = useQuery({
-    queryKey: ["tickets", "menu"],
-    queryFn: async (): Promise<TicketsMenuResponse> => {
-      const response = await api.get<TicketsMenuResponse>("/tickets/menu");
-      return extractApiData<TicketsMenuResponse>(response);
-    },
-    retry: false,
-    staleTime: 2 * 60 * 1000, // Consider fresh for 2 minutes
-  });
-
-  /**
    * Get ticket menu/statistics
    * @returns Promise with menu information
    */
@@ -341,20 +327,13 @@ export function useTickets() {
       ? handleApiError(getTicketsQuery().error)
       : null,
 
-    menuData: getTicketsMenuQuery.data,
-    menuIsLoading: getTicketsMenuQuery.isLoading,
-    menuError: getTicketsMenuQuery.error
-      ? handleApiError(getTicketsMenuQuery.error)
-      : null,
-
     // Query hooks for reactive usage (with parameters)
     getTicketsQuery,
     getTicketAttachmentQuery,
     getTicketCreateInfoQuery,
 
-    // Direct access to mutations/queries for advanced usage
+    // Direct access to mutations for advanced usage
     closeTicketMutation,
-    getTicketsMenuQuery,
   };
 }
 

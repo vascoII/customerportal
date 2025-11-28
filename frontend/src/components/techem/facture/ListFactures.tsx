@@ -32,6 +32,8 @@ export default function ListFactures() {
       | "montantAPayer";
     direction: "asc" | "desc";
   } | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const pageSize = 20;
 
   // Load factures data
   const {
@@ -46,6 +48,11 @@ export default function ListFactures() {
       setErrorMessage(null);
     }
   }, [facturesData]);
+
+  // Reset pagination when filters or sorting change
+  useEffect(() => {
+    setPage(1);
+  }, [filterText, sortConfig, factures.length]);
 
   const handleSort = (
     key:
@@ -240,252 +247,331 @@ export default function ListFactures() {
         </div>
       )}
 
-      {displayedFactures.length === 0 ? (
-        <div className="flex items-center justify-center min-h-[200px] rounded-xl border border-dashed border-gray-200 dark:border-gray-800">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Aucune facture disponible.
-          </p>
-        </div>
-      ) : (
-        <Table>
-          <TableHeader className="border-y border-gray-100 dark:border-gray-800">
-            <TableRow>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("numero")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Numéro de facture</span>
-                  {sortConfig?.key === "numero" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("codeGestio")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Code gestionnaire</span>
-                  {sortConfig?.key === "codeGestio" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("adresse")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Adresse</span>
-                  {sortConfig?.key === "adresse" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("ville")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Ville</span>
-                  {sortConfig?.key === "ville" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("cp")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Code postal</span>
-                  {sortConfig?.key === "cp" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("dateEdition")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Date d&apos;émission</span>
-                  {sortConfig?.key === "dateEdition" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("montantHT")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Montant total HT</span>
-                  {sortConfig?.key === "montantHT" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("montantTTC")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Montant total TTC</span>
-                  {sortConfig?.key === "montantTTC" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleSort("montantAPayer")}
-                  className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <span>Montant total à payer</span>
-                  {sortConfig?.key === "montantAPayer" && (
-                    <span>{sortConfig.direction === "asc" ? "▲" : "▼"}</span>
-                  )}
-                </button>
-              </TableCell>
-              <TableCell
-                isHeader
-                className="py-3 text-center text-theme-xs font-medium text-gray-500 dark:text-gray-400"
-              >
-                Télécharger
-              </TableCell>
-            </TableRow>
-          </TableHeader>
+      {/* Pagination + table */}
+      {(() => {
+        const totalItems = displayedFactures.length;
+        const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+        const currentPage = Math.min(page, totalPages);
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const paginatedFactures = displayedFactures.slice(startIndex, endIndex);
 
-          <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-            {displayedFactures.map((facture) => {
-              const pkFacture = facture.pkFacture;
-              const numero = facture.numero ?? "—";
-              const codeGestio = facture.codeGestio ?? "—";
-              const adresse = facture.adresse ?? "—";
-              const ville = facture.ville ?? "—";
-              const cp = facture.cp ?? "—";
-              const dateEdition = facture.dateEditionFormatted ?? facture.dateEdition ?? "—";
-              const montantHT = facture.montantTotalHTFormatted ?? "—";
-              const montantTTC = facture.montantTotalTTCFormatted ?? "—";
-              const montantAPayer = facture.montantTotalAPayerFormatted ?? "—";
-              const isDownloading = downloadingId === pkFacture;
+        if (totalItems === 0) {
+          return (
+            <div className="flex items-center justify-center min-h-[200px] rounded-xl border border-dashed border-gray-200 dark:border-gray-800">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Aucune facture disponible.
+              </p>
+            </div>
+          );
+        }
 
-              return (
-                <TableRow key={pkFacture} className="align-top">
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {numero}
+        return (
+          <>
+            <Table>
+              <TableHeader className="border-y border-gray-100 dark:border-gray-800">
+                <TableRow>
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("numero")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Numéro de facture</span>
+                      {sortConfig?.key === "numero" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {codeGestio}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("codeGestio")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Code gestionnaire</span>
+                      {sortConfig?.key === "codeGestio" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {adresse}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("adresse")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Adresse</span>
+                      {sortConfig?.key === "adresse" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {ville}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("ville")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Ville</span>
+                      {sortConfig?.key === "ville" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {cp}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("cp")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Code postal</span>
+                      {sortConfig?.key === "cp" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {dateEdition}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("dateEdition")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Date d&apos;émission</span>
+                      {sortConfig?.key === "dateEdition" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {montantHT}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("montantHT")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Montant total HT</span>
+                      {sortConfig?.key === "montantHT" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {montantTTC}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("montantTTC")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Montant total TTC</span>
+                      {sortConfig?.key === "montantTTC" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
-                    {montantAPayer}
+                  <TableCell
+                    isHeader
+                    className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSort("montantAPayer")}
+                      className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200"
+                    >
+                      <span>Montant total à payer</span>
+                      {sortConfig?.key === "montantAPayer" && (
+                        <span>
+                          {sortConfig.direction === "asc" ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </button>
                   </TableCell>
-                  <TableCell className="py-4">
-                    <div className="flex items-center justify-center">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleDownload(pkFacture)}
-                        disabled={isDownloading}
-                        className="inline-flex items-center gap-2"
-                      >
-                        <svg
-                          className="stroke-current"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M8 10.6667V2.66667"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M5.33333 7.33333L8 10L10.6667 7.33333"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M2.66667 13.3333H13.3333"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        {isDownloading ? "Téléchargement..." : "Télécharger"}
-                      </Button>
-                    </div>
+                  <TableCell
+                    isHeader
+                    className="py-3 text-center text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                  >
+                    Télécharger
                   </TableCell>
                 </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      )}
+              </TableHeader>
+
+              <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
+                {paginatedFactures.map((facture) => {
+                  const pkFacture = facture.pkFacture;
+                  const numero = facture.numero ?? "—";
+                  const codeGestio = facture.codeGestio ?? "—";
+                  const adresse = facture.adresse ?? "—";
+                  const ville = facture.ville ?? "—";
+                  const cp = facture.cp ?? "—";
+                  const dateEdition =
+                    facture.dateEditionFormatted ?? facture.dateEdition ?? "—";
+                  const montantHT = facture.montantTotalHTFormatted ?? "—";
+                  const montantTTC = facture.montantTotalTTCFormatted ?? "—";
+                  const montantAPayer =
+                    facture.montantTotalAPayerFormatted ?? "—";
+                  const isDownloading = downloadingId === pkFacture;
+
+                  return (
+                    <TableRow key={pkFacture} className="align-top">
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {numero}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {codeGestio}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {adresse}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {ville}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {cp}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {dateEdition}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {montantHT}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {montantTTC}
+                      </TableCell>
+                      <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                        {montantAPayer}
+                      </TableCell>
+                      <TableCell className="py-4">
+                        <div className="flex items-center justify-center">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDownload(pkFacture)}
+                            disabled={isDownloading}
+                            className="inline-flex items-center gap-2"
+                          >
+                            <svg
+                              className="stroke-current"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M8 10.6667V2.66667"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M5.33333 7.33333L8 10L10.6667 7.33333"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M2.66667 13.3333H13.3333"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                            {isDownloading
+                              ? "Téléchargement..."
+                              : "Télécharger"}
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+
+            {/* Pagination controls */}
+            <div className="mt-4 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+              <span>
+                Affichage{" "}
+                <span className="font-medium">
+                  {startIndex + 1}-
+                  {Math.min(endIndex, totalItems)}
+                </span>{" "}
+                sur <span className="font-medium">{totalItems}</span>
+              </span>
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  type="button"
+                  disabled={currentPage === 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                >
+                  Précédent
+                </Button>
+                <span>
+                  Page{" "}
+                  <span className="font-medium">
+                    {currentPage}
+                  </span>{" "}
+                  / {totalPages}
+                </span>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  type="button"
+                  disabled={currentPage === totalPages}
+                  onClick={() =>
+                    setPage((p) => Math.min(totalPages, p + 1))
+                  }
+                >
+                  Suivant
+                </Button>
+              </div>
+            </div>
+          </>
+        );
+      })()}
     </div>
   );
 }
