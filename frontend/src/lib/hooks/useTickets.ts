@@ -51,6 +51,8 @@ export interface TicketCreateInfoResponse {
  * Parameters for getting tickets list
  */
 export interface GetTicketsParams {
+  // When true => backend receives showall=O (tous les tickets)
+  // When false => backend receives showall=N (tickets actifs uniquement)
   showAll?: boolean;
 }
 
@@ -92,7 +94,10 @@ export function useTickets() {
       queryFn: async (): Promise<TicketsListResponse> => {
         const queryParams: any = {};
         if (params?.showAll !== undefined) {
-          queryParams.showAll = params.showAll ? "1" : "0";
+          // Map boolean to backend expected values:
+          // true  => showall=O (tous)
+          // false => showall=N (actifs)
+          queryParams.showall = params.showAll ? "O" : "N";
         }
 
         const response = await api.get<TicketsListResponse>("/tickets", {
@@ -115,7 +120,8 @@ export function useTickets() {
   ): Promise<TicketsListResponse> => {
     const queryParams: any = {};
     if (params?.showAll !== undefined) {
-      queryParams.showAll = params.showAll ? "1" : "0";
+      // Same mapping as in getTicketsQuery
+      queryParams.showall = params.showAll ? "O" : "N";
     }
 
     const result = await queryClient.fetchQuery({

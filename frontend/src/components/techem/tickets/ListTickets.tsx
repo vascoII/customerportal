@@ -27,11 +27,20 @@ type SortKey =
   | "depannage";
 
 export default function ListTickets() {
+  const { getTicketsQuery } = useTickets();
+
+  // Chargement des tickets "Tous" (showall=O) et "Actif" (showall=N)
   const {
-    ticketsData,
-    ticketsIsLoading,
-    ticketsError,
-  } = useTickets();
+    data: ticketsTousData,
+    isLoading: ticketsTousIsLoading,
+    error: ticketsTousError,
+  } = getTicketsQuery({ showAll: true });
+
+  const {
+    data: ticketsActifData,
+    isLoading: ticketsActifIsLoading,
+    error: ticketsActifError,
+  } = getTicketsQuery({ showAll: false });
 
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -58,50 +67,37 @@ export default function ListTickets() {
     errorTitle: "Erreur d'export Excel",
   });
 
-  // Load tickets from query
+  // Load tickets from appropriate query based on selected tab
   useEffect(() => {
-    if (ticketsData) {
-      setTickets(ticketsData.tickets ?? []);
-      setErrorMessage(null);
+    if (selectedStatus === "Tous") {
+      if (ticketsTousData) {
+        setTickets(ticketsTousData.tickets ?? []);
+        setErrorMessage(null);
+      } else if (ticketsTousError) {
+        setErrorMessage("Impossible de charger les tickets (Tous).");
+        setTickets([]);
+      }
+    } else {
+      if (ticketsActifData) {
+        setTickets(ticketsActifData.tickets ?? []);
+        setErrorMessage(null);
+      } else if (ticketsActifError) {
+        setErrorMessage("Impossible de charger les tickets (Actif).");
+        setTickets([]);
+      }
     }
-  }, [ticketsData]);
+  }, [selectedStatus, ticketsTousData, ticketsActifData, ticketsTousError, ticketsActifError]);
 
   // Reset pagination when filters, status or sorting change
   useEffect(() => {
     setPage(1);
   }, [filterText, selectedStatus, sortConfig, tickets.length]);
 
-  const allStatuses = useMemo(() => {
-    let hasNouveau = false;
-    let hasClos = false;
-    let hasInterventionPlanifie = false;
-    let hasOuvert = false;
-
-    tickets.forEach((t) => {
-      const raw = (t.Statut ?? "").toString().trim().toLowerCase();
-      if (!raw) return;
-
-      if (raw.startsWith("nouveau")) {
-        hasNouveau = true;
-      }
-      if (raw.startsWith("clos")) {
-        hasClos = true;
-      }
-      if (raw.startsWith("intervention planif")) {
-        hasInterventionPlanifie = true;
-      }
-      if (!raw.startsWith("clos")) {
-        hasOuvert = true;
-      }
-    });
-
-    const result: string[] = ["Tous"];
-    if (hasNouveau) result.push("Nouveau");
-    if (hasOuvert) result.push("Ouvert");
-    if (hasClos) result.push("Clos");
-    if (hasInterventionPlanifie) result.push("Intervention planifiés");
-    return result;
-  }, [tickets]);
+  // Onglets fixes : Tous / Actif / + déclinaisons filtrées d'Actif
+  const allStatuses = useMemo(
+    () => ["Tous", "Actif", "Nouveau", "Ouvert", "Intervention planifiés", "Clos"],
+    []
+  );
 
   const handleSort = (key: SortKey) => {
     setSortConfig((current) => {
@@ -146,7 +142,8 @@ export default function ListTickets() {
     let data = [...tickets];
 
     // Onglet par statut (avec fusion des statuts "Clos ..." et mapping simple)
-    if (selectedStatus !== "Tous") {
+    // "Actif" = aucun filtre supplémentaire (tous les tickets actifs)
+    if (selectedStatus !== "Tous" && selectedStatus !== "Actif") {
       data = data.filter((t) => {
         const raw = (t.Statut ?? "").toString().trim();
         const lower = raw.toLowerCase();
@@ -211,8 +208,11 @@ export default function ListTickets() {
     return data;
   }, [tickets, filterText, selectedStatus, sortConfig]);
 
+  const isLoading =
+    selectedStatus === "Tous" ? ticketsTousIsLoading : ticketsActifIsLoading;
+
   // Show loading state
-  if (ticketsIsLoading) {
+  if (isLoading) {
     return (
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
         <div className="flex items-center justify-center min-h-[400px]">
