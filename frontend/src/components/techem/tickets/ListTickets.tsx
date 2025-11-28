@@ -522,10 +522,10 @@ export default function ListTickets() {
                 {paginatedTickets.map((ticket) => {
                   const caseNumber = ticket.CaseNumber ?? "—";
                   const ticketDate = ticket.TicketDate
-                    ? new Date(ticket.TicketDate).toLocaleString("fr-FR")
+                    ? new Date(ticket.TicketDate).toLocaleDateString("fr-FR")
                     : "—";
                   const lastUpdate = ticket.LastUpdateDate
-                    ? new Date(ticket.LastUpdateDate).toLocaleString("fr-FR")
+                    ? new Date(ticket.LastUpdateDate).toLocaleDateString("fr-FR")
                     : "—";
                   const demandeur = `${
                     ticket.WebUser_Nom ?? ""
