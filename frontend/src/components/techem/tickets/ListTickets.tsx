@@ -75,6 +75,7 @@ export default function ListTickets() {
     let hasNouveau = false;
     let hasClos = false;
     let hasInterventionPlanifie = false;
+    let hasOuvert = false;
 
     tickets.forEach((t) => {
       const raw = (t.Statut ?? "").toString().trim().toLowerCase();
@@ -89,10 +90,14 @@ export default function ListTickets() {
       if (raw.startsWith("intervention planif")) {
         hasInterventionPlanifie = true;
       }
+      if (!raw.startsWith("clos")) {
+        hasOuvert = true;
+      }
     });
 
     const result: string[] = ["Tous"];
     if (hasNouveau) result.push("Nouveau");
+    if (hasOuvert) result.push("Ouvert");
     if (hasClos) result.push("Clos");
     if (hasInterventionPlanifie) result.push("Intervention planifiés");
     return result;
@@ -154,6 +159,9 @@ export default function ListTickets() {
         }
         if (selectedStatus === "Intervention planifiés") {
           return lower.startsWith("intervention planif");
+        }
+        if (selectedStatus === "Ouvert") {
+          return !lower.startsWith("clos");
         }
         return raw === selectedStatus;
       });
