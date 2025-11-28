@@ -27,7 +27,7 @@ type SortKey =
   | "depannage";
 
 export default function ListTickets() {
-  const { getTicketsQuery } = useTickets();
+  const { getTicketsQuery, closeTicket, isClosing, closeError } = useTickets();
 
   // Chargement des tickets "Tous" (showall=O) et "Actif" (showall=N)
   const {
@@ -294,12 +294,17 @@ export default function ListTickets() {
       </div>
 
       {/* Error message */}
-      {(errorMessage || exportError) && (
+      {(errorMessage || exportError || closeError) && (
         <div className="mb-4">
           <Alert
             variant="error"
             title="Erreur"
-            message={errorMessage ?? exportError?.message ?? ""}
+            message={
+              errorMessage ??
+              exportError?.message ??
+              (typeof closeError === "string" ? closeError : "") ??
+              ""
+            }
           />
           {exportError && (
             <button
@@ -527,6 +532,14 @@ export default function ListTickets() {
                       )}
                     </button>
                   </TableCell>
+                  {selectedStatus === "Clos" && (
+                    <TableCell
+                      isHeader
+                      className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400 select-none"
+                    >
+                      Action
+                    </TableCell>
+                  )}
                 </TableRow>
               </TableHeader>
 
@@ -599,6 +612,23 @@ export default function ListTickets() {
                           "—"
                         )}
                       </TableCell>
+                      {selectedStatus === "Clos" && (
+                        <TableCell className="py-4 text-sm text-gray-700 dark:text-gray-200">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            type="button"
+                            disabled={!ticket.CaseId || isClosing}
+                            onClick={() => {
+                              if (ticket.CaseId) {
+                                void closeTicket(String(ticket.CaseId));
+                              }
+                            }}
+                          >
+                            {isClosing ? "Clôture..." : "Clôture"}
+                          </Button>
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}
