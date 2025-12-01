@@ -27,7 +27,7 @@ export default function AuthLayout({
                     width={231}
                     height={48}
                     src="./images/techem/auth-logo.svg"
-                    alt="Logo"
+                    alt="Logo Techem"
                   />
                 </Link>
                 <p className="text-center text-gray-600 dark:text-white/60">

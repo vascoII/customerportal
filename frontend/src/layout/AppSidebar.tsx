@@ -580,22 +580,22 @@ const AppSidebar: React.FC = () => {
               <Image
                 className="dark:hidden"
                 src="/images/techem/logo.svg"
-                alt="Logo"
+                alt="Logo Techem"
                 width={200}
                 height={140}
               />
               <Image
                 className="hidden dark:block"
                 src="/images/techem/logo-dark.svg"
-                alt="Logo"
+                alt="Logo Techem"
                 width={200}
                 height={140}
               />
             </>
           ) : (
             <Image
-              src="/images/techem/logo-icon.svg"
-              alt="Logo"
+              src="/images/techem/auth-logo.svg"
+              alt="Logo Techem"
               width={32}
               height={32}
             />
