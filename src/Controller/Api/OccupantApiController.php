@@ -25,7 +25,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * Get current occupant's logement details
      */
-    #[Route("", name: "show", methods: ["GET"])]
+    #[Route("/{fk}", name: "show", methods: ["GET"])]
     public function show(Request $request, Logement $logementService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
@@ -33,19 +33,15 @@ class OccupantApiController extends AbstractApiController
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
-
+        
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $consoTabs = $logementService->generateTabConsos($logement);
             $soustraitants = $client->getSousTraitants();
 
@@ -75,7 +71,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * Get simulator data for current occupant
      */
-    #[Route("/simulateur", name: "simulateur", methods: ["GET"])]
+    #[Route("/{fk}/simulateur", name: "simulateur", methods: ["GET"])]
     public function simulateur(Request $request, Logement $logementService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
@@ -84,18 +80,15 @@ class OccupantApiController extends AbstractApiController
             return $fakeResponse;
         }
 
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $consoTabs = $logementService->generateTabConsos($logement);
 
             // Handle repart appareils
@@ -123,8 +116,8 @@ class OccupantApiController extends AbstractApiController
     /**
      * Get intervention details
      */
-    #[Route("/interventions/{pkIntervention]", name: "show_intervention", methods: ["GET"])]
-    public function showIntervention(int $pkIntervention, Request $request): JsonResponse
+    #[Route("/{fk}/interventions/{pkIntervention]", name: "show_intervention", methods: ["GET"])]
+    public function showIntervention(string $pkIntervention, Request $request): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
         $fakeResponse = $this->sendFakeData('api.occupant.interventions.pkIntervention');
@@ -132,18 +125,15 @@ class OccupantApiController extends AbstractApiController
             return $fakeResponse;
         }
 
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $depannage = $client->getDetailDepannage($pkIntervention);
 
             return $this->success([
@@ -158,7 +148,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * List interventions for current occupant
      */
-    #[Route("/interventions", name: "list_interventions", methods: ["GET"])]
+    #[Route("/{fk}/interventions", name: "list_interventions", methods: ["GET"])]
     public function listInterventions(Request $request, Depannage $depannageService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
@@ -167,22 +157,19 @@ class OccupantApiController extends AbstractApiController
             return $fakeResponse;
         }
 
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
 
             if ($pkImmeuble) {
-                $depannages = $client->getInterventionsImmeuble($pkImmeuble, $logement->Logement->PkLogement, $user->FK);
+                $depannages = $client->getInterventionsImmeuble($pkImmeuble, $logement->Logement->PkLogement, $userFk);
             } else {
                 $depannages = [];
             }
@@ -200,7 +187,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * List leaks for current occupant
      */
-    #[Route("/fuites", name: "list_leaks", methods: ["GET"])]
+    #[Route("/{fk}/fuites", name: "list_leaks", methods: ["GET"])]
     public function listLeaks(Request $request, Fuite $fuiteService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
@@ -209,23 +196,20 @@ class OccupantApiController extends AbstractApiController
             return $fakeResponse;
         }
 
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
             $pkAppareil = $request->query->get('appareil');
 
             if ($pkImmeuble) {
-                $fuites = $client->getFuitesImmeuble($pkImmeuble, $logement->Logement->PkLogement, $pkAppareil, $user->FK);
+                $fuites = $client->getFuitesImmeuble($pkImmeuble, $logement->Logement->PkLogement, $pkAppareil, $userFk);
             } else {
                 $fuites = [];
             }
@@ -243,7 +227,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * List dysfunctions for current occupant
      */
-    #[Route("/dysfonctionnements", name: "list_dysfunctions", methods: ["GET"])]
+    #[Route("/{fk}/dysfonctionnements", name: "list_dysfunctions", methods: ["GET"])]
     public function listDysfunctions(Request $request, Dysfonctionnement $dysfonctionnementService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
@@ -252,22 +236,19 @@ class OccupantApiController extends AbstractApiController
             return $fakeResponse;
         }
 
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
 
             if ($pkImmeuble) {
-                $dysfonctionnements = $client->getDysfonctionnementsImmeuble($pkImmeuble, $logement->Logement->PkLogement, $user->FK);
+                $dysfonctionnements = $client->getDysfonctionnementsImmeuble($pkImmeuble, $logement->Logement->PkLogement, $userFk);
             } else {
                 $dysfonctionnements = [];
             }
@@ -285,7 +266,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * List anomalies for current occupant
      */
-    #[Route("/anomalies", name: "list_anomalies", methods: ["GET"])]
+    #[Route("/{fk}/anomalies", name: "list_anomalies", methods: ["GET"])]
     public function listAnomalies(Request $request, Anomalie $anomalieService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
@@ -294,23 +275,20 @@ class OccupantApiController extends AbstractApiController
             return $fakeResponse;
         }
 
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
             $pkAppareil = $request->query->get('appareil');
 
             if ($pkImmeuble) {
-                $anomalies = $client->getAnomaliesImmeuble($pkImmeuble, $logement->Logement->PkLogement, $pkAppareil, $user->FK);
+                $anomalies = $client->getAnomaliesImmeuble($pkImmeuble, $logement->Logement->PkLogement, $pkAppareil, $userFk);
             } else {
                 $anomalies = [];
             }
@@ -328,7 +306,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * Export anomalies to CSV
      */
-    #[Route("/anomalies/export", name: "export_anomalies", methods: ["GET"])]
+    #[Route("/{fk}/anomalies/export", name: "export_anomalies", methods: ["GET"])]
     public function exportAnomalies(Request $request, Anomalie $anomalieService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
@@ -339,22 +317,19 @@ class OccupantApiController extends AbstractApiController
             return $fakeResponse;
         }
 
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
 
             if ($pkImmeuble) {
-                $anomalies = $client->getAnomaliesImmeuble($pkImmeuble, $logement->Logement->PkLogement, null, $user->FK);
+                $anomalies = $client->getAnomaliesImmeuble($pkImmeuble, $logement->Logement->PkLogement, null, $userFk);
             } else {
                 $anomalies = [];
             }
@@ -380,7 +355,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * Export leaks to CSV
      */
-    #[Route("/fuites/export", name: "export_leaks", methods: ["GET"])]
+    #[Route("/{fk}/fuites/export", name: "export_leaks", methods: ["GET"])]
     public function exportLeaks(Request $request, Fuite $fuiteService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
@@ -391,22 +366,19 @@ class OccupantApiController extends AbstractApiController
             return $fakeResponse;
         }
 
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
 
             if ($pkImmeuble) {
-                $fuites = $client->getFuitesImmeuble($pkImmeuble, $logement->Logement->PkLogement, null, $user->FK);
+                $fuites = $client->getFuitesImmeuble($pkImmeuble, $logement->Logement->PkLogement, null, $userFk);
             } else {
                 $fuites = [];
             }
@@ -432,7 +404,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * Export interventions to CSV
      */
-    #[Route("/interventions/export", name: "export_interventions", methods: ["GET"])]
+    #[Route("/{fk}/interventions/export", name: "export_interventions", methods: ["GET"])]
     public function exportInterventions(Request $request, Depannage $depannageService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
@@ -443,22 +415,19 @@ class OccupantApiController extends AbstractApiController
             return $fakeResponse;
         }
 
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
 
             if ($pkImmeuble) {
-                $depannages = $client->getInterventionsImmeuble($pkImmeuble, $logement->Logement->PkLogement, $user->FK);
+                $depannages = $client->getInterventionsImmeuble($pkImmeuble, $logement->Logement->PkLogement, $userFk);
             } else {
                 $depannages = [];
             }
@@ -484,7 +453,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * Export dysfunctions to CSV
      */
-    #[Route("/dysfonctionnements/export", name: "export_dysfunctions", methods: ["GET"])]
+    #[Route("/{fk}/dysfonctionnements/export", name: "export_dysfunctions", methods: ["GET"])]
     public function exportDysfunctions(Request $request, Dysfonctionnement $dysfonctionnementService, CsvHelper $csvHelper): Response|JsonResponse
     {
         ini_set('max_execution_time', 120);
@@ -495,22 +464,19 @@ class OccupantApiController extends AbstractApiController
             return $fakeResponse;
         }
 
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $pkImmeuble = $logement->Immeuble->PkImmeuble ?? null;
 
             if ($pkImmeuble) {
-                $dysfonctionnements = $client->getDysfonctionnementsImmeuble($pkImmeuble, $logement->Logement->PkLogement, $user->FK);
+                $dysfonctionnements = $client->getDysfonctionnementsImmeuble($pkImmeuble, $logement->Logement->PkLogement, $userFk);
             } else {
                 $dysfonctionnements = [];
             }
@@ -648,7 +614,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * Get my account information
      */
-    #[Route("/my-account", name: "my_account", methods: ["GET", "POST"])]
+    #[Route("/{fk}/my-account", name: "my_account", methods: ["GET", "POST"])]
     public function myAccount(Logement $logementService, Request $request): JsonResponse
     {
         // Check if faker mode is enabled and return fake data (only for GET)
@@ -659,17 +625,14 @@ class OccupantApiController extends AbstractApiController
             }
         }
 
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
             // Handle POST request for RGPD consent update
             if ($request->isMethod('POST')) {
                 $requestData = json_decode($request->getContent(), true);
@@ -680,7 +643,7 @@ class OccupantApiController extends AbstractApiController
                 $rgpdcheckboxvalue = $data ? 'true' : 'false';
             }
 
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $consoTabs = $logementService->generateTabConsos($logement);
 
             // Handle repart appareils
@@ -709,7 +672,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * Get or update alerts configuration
      */
-    #[Route("/alertes", name: "alertes", methods: ["GET", "POST"])]
+    #[Route("/{fk}/alertes", name: "alertes", methods: ["GET", "POST"])]
     public function alertes(Request $request, Logement $logementService): JsonResponse
     {
         // Check if faker mode is enabled and return fake data (only for GET)
@@ -720,17 +683,14 @@ class OccupantApiController extends AbstractApiController
             }
         }
 
+        $userFk = $request->get('fk') ?? $request->query->get('fk');
+
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
             return $client;
         }
 
         try {
-            $user = $this->getCurrentUser();
-            if (!$user) {
-                return $this->unauthorized('User not found');
-            }
-
             if ($request->isMethod('POST')) {
                 $data = $request->request->all();
                 if (isset($data['SEUIL_CONSO_ACTIF'])) {
@@ -741,7 +701,7 @@ class OccupantApiController extends AbstractApiController
                 $client->setSeuilConso($data);
             }
 
-            $logement = $client->getTableauBordOccupant($user->FK);
+            $logement = $client->getTableauBordOccupant($userFk);
             $consoTabs = $logementService->generateTabConsos($logement);
 
             // Handle repart appareils
@@ -759,21 +719,10 @@ class OccupantApiController extends AbstractApiController
 
             return $this->success([
                 'logement' => $this->normalize($logement),
-                'consoTabs' => $this->normalize($consoTabs),
-                'user' => $this->normalize($user),
+                'consoTabs' => $this->normalize($consoTabs)
             ], $request->isMethod('POST') ? 'Alerts updated successfully' : null);
         } catch (\Exception $e) {
             return $this->error('Error fetching/updating alerts: ' . $e->getMessage(), 500);
         }
-    }
-
-
-    private function getCurrentUser()
-    {
-        $token = $this->container->get('security.token_storage')->getToken();
-        if (!$token) {
-            return null;
-        }
-        return $token->getAttribute('soap.user');
     }
 }
