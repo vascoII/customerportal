@@ -165,7 +165,7 @@ export const LogementMetrics = ({ pkLogement, pkImmeuble }: LogementMetricsProps
               Fuites
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              {formatNumber(metrics.fuites)}
+              {formatNumber(Math.max(metrics.fuites, 0))}
             </h4>
           </div>
         </div>
@@ -185,7 +185,7 @@ export const LogementMetrics = ({ pkLogement, pkImmeuble }: LogementMetricsProps
               Alarmes techniques
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              {formatNumber(metrics.alarmes)}
+              {formatNumber(Math.max(metrics.alarmes, 0))}
             </h4>
           </div>
         </div>
@@ -206,7 +206,7 @@ export const LogementMetrics = ({ pkLogement, pkImmeuble }: LogementMetricsProps
               Anomalies de consommation
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              {formatNumber(metrics.anomalies)}
+              {formatNumber(Math.max(metrics.anomalies, 0))}
             </h4>
           </div>
         </div>
@@ -226,7 +226,7 @@ export const LogementMetrics = ({ pkLogement, pkImmeuble }: LogementMetricsProps
               Depannages en cours
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              {formatNumber(metrics.depannages)}
+              {formatNumber(Math.max(metrics.depannages, 0))}
             </h4>
           </div>
         </div>
