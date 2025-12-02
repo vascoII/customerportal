@@ -18,6 +18,9 @@ echo "📦 Installation des dépendances frontend..."
 cd frontend
 npm install
 
+echo "🧹 Suppression du cache Next.js (.next)..."
+rm -rf .next
+
 echo "🌐 Démarrage du serveur frontend sur le port 3000 en mode développement..."
 
 npm run dev
