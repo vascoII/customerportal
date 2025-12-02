@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
 import { useLogements } from "@/lib/hooks/useLogements";
@@ -102,6 +102,12 @@ export default function LogementConsommationChartEf({ pkLogement }: LogementCons
       pkOccupant: occupant?.PkOccupant,
     };
   }, [logementData]);
+
+  const handleOpenOccupantPdf = useCallback(() => {
+    if (!pkOccupant) return;
+    const url = `/occupant/${String(pkOccupant)}/releve-eau`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  }, [pkOccupant]);
 
   const hasData = values.length > 0 && categories.length > 0;
 
@@ -243,14 +249,23 @@ export default function LogementConsommationChartEf({ pkLogement }: LogementCons
           </p>
         </div>
         {pkOccupant && (
-          <a
-            href={`/occupant/${String(pkOccupant)}/releve-eau`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/[0.05]"
+          <button
+            type="button"
+            onClick={handleOpenOccupantPdf}
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-theme-xs transition hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/[0.05]"
           >
-            Export PDF
-          </a>
+            <span>Export PDF</span>
+            <svg
+              className="h-4 w-4 text-red-500"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M6 2H14L20 8V20C20 21.1 19.1 22 18 22H6C4.9 22 4 21.1 4 20V4C4 2.9 4.9 2 6 2ZM13 9V3.5L18.5 9H13Z" />
+              <path d="M8 13H16V15H8V13Z" />
+              <path d="M8 17H16V19H8V17Z" />
+            </svg>
+          </button>
         )}
       </div>
 
