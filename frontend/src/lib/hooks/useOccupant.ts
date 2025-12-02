@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, extractApiData, handleApiError } from "@/lib/api/client";
 import { getStaleTimeUntilMidnight } from "@/lib/utils/cache";
 import type {
@@ -48,90 +48,47 @@ export interface OccupantInterventionsListResponse {
   filters: FilterValues;
 }
 
-/**
- * Response from /api/occupant/my-account
- */
 export interface OccupantMyAccountResponse {
   logement: Housing;
   consoTabs: ConsumptionTab;
   rgpdcheckboxvalue: string; // 'true' or 'false'
 }
 
-/**
- * Response from /api/occupant/alertes
- */
 export interface OccupantAlertesResponse {
   logement: Housing;
   consoTabs: ConsumptionTab;
   user: User;
 }
 
-/**
- * Parameters for updating alerts
- */
 export interface UpdateAlertesParams {
   SEUIL_CONSO_ACTIF?: boolean; // Will be converted to 'O' or 'N'
   [key: string]: any;
 }
 
 /**
- * Helper function to download a blob file
- */
-function downloadBlob(blob: Blob, filename: string): void {
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  window.URL.revokeObjectURL(url);
-}
-
-/**
  * Custom hook for Occupant API endpoints
  *
- * Provides all occupant-related API calls including:
- * - Occupant logement details
- * - Simulator data
- * - Interventions, leaks, anomalies, dysfunctions
- * - Reports (PDF downloads)
- * - Exports (CSV downloads)
- * - Account management
- * - Alerts configuration
- *
- * @example
- * ```tsx
- * const { getOccupantLogement, getInterventions, exportAnomalies, updateAlertes } = useOccupant();
- *
- * // Get occupant logement
- * const logement = await getOccupantLogement();
- *
- * // Get interventions
- * const interventions = await getInterventions();
- *
- * // Export anomalies
- * await exportAnomalies();
- *
- * // Update alerts
- * await updateAlertes({ SEUIL_CONSO_ACTIF: true });
- * ```
+ * All endpoints are scoped by the current occupant FK (`fkUser`),
+ * which is typically read from localStorage via `useFkUser()`.
  */
-export function useOccupant(fkUser?: string | number) {
+export function useOccupant(fkUser?: string | number | null) {
   const queryClient = useQueryClient();
 
   /**
    * Get current occupant's logement query
-   * GET /api/occupant
+   * GET /api/occupant/{fk}
    */
   const getOccupantLogementQuery = useQuery({
-    queryKey: ["occupant", "logement"],
+    queryKey: ["occupant", "logement", fkUser],
     queryFn: async (): Promise<OccupantLogementResponse> => {
-      const response = await api.get<OccupantLogementResponse>("/occupant");
+      const response = await api.get<OccupantLogementResponse>(
+        `/occupant/${fkUser}`
+      );
       return extractApiData<OccupantLogementResponse>(response);
     },
     retry: false,
     staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
+    enabled: !!fkUser,
   });
 
   /**
@@ -139,10 +96,16 @@ export function useOccupant(fkUser?: string | number) {
    * @returns Promise with occupant logement data
    */
   const getOccupantLogement = async (): Promise<OccupantLogementResponse> => {
+    if (!fkUser) {
+      throw new Error("fkUser is required to fetch occupant logement");
+    }
+
     const result = await queryClient.fetchQuery({
-      queryKey: ["occupant", "logement"],
+      queryKey: ["occupant", "logement", fkUser],
       queryFn: async (): Promise<OccupantLogementResponse> => {
-        const response = await api.get<OccupantLogementResponse>("/occupant");
+        const response = await api.get<OccupantLogementResponse>(
+          `/occupant/${fkUser}`
+        );
         return extractApiData<OccupantLogementResponse>(response);
       },
       retry: false,
@@ -153,19 +116,19 @@ export function useOccupant(fkUser?: string | number) {
 
   /**
    * Get simulator data query
-   * GET /api/occupant/simulateur
+   * GET /api/occupant/{fk}/simulateur
    */
   const getSimulatorQuery = useQuery({
-    queryKey: ["occupant", "simulateur"],
+    queryKey: ["occupant", "simulateur", fkUser],
     queryFn: async (): Promise<OccupantSimulatorResponse> => {
       const response = await api.get<OccupantSimulatorResponse>(
-        "/occupant/simulateur"
+        `/occupant/${fkUser}/simulateur`
       );
       return extractApiData<OccupantSimulatorResponse>(response);
     },
     retry: false,
     staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
-    enabled: false, // Disabled by default
+    enabled: false, // Disabled by default (triggered via getSimulator)
   });
 
   /**
@@ -173,11 +136,15 @@ export function useOccupant(fkUser?: string | number) {
    * @returns Promise with simulator data
    */
   const getSimulator = async (): Promise<OccupantSimulatorResponse> => {
+    if (!fkUser) {
+      throw new Error("fkUser is required to fetch simulator data");
+    }
+
     const result = await queryClient.fetchQuery({
-      queryKey: ["occupant", "simulateur"],
+      queryKey: ["occupant", "simulateur", fkUser],
       queryFn: async (): Promise<OccupantSimulatorResponse> => {
         const response = await api.get<OccupantSimulatorResponse>(
-          "/occupant/simulateur"
+          `/occupant/${fkUser}/simulateur`
         );
         return extractApiData<OccupantSimulatorResponse>(response);
       },
@@ -231,18 +198,19 @@ export function useOccupant(fkUser?: string | number) {
 
   /**
    * Get interventions list query
-   * GET /api/occupant/interventions
+   * GET /api/occupant/{fk}/interventions
    */
   const getInterventionsQuery = useQuery({
-    queryKey: ["occupant", "interventions"],
+    queryKey: ["occupant", "interventions", fkUser],
     queryFn: async (): Promise<OccupantInterventionsListResponse> => {
       const response = await api.get<OccupantInterventionsListResponse>(
-        "/occupant/interventions"
+        `/occupant/${fkUser}/interventions`
       );
       return extractApiData<OccupantInterventionsListResponse>(response);
     },
     retry: false,
     staleTime: 2 * 60 * 1000,
+    enabled: !!fkUser,
   });
 
   /**
@@ -250,11 +218,15 @@ export function useOccupant(fkUser?: string | number) {
    * @returns Promise with interventions list
    */
   const getInterventions = async (): Promise<OccupantInterventionsListResponse> => {
+    if (!fkUser) {
+      throw new Error("fkUser is required to fetch interventions");
+    }
+
     const result = await queryClient.fetchQuery({
-      queryKey: ["occupant", "interventions"],
+      queryKey: ["occupant", "interventions", fkUser],
       queryFn: async (): Promise<OccupantInterventionsListResponse> => {
         const response = await api.get<OccupantInterventionsListResponse>(
-          "/occupant/interventions"
+          `/occupant/${fkUser}/interventions`
         );
         return extractApiData<OccupantInterventionsListResponse>(response);
       },
@@ -266,21 +238,25 @@ export function useOccupant(fkUser?: string | number) {
 
   /**
    * Get leaks list query
-   * GET /api/occupant/fuites
+   * GET /api/occupant/{fk}/fuites
    * @param appareil - Optional device ID
    */
   const getFuitesQuery = (appareil?: string) => {
     return useQuery({
-      queryKey: ["occupant", "fuites", appareil],
+      queryKey: ["occupant", "fuites", fkUser, appareil],
       queryFn: async (): Promise<LeakListResponse> => {
         const params = appareil ? { appareil } : {};
-        const response = await api.get<LeakListResponse>("/occupant/fuites", {
-          params,
-        });
+        const response = await api.get<LeakListResponse>(
+          `/occupant/${fkUser}/fuites`,
+          {
+            params,
+          }
+        );
         return extractApiData<LeakListResponse>(response);
       },
       retry: false,
       staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
+      enabled: !!fkUser,
     });
   };
 
@@ -290,13 +266,20 @@ export function useOccupant(fkUser?: string | number) {
    * @returns Promise with leaks list
    */
   const getFuites = async (appareil?: string): Promise<LeakListResponse> => {
+    if (!fkUser) {
+      throw new Error("fkUser is required to fetch leaks");
+    }
+
     const params = appareil ? { appareil } : {};
     const result = await queryClient.fetchQuery({
-      queryKey: ["occupant", "fuites", appareil],
+      queryKey: ["occupant", "fuites", fkUser, appareil],
       queryFn: async (): Promise<LeakListResponse> => {
-        const response = await api.get<LeakListResponse>("/occupant/fuites", {
-          params,
-        });
+        const response = await api.get<LeakListResponse>(
+          `/occupant/${fkUser}/fuites`,
+          {
+            params,
+          }
+        );
         return extractApiData<LeakListResponse>(response);
       },
       retry: false,
@@ -307,18 +290,19 @@ export function useOccupant(fkUser?: string | number) {
 
   /**
    * Get dysfunctions list query
-   * GET /api/occupant/dysfonctionnements
+   * GET /api/occupant/{fk}/dysfonctionnements
    */
   const getDysfonctionnementsQuery = useQuery({
-    queryKey: ["occupant", "dysfonctionnements"],
+    queryKey: ["occupant", "dysfonctionnements", fkUser],
     queryFn: async (): Promise<DysfunctionListResponse> => {
       const response = await api.get<DysfunctionListResponse>(
-        "/occupant/dysfonctionnements"
+        `/occupant/${fkUser}/dysfonctionnements`
       );
       return extractApiData<DysfunctionListResponse>(response);
     },
     retry: false,
     staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
+    enabled: !!fkUser,
   });
 
   /**
@@ -326,11 +310,15 @@ export function useOccupant(fkUser?: string | number) {
    * @returns Promise with dysfunctions list
    */
   const getDysfonctionnements = async (): Promise<DysfunctionListResponse> => {
+    if (!fkUser) {
+      throw new Error("fkUser is required to fetch dysfunctions");
+    }
+
     const result = await queryClient.fetchQuery({
-      queryKey: ["occupant", "dysfonctionnements"],
+      queryKey: ["occupant", "dysfonctionnements", fkUser],
       queryFn: async (): Promise<DysfunctionListResponse> => {
         const response = await api.get<DysfunctionListResponse>(
-          "/occupant/dysfonctionnements"
+          `/occupant/${fkUser}/dysfonctionnements`
         );
         return extractApiData<DysfunctionListResponse>(response);
       },
@@ -342,22 +330,23 @@ export function useOccupant(fkUser?: string | number) {
 
   /**
    * Get anomalies list query
-   * GET /api/occupant/anomalies
+   * GET /api/occupant/{fk}/anomalies
    * @param appareil - Optional device ID
    */
   const getAnomaliesQuery = (appareil?: string) => {
     return useQuery({
-      queryKey: ["occupant", "anomalies", appareil],
+      queryKey: ["occupant", "anomalies", fkUser, appareil],
       queryFn: async (): Promise<AnomalyListResponse> => {
         const params = appareil ? { appareil } : {};
         const response = await api.get<AnomalyListResponse>(
-          "/occupant/anomalies",
-          { params }
+          `/occupant/${fkUser}/anomalies`,
+          { params },
         );
         return extractApiData<AnomalyListResponse>(response);
       },
       retry: false,
       staleTime: getStaleTimeUntilMidnight(), // Cache until midnight (SOAP data updated once per night at 2 AM)
+      enabled: !!fkUser,
     });
   };
 
@@ -369,13 +358,17 @@ export function useOccupant(fkUser?: string | number) {
   const getAnomalies = async (
     appareil?: string
   ): Promise<AnomalyListResponse> => {
+    if (!fkUser) {
+      throw new Error("fkUser is required to fetch anomalies");
+    }
+
     const params = appareil ? { appareil } : {};
     const result = await queryClient.fetchQuery({
-      queryKey: ["occupant", "anomalies", appareil],
+      queryKey: ["occupant", "anomalies", fkUser, appareil],
       queryFn: async (): Promise<AnomalyListResponse> => {
         const response = await api.get<AnomalyListResponse>(
-          "/occupant/anomalies",
-          { params }
+          `/occupant/${fkUser}/anomalies`,
+          { params },
         );
         return extractApiData<AnomalyListResponse>(response);
       },
@@ -387,21 +380,32 @@ export function useOccupant(fkUser?: string | number) {
 
   /**
    * Export anomalies to CSV
-   * GET /api/occupant/anomalies/export
+   * GET /api/occupant/{fk}/anomalies/export
    * Downloads the file automatically
    * @returns Promise that resolves when download is complete
    */
   const exportAnomalies = async (): Promise<void> => {
     try {
+      if (!fkUser) {
+        throw new Error("fkUser is required to export anomalies");
+      }
+
       const response = await api.get("/occupant/anomalies/export", {
         responseType: "blob",
       });
 
-      const blob = new Blob([response.data], {
+      const blob = new Blob([response.data as unknown as BlobPart], {
         type: "text/csv",
       });
 
-      downloadBlob(blob, "export-anomalies.csv");
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "export-anomalies.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       const errorMessage = handleApiError(error);
       throw new Error(`Failed to export anomalies: ${errorMessage}`);
@@ -410,21 +414,32 @@ export function useOccupant(fkUser?: string | number) {
 
   /**
    * Export leaks to CSV
-   * GET /api/occupant/fuites/export
+   * GET /api/occupant/{fk}/fuites/export
    * Downloads the file automatically
    * @returns Promise that resolves when download is complete
    */
   const exportFuites = async (): Promise<void> => {
     try {
+      if (!fkUser) {
+        throw new Error("fkUser is required to export leaks");
+      }
+
       const response = await api.get("/occupant/fuites/export", {
         responseType: "blob",
       });
 
-      const blob = new Blob([response.data], {
+      const blob = new Blob([response.data as unknown as BlobPart], {
         type: "text/csv",
       });
 
-      downloadBlob(blob, "export-fuites.csv");
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "export-fuites.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       const errorMessage = handleApiError(error);
       throw new Error(`Failed to export leaks: ${errorMessage}`);
@@ -433,21 +448,32 @@ export function useOccupant(fkUser?: string | number) {
 
   /**
    * Export interventions to CSV
-   * GET /api/occupant/interventions/export
+   * GET /api/occupant/{fk}/interventions/export
    * Downloads the file automatically
    * @returns Promise that resolves when download is complete
    */
   const exportInterventions = async (): Promise<void> => {
     try {
+      if (!fkUser) {
+        throw new Error("fkUser is required to export interventions");
+      }
+
       const response = await api.get("/occupant/interventions/export", {
         responseType: "blob",
       });
 
-      const blob = new Blob([response.data], {
+      const blob = new Blob([response.data as unknown as BlobPart], {
         type: "text/csv",
       });
 
-      downloadBlob(blob, "export-depannages.csv");
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "export-depannages.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       const errorMessage = handleApiError(error);
       throw new Error(`Failed to export interventions: ${errorMessage}`);
@@ -456,21 +482,32 @@ export function useOccupant(fkUser?: string | number) {
 
   /**
    * Export dysfunctions to CSV
-   * GET /api/occupant/dysfonctionnements/export
+   * GET /api/occupant/{fk}/dysfonctionnements/export
    * Downloads the file automatically
    * @returns Promise that resolves when download is complete
    */
   const exportDysfonctionnements = async (): Promise<void> => {
     try {
+      if (!fkUser) {
+        throw new Error("fkUser is required to export dysfunctions");
+      }
+
       const response = await api.get("/occupant/dysfonctionnements/export", {
         responseType: "blob",
       });
 
-      const blob = new Blob([response.data], {
+      const blob = new Blob([response.data as unknown as BlobPart], {
         type: "text/csv",
       });
 
-      downloadBlob(blob, "export-autres-dysfonctionnemnts.csv");
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "export-autres-dysfonctionnemnts.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       const errorMessage = handleApiError(error);
       throw new Error(`Failed to export dysfunctions: ${errorMessage}`);
@@ -495,14 +532,21 @@ export function useOccupant(fkUser?: string | number) {
         }
       );
 
-      const blob = new Blob([response.data], {
+      const blob = new Blob([response.data as unknown as BlobPart], {
         type: "application/pdf",
       });
 
       const dateStr = new Date().toISOString().split("T")[0];
       const filename = `relevé-${dateStr}.pdf`;
 
-      downloadBlob(blob, filename);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       const errorMessage = handleApiError(error);
       throw new Error(`Failed to download water report: ${errorMessage}`);
@@ -529,14 +573,21 @@ export function useOccupant(fkUser?: string | number) {
         }
       );
 
-      const blob = new Blob([response.data], {
+      const blob = new Blob([response.data as unknown as BlobPart], {
         type: "application/pdf",
       });
 
       const dateStr = new Date().toISOString().split("T")[0];
       const filename = `relevé-${dateStr}.pdf`;
 
-      downloadBlob(blob, filename);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       const errorMessage = handleApiError(error);
       throw new Error(
@@ -567,140 +618,28 @@ export function useOccupant(fkUser?: string | number) {
         }
       );
 
-      const blob = new Blob([response.data], {
+      const blob = new Blob([response.data as unknown as BlobPart], {
         type: "application/pdf",
       });
 
       const dateStr = new Date().toISOString().split("T")[0];
       const filename = `relevé-${dateStr}.pdf`;
 
-      downloadBlob(blob, filename);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       const errorMessage = handleApiError(error);
       throw new Error(`Failed to download note report: ${errorMessage}`);
     }
   };
 
-  /**
-   * Get my account information query
-   * GET /api/occupant/my-account
-   */
-  const getMyAccountQuery = useQuery({
-    queryKey: ["occupant", "my-account"],
-    queryFn: async (): Promise<OccupantMyAccountResponse> => {
-      const response = await api.get<OccupantMyAccountResponse>(
-        "/occupant/my-account"
-      );
-      return extractApiData<OccupantMyAccountResponse>(response);
-    },
-    retry: false,
-    staleTime: 5 * 60 * 1000,
-  });
-
-  /**
-   * Get my account information
-   * @returns Promise with account information
-   */
-  const getMyAccount = async (): Promise<OccupantMyAccountResponse> => {
-    const result = await queryClient.fetchQuery({
-      queryKey: ["occupant", "my-account"],
-      queryFn: async (): Promise<OccupantMyAccountResponse> => {
-        const response = await api.get<OccupantMyAccountResponse>(
-          "/occupant/my-account"
-        );
-        return extractApiData<OccupantMyAccountResponse>(response);
-      },
-      retry: false,
-      staleTime: 5 * 60 * 1000,
-    });
-    return result;
-  };
-
-  /**
-   * Get or update alerts mutation
-   * GET/POST /api/occupant/alertes
-   * @param params - Optional alert parameters for update
-   */
-  const alertesMutation = useMutation({
-    mutationFn: async (
-      params?: UpdateAlertesParams
-    ): Promise<OccupantAlertesResponse> => {
-      // If params provided, it's a POST request (update)
-      if (params) {
-        // Convert SEUIL_CONSO_ACTIF boolean to 'O' or 'N'
-        const data: any = { ...params };
-        if (typeof data.SEUIL_CONSO_ACTIF === "boolean") {
-          data.SEUIL_CONSO_ACTIF = data.SEUIL_CONSO_ACTIF ? "O" : "N";
-        }
-
-        const response = await api.post<OccupantAlertesResponse>(
-          "/occupant/alertes",
-          data
-        );
-        return extractApiData<OccupantAlertesResponse>(response);
-      } else {
-        // GET request (fetch)
-        const response = await api.get<OccupantAlertesResponse>(
-          "/occupant/alertes"
-        );
-        return extractApiData<OccupantAlertesResponse>(response);
-      }
-    },
-    onSuccess: () => {
-      // Invalidate related queries
-      queryClient.invalidateQueries({ queryKey: ["occupant", "logement"] });
-      queryClient.invalidateQueries({ queryKey: ["occupant", "my-account"] });
-    },
-  });
-
-  /**
-   * Get alerts configuration
-   * @returns Promise with alerts data
-   */
-  const getAlertes = async (): Promise<OccupantAlertesResponse> => {
-    const result = await queryClient.fetchQuery({
-      queryKey: ["occupant", "alertes"],
-      queryFn: async (): Promise<OccupantAlertesResponse> => {
-        const response = await api.get<OccupantAlertesResponse>(
-          "/occupant/alertes"
-        );
-        return extractApiData<OccupantAlertesResponse>(response);
-      },
-      retry: false,
-      staleTime: 2 * 60 * 1000,
-    });
-    return result;
-  };
-
-  /**
-   * Update alerts configuration
-   * @param params - Alert parameters
-   * @returns Promise with updated alerts data
-   */
-  const updateAlertes = async (
-    params: UpdateAlertesParams
-  ): Promise<OccupantAlertesResponse> => {
-    return alertesMutation.mutateAsync(params);
-  };
-
-  /**
-   * Get alerts query
-   * GET /api/occupant/alertes
-   */
-  const getAlertesQuery = useQuery({
-    queryKey: ["occupant", "alertes"],
-    queryFn: async (): Promise<OccupantAlertesResponse> => {
-      const response = await api.get<OccupantAlertesResponse>(
-        "/occupant/alertes"
-      );
-      return extractApiData<OccupantAlertesResponse>(response);
-    },
-    retry: false,
-    staleTime: 2 * 60 * 1000,
-  });
-
   return {
-    // Query functions (async functions that refetch)
     getOccupantLogement,
     getSimulator,
     getIntervention,
@@ -708,13 +647,7 @@ export function useOccupant(fkUser?: string | number) {
     getFuites,
     getAnomalies,
     getDysfonctionnements,
-    getMyAccount,
-    getAlertes,
 
-    // Mutation functions
-    updateAlertes,
-
-    // Export/Download functions
     exportAnomalies,
     exportFuites,
     exportInterventions,
@@ -723,15 +656,6 @@ export function useOccupant(fkUser?: string | number) {
     getRepartReleve,
     getNoteReleve,
 
-    // Mutation states
-    isUpdatingAlertes: alertesMutation.isPending,
-
-    // Mutation errors
-    updateAlertesError: alertesMutation.error
-      ? handleApiError(alertesMutation.error)
-      : null,
-
-    // Query states (from reactive queries)
     occupantLogementData: getOccupantLogementQuery.data,
     occupantLogementIsLoading: getOccupantLogementQuery.isLoading,
     occupantLogementError: getOccupantLogementQuery.error
@@ -756,31 +680,13 @@ export function useOccupant(fkUser?: string | number) {
       ? handleApiError(getDysfonctionnementsQuery.error)
       : null,
 
-    myAccountData: getMyAccountQuery.data,
-    myAccountIsLoading: getMyAccountQuery.isLoading,
-    myAccountError: getMyAccountQuery.error
-      ? handleApiError(getMyAccountQuery.error)
-      : null,
-
-    alertesData: getAlertesQuery.data,
-    alertesIsLoading: getAlertesQuery.isLoading,
-    alertesError: getAlertesQuery.error
-      ? handleApiError(getAlertesQuery.error)
-      : null,
-
-    // Query hooks for reactive usage (with parameters)
     getInterventionQuery,
     getFuitesQuery,
     getAnomaliesQuery,
-
-    // Direct access to mutations/queries for advanced usage
-    alertesMutation,
     getOccupantLogementQuery,
     getSimulatorQuery,
     getInterventionsQuery,
     getDysfonctionnementsQuery,
-    getMyAccountQuery,
-    getAlertesQuery,
   };
 }
 
