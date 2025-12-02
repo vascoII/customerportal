@@ -1,5 +1,3 @@
-"use server";
-
 import { Metadata } from "next";
 import OccupantFuitesPageClient from "./OccupantFuitesPageClient";
 
