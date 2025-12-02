@@ -7,8 +7,10 @@ import Button from "@/components/ui/button/Button";
 import { useInterventions } from "@/lib/hooks/useInterventions";
 
 interface InterventionDetailsProps {
-  pkImmeuble: string;
+  pkImmeuble?: string;
   pkIntervention: string;
+  fkOccupant?: string | number;
+  mode?: "immeuble" | "occupant";
 }
 
 interface ParsedIntervention {
@@ -26,6 +28,8 @@ interface ParsedIntervention {
 export default function InterventionDetails({
   pkImmeuble,
   pkIntervention,
+  fkOccupant,
+  mode = "immeuble",
 }: InterventionDetailsProps) {
   const [data, setData] = useState<ParsedIntervention | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -42,11 +46,20 @@ export default function InterventionDetails({
         setIsLoading(true);
         setError(null);
 
-        const response = await api.get(`/immeubles/${pkImmeuble}/interventions/${pkIntervention}`);
+        const url =
+          mode === "occupant" && fkOccupant
+            ? `/occupant/${fkOccupant}/interventions/${pkIntervention}`
+            : `/immeubles/${pkImmeuble}/interventions/${pkIntervention}`;
 
-        // The faker returns: { success, status, data: { immeuble: {...}, depannage: {...} } }
+        const response = await api.get(url);
+
+        // API returns: { success, status, data: { immeuble/logement, depannage } }
         const root = (response as any).data?.data ?? (response as any).data ?? {};
-        const immeuble = root.immeuble?.Immeuble ?? {};
+        const immeubleSource =
+          root.immeuble?.Immeuble ??
+          root.logement?.Immeuble ??
+          {};
+        const immeuble = immeubleSource ?? {};
         const depannageInfo = root.depannage?.InfosDepannage ?? {};
         const logement = depannageInfo.Logement ?? {};
         const occupant = depannageInfo.Occupant ?? {};
@@ -78,12 +91,21 @@ export default function InterventionDetails({
       }
     };
 
-    fetchData();
+    // In occupant mode, wait for fkOccupant to be available
+    if (mode === "occupant" && !fkOccupant) {
+      setIsLoading(false);
+      setError("Identifiant occupant manquant pour charger l'intervention.");
+      return;
+    }
+
+    fetchData().catch(() => {
+      // error handled in catch
+    });
 
     return () => {
       cancelled = true;
     };
-  }, [pkImmeuble, pkIntervention]);
+  }, [pkImmeuble, pkIntervention, fkOccupant, mode]);
 
   if (isLoading) {
     return (

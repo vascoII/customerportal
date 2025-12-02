@@ -33,7 +33,7 @@ class OccupantApiController extends AbstractApiController
         if ($fakeResponse !== null) {
             return $fakeResponse;
         }
-        
+
         $userFk = $request->get('fk') ?? $request->query->get('fk');
         $client = $this->getAuthenticatedClientFromHeaders($request);
         if ($client instanceof JsonResponse) {
@@ -116,7 +116,7 @@ class OccupantApiController extends AbstractApiController
     /**
      * Get intervention details
      */
-    #[Route("/{fk}/interventions/{pkIntervention]", name: "show_intervention", methods: ["GET"])]
+    #[Route("/{fk}/interventions/{pkIntervention}", name: "show_intervention", methods: ["GET"])]
     public function showIntervention(string $pkIntervention, Request $request): JsonResponse
     {
         // Check if faker mode is enabled and return fake data
