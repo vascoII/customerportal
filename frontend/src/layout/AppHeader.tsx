@@ -20,6 +20,11 @@ const AppHeader: React.FC = () => {
       return "/parc"; // Default fallback
     }
     
+    // If CGU is "N", redirect to /cgu
+    if (user.CGU === "N") {
+      return "/cgu";
+    }
+
     // If UserType is O (Occupant), redirect to /occupant
     if (user.UserType === "O") {
       return "/occupant";
@@ -32,7 +37,7 @@ const AppHeader: React.FC = () => {
     
     // Default fallback
     return "/parc";
-  }, [user?.UserType]);
+  }, [user?.UserType, user?.CGU]);
 
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {
