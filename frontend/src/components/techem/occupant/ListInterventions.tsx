@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import StatusIconsAlerte from "@/components/techem/images/StatusIconsAlerte";
 import {
   Table,
@@ -64,6 +65,7 @@ export default function ListInterventions({
   fkUser,
 }: ListInterventionsProps) {
   const { getInterventions, exportInterventions } = useOccupant(fkUser);
+  const router = useRouter();
   const [depannages, setDepannages] = useState<DepannageRecord[]>([]);
   const [logement, setLogement] = useState<Housing | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -418,9 +420,27 @@ export default function ListInterventions({
 
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
             {depannages.map((depannage, index) => {
-              const key = getInterventionNumber(depannage) || `depannage-${index}`;
+              const numeroIntervention = getInterventionNumber(depannage);
+              const pkLogement =
+                depannage.Logement?.PkLogement ??
+                // support alternative casing if present
+                (depannage.Logement as unknown as { pkLogement?: string | number })?.pkLogement ??
+                "";
+              const key = numeroIntervention || `depannage-${index}`;
               return (
-                <TableRow key={key} className="align-top">
+                <TableRow
+                  key={key}
+                  className="align-top cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/40"
+                  onClick={() => {
+                    if (!numeroIntervention) return;
+                    const basePath = `/occupant/interventions/${numeroIntervention}`;
+                    const url =
+                      pkLogement !== ""
+                        ? `${basePath}?pkLogement=${encodeURIComponent(String(pkLogement))}`
+                        : basePath;
+                    router.push(url);
+                  }}
+                >
                   <TableCell className="py-4">
                     <div className="flex gap-3">
                       <div className="flex-shrink-0 rounded-xl bg-amber-50 p-3 dark:bg-amber-500/10">
