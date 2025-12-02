@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import { useLogements } from "@/lib/hooks/useLogements";
 import { LoadingChart } from "@/components/ui/loading";
 import Alert from "@/components/ui/alert/Alert";
+import { api, handleApiError } from "@/lib/api/client";
+import { useExport } from "@/lib/hooks/useExport";
 
 // Dynamically import the ReactApexChart component
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
@@ -103,11 +105,40 @@ export default function LogementConsommationChartEf({ pkLogement }: LogementCons
     };
   }, [logementData]);
 
-  const handleOpenOccupantPdf = useCallback(() => {
-    if (!pkOccupant) return;
-    const url = `/occupant/${String(pkOccupant)}/releve-eau`;
-    window.open(url, "_blank", "noopener,noreferrer");
+  const downloadReleveEau = useCallback(async () => {
+    try {
+      if (!pkOccupant) {
+        throw new Error("Identifiant occupant manquant pour l'export du relevé eau.");
+      }
+
+      const response = await api.get(`/occupant/${pkOccupant}/releve-eau`, {
+        responseType: "blob",
+      });
+
+      const blob = new Blob([response.data as unknown as BlobPart], {
+        type: "application/pdf",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `occupant-${pkOccupant}-releve-eau.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      const message = handleApiError(err);
+      throw new Error(message || "Erreur lors de l'export du relevé eau.");
+    }
   }, [pkOccupant]);
+
+  const {
+    handleExport: handleReleveExport,
+    isExporting: isReleveExporting,
+    error: releveError,
+    clearError: clearReleveError,
+  } = useExport(downloadReleveEau, { errorTitle: "Erreur export relevé eau" });
 
   const hasData = values.length > 0 && categories.length > 0;
 
@@ -225,6 +256,23 @@ export default function LogementConsommationChartEf({ pkLogement }: LogementCons
   if (!hasData) {
     return (
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
+        {releveError && (
+          <div className="mb-3">
+            <Alert
+              variant={releveError.variant || "error"}
+              title={releveError.title}
+              message={releveError.message}
+              showLink={false}
+            />
+            <button
+              type="button"
+              onClick={clearError: clearReleveError}
+              className="mt-1 text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              Fermer
+            </button>
+          </div>
+        )}
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
           Compteur Eau froide
         </h3>
@@ -239,6 +287,23 @@ export default function LogementConsommationChartEf({ pkLogement }: LogementCons
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
+      {releveError && (
+        <div className="mb-3">
+          <Alert
+            variant={releveError.variant || "error"}
+            title={releveError.title}
+            message={releveError.message}
+            showLink={false}
+          />
+          <button
+            type="button"
+            onClick={clearReleveError}
+            className="mt-1 text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            Fermer
+          </button>
+        </div>
+      )}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
@@ -251,20 +316,11 @@ export default function LogementConsommationChartEf({ pkLogement }: LogementCons
         {pkOccupant && (
           <button
             type="button"
-            onClick={handleOpenOccupantPdf}
+            onClick={handleReleveExport}
+            disabled={isReleveExporting}
             className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-theme-xs transition hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/[0.05]"
           >
-            <span>Export PDF</span>
-            <svg
-              className="h-4 w-4 text-red-500"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M6 2H14L20 8V20C20 21.1 19.1 22 18 22H6C4.9 22 4 21.1 4 20V4C4 2.9 4.9 2 6 2ZM13 9V3.5L18.5 9H13Z" />
-              <path d="M8 13H16V15H8V13Z" />
-              <path d="M8 17H16V19H8V17Z" />
-            </svg>
+            <span>{isReleveExporting ? "Export en cours..." : "Export PDF"}</span>
           </button>
         )}
       </div>
