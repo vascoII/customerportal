@@ -59,9 +59,9 @@ class SecurityApiController extends AbstractApiController
                 $loginData['session_id']
             );
 
-            $loginData['user']['Password'] = NULL;
-            $loginData['user']['PasswordExpirationDate'] = NULL;
-            $loginData['user']['ExpirationDate'] = NULL;
+            $loginData['user']['Password'] = "********";
+            $loginData['user']['PasswordExpirationDate'] = "********";
+            $loginData['user']['ExpirationDate'] = "********";
 
             $currentUser = $loginData['user'];
             $roles = ['ROLE_USER'];
