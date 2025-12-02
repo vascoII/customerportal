@@ -74,8 +74,9 @@ export default function LogementConsommationChartEf({ pkLogement }: LogementCons
     error,
   } = getLogementQuery(pkLogement);
 
-  const { categories, values } = useMemo(() => {
+  const { categories, values, pkOccupant } = useMemo(() => {
     const logement = logementData?.logement as Record<string, unknown> | undefined;
+
     const logementEF =
       logement && typeof logement === "object" && "LogementEF" in logement
         ? (logement.LogementEF as Record<string, unknown> | undefined)
@@ -89,7 +90,17 @@ export default function LogementConsommationChartEf({ pkLogement }: LogementCons
           >)
         : undefined;
 
-    return parseConsoPeriodeReadings(consoPeriode);
+    const occupant =
+      logement && typeof logement === "object" && "Occupant" in logement
+        ? (logement.Occupant as { PkOccupant?: string | number } | undefined)
+        : undefined;
+
+    const parsed = parseConsoPeriodeReadings(consoPeriode);
+
+    return {
+      ...parsed,
+      pkOccupant: occupant?.PkOccupant,
+    };
   }, [logementData]);
 
   const hasData = values.length > 0 && categories.length > 0;
@@ -222,13 +233,25 @@ export default function LogementConsommationChartEf({ pkLogement }: LogementCons
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Compteur Eau froide
-        </h3>
-        <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-          Information consommation + variation entre deux relevés
-        </p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+            Compteur Eau froide
+          </h3>
+          <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
+            Information consommation + variation entre deux relevés
+          </p>
+        </div>
+        {pkOccupant && (
+          <a
+            href={`/occupant/${String(pkOccupant)}/releve-eau`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/[0.05]"
+          >
+            Export PDF
+          </a>
+        )}
       </div>
 
       <div className="max-w-full overflow-x-auto custom-scrollbar">
