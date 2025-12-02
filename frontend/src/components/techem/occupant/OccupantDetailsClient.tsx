@@ -1,49 +1,47 @@
 "use client";
-import { useState, Suspense, lazy } from "react";
+import { useState } from "react";
 import LogementReleves, { TabType } from "@/components/techem/logement/LogementReleves";
 import LogementConsommationChartEf from "@/components/techem/logement/releve/LogementConsommationChartEf";
-import LogementStatisticsConsommationChartEf from "@/components/techem/logement/releve/LogementStatisticsConsommationChartEf";
-import LogementConsommationChartEc from "@/components/techem/logement/releve/LogementConsommationChartEc";
 import LogementStatisticsConsommationChartEc from "@/components/techem/logement/releve/LogementStatisticsConsommationChartEc";
+import LogementConsommationChartEc from "@/components/techem/logement/releve/LogementConsommationChartEc";
 import LogementConsommationChartRepart from "@/components/techem/logement/releve/LogementConsommationChartRepart";
 import LogementStatisticsConsommationChartRepart from "@/components/techem/logement/releve/LogementStatisticsConsommationChartRepart";
 import LogementConsommationChartCet from "@/components/techem/logement/releve/LogementConsommationChartCet";
 import LogementStatisticsConsommationChartCet from "@/components/techem/logement/releve/LogementStatisticsConsommationChartCet";
-import Accordion from "@/components/ui/accordion/Accordion";
-import { LoadingChart } from "@/components/ui/loading";
+import LogementStatisticsConsommationChartEfAppareil from "@/components/techem/occupant/LogementStatisticsConsommationChartEfAppareil";
 import { OccupantLogementResponse } from "@/lib/hooks/useOccupant";
-
-// Lazy load des composants lourds
-const LogementStatisticsConsommationChartConsoTabsEf = lazy(
-  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsEf")
-);
-const LogementStatisticsConsommationChartSerieConsosEf = lazy(
-  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosEf")
-);
-const LogementStatisticsConsommationChartConsoTabsEc = lazy(
-  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsEc")
-);
-const LogementStatisticsConsommationChartSerieConsosEc = lazy(
-  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosEc")
-);
-const LogementStatisticsConsommationChartConsoTabsRepart = lazy(
-  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsRepart")
-);
-const LogementStatisticsConsommationChartSerieConsosRepart = lazy(
-  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosRepart")
-);
-const LogementStatisticsConsommationChartConsoTabsCet = lazy(
-  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartConsoTabsCet")
-);
-const LogementStatisticsConsommationChartSerieConsosCet = lazy(
-  () => import("@/components/techem/logement/releve/LogementStatisticsConsommationChartSerieConsosCet")
-);
 
 export default function OccupantDetailsClient({ occupantData }: { occupantData: OccupantLogementResponse }) {
   const [selectedTab, setSelectedTab] = useState<TabType>("eauFroide");
 
+  const logement = occupantData?.logement as unknown as {
+    Logement?: { PkLogement?: string | number };
+    logement?: { pkLogement?: string | number };
+    LogementEF?: {
+      ListeInfosAppareils?: {
+        infosAppareilEAU?: Array<{
+          Appareil?: { Numero?: string | number; Emplacement?: string };
+          SerieConsos?: { ValeursXYL?: string };
+        }>;
+      };
+      listeInfosAppareils?: {
+        infosAppareilEAU?: Array<{
+          Appareil?: { Numero?: string | number; Emplacement?: string };
+          SerieConsos?: { ValeursXYL?: string };
+        }>;
+      };
+    };
+  };
+
   // Extract pkLogement from occupantData
-  const pkLogement = occupantData?.logement?.Logement?.PkLogement ?? occupantData?.logement?.logement?.pkLogement ?? "";
+  const pkLogement =
+    logement?.Logement?.PkLogement ?? logement?.logement?.pkLogement ?? "";
+
+  // Extract Eau froide appareils for occupant (ListeInfosAppareils.infosAppareilEAU)
+  const efInfosAppareilEAU =
+    logement?.LogementEF?.ListeInfosAppareils?.infosAppareilEAU ??
+    logement?.LogementEF?.listeInfosAppareils?.infosAppareilEAU ??
+    [];
 
   if (!pkLogement) {
     return null;
@@ -61,7 +59,30 @@ export default function OccupantDetailsClient({ occupantData }: { occupantData: 
       {selectedTab === "eauFroide" && (
         <>
           <LogementConsommationChartEf pkLogement={String(pkLogement)} />
-          <LogementStatisticsConsommationChartEf pkLogement={String(pkLogement)} />
+          {Array.isArray(efInfosAppareilEAU) &&
+            efInfosAppareilEAU.map(
+              (
+                appareil: {
+                  Appareil?: { Numero?: string | number; Emplacement?: string };
+                  SerieConsos?: { ValeursXYL?: string };
+                },
+                index: number,
+              ) => {
+                const numero =
+                  appareil?.Appareil?.Numero ?? `Compteur ${index + 1}`;
+                const emplacement = appareil?.Appareil?.Emplacement ?? "";
+                const valeursXYL = appareil?.SerieConsos?.ValeursXYL ?? "";
+
+                return (
+                  <LogementStatisticsConsommationChartEfAppareil
+                    key={numero || index}
+                    numero={String(numero)}
+                    emplacement={String(emplacement)}
+                    valeursXYL={String(valeursXYL ?? "")}
+                  />
+                );
+              },
+            )}
 {/*          
           <Accordion title="Évolution des consommations (ConsoTabs)">
             <Suspense
