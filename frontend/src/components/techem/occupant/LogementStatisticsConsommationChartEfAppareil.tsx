@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
 
@@ -75,6 +75,57 @@ export default function LogementStatisticsConsommationChartEfAppareil({
   );
 
   const hasData = points.length > 0;
+
+  // Helpers to convert between "dd/MM/yyyy" and "yyyy-MM-dd"
+  const toInputDate = (displayDate: string): string => {
+    const [day, month, year] = displayDate.split("/");
+    if (!day || !month || !year) return "";
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  };
+
+  const toDisplayDate = (inputDate: string): string => {
+    const [year, month, day] = inputDate.split("-");
+    if (!day || !month || !year) return "";
+    return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
+  };
+
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+
+  useEffect(() => {
+    if (!hasData) {
+      setStartDate("");
+      setEndDate("");
+      return;
+    }
+    const first = categories[0];
+    const last = categories[categories.length - 1];
+    setStartDate(toInputDate(first));
+    setEndDate(toInputDate(last));
+  }, [hasData, categories]);
+
+  const filteredPoints = useMemo(() => {
+    if (!hasData || !startDate || !endDate) {
+      return points;
+    }
+
+    const startDisplay = toDisplayDate(startDate);
+    const endDisplay = toDisplayDate(endDate);
+
+    const parseTs = (disp: string): number => {
+      const [d, m, y] = disp.split("/");
+      const date = new Date(Number(y), Number(m) - 1, Number(d));
+      return date.getTime();
+    };
+
+    const startTs = parseTs(startDisplay);
+    const endTs = parseTs(endDisplay);
+
+    return points.filter((p) => {
+      const ts = parseTs(p.x);
+      return ts >= startTs && ts <= endTs;
+    });
+  }, [hasData, points, startDate, endDate]);
 
   const options: ApexOptions = useMemo(
     () => ({
@@ -176,10 +227,10 @@ export default function LogementStatisticsConsommationChartEfAppareil({
     () => [
       {
         name: "Index Compteur",
-        data: points,
+        data: filteredPoints,
       },
     ],
-    [points],
+    [filteredPoints],
   );
 
   if (!hasData) {
@@ -205,6 +256,36 @@ export default function LogementStatisticsConsommationChartEfAppareil({
             Evolution des index - Compteur {numero} ({emplacement || "—"})
           </h3>
         </div>
+        {hasData && startDate && endDate && (
+          <div className="flex flex-col gap-2 text-xs sm:flex-row sm:items-center sm:gap-3">
+            <div className="flex items-center gap-2">
+              <label className="font-medium text-gray-500 dark:text-gray-400">
+                Du
+              </label>
+              <input
+                type="date"
+                value={startDate}
+                min={toInputDate(categories[0])}
+                max={toInputDate(categories[categories.length - 1])}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-700 focus:border-brand-500 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="font-medium text-gray-500 dark:text-gray-400">
+                Au
+              </label>
+              <input
+                type="date"
+                value={endDate}
+                min={toInputDate(categories[0])}
+                max={toInputDate(categories[categories.length - 1])}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-700 focus:border-brand-500 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="custom-scrollbar max-w-full overflow-x-auto">
