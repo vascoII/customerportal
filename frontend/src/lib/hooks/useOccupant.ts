@@ -117,7 +117,7 @@ function downloadBlob(blob: Blob, filename: string): void {
  * await updateAlertes({ SEUIL_CONSO_ACTIF: true });
  * ```
  */
-export function useOccupant() {
+export function useOccupant(fkUser?: string | number) {
   const queryClient = useQueryClient();
 
   /**

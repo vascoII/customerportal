@@ -155,7 +155,7 @@ export const OccupantMetrics = ({ occupantData }: { occupantData: OccupantLogeme
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
       {/* Fuites - Metric Item Start */}
       {pkImmeuble && pkLogement ? (
-        <Link href={`/immeuble/${pkImmeuble}/logements/${pkLogement}/fuites`}>
+        <Link href={`/occupant/fuites?fluide=EF`}>
           <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
             <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
               <StatusIconsFuite size={24} className={fuitesColor} color="currentColor" />
@@ -167,7 +167,7 @@ export const OccupantMetrics = ({ occupantData }: { occupantData: OccupantLogeme
                   Fuites
                 </span>
                 <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                  {formatNumber(metrics.fuites)}
+                  {formatNumber(Math.max(metrics.fuites, 0))}
                 </h4>
               </div>
             </div>
@@ -185,7 +185,7 @@ export const OccupantMetrics = ({ occupantData }: { occupantData: OccupantLogeme
                 Fuites
               </span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {formatNumber(metrics.fuites)}
+                {formatNumber(Math.max(metrics.fuites, 0))}
               </h4>
             </div>
           </div>
@@ -195,7 +195,7 @@ export const OccupantMetrics = ({ occupantData }: { occupantData: OccupantLogeme
 
       {/* Alarmes (Dysfonctionnements) - Metric Item Start */}
       {pkImmeuble && pkLogement ? (
-        <Link href={`/immeuble/${pkImmeuble}/logements/${pkLogement}/dysfonctionnements`}>
+        <Link href={`/occupant/dysfonctionnements`}>
           <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
             <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
               <StatusIconsDysfonctionnement size={24} className={dysfonctionnementsColor} color="currentColor" />
@@ -206,7 +206,7 @@ export const OccupantMetrics = ({ occupantData }: { occupantData: OccupantLogeme
                   Alarmes techniques
                 </span>
                 <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                  {formatNumber(metrics.alarmes)}
+                  {formatNumber(Math.max(metrics.alarmes, 0))}
                 </h4>
               </div>
             </div>
@@ -223,7 +223,7 @@ export const OccupantMetrics = ({ occupantData }: { occupantData: OccupantLogeme
                 Alarmes techniques
               </span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {formatNumber(metrics.alarmes)}
+                {formatNumber(Math.max(metrics.alarmes, 0))}
               </h4>
             </div>
           </div>
@@ -233,7 +233,7 @@ export const OccupantMetrics = ({ occupantData }: { occupantData: OccupantLogeme
 
       {/* Anomalies - Metric Item Start */}
       {pkImmeuble && pkLogement ? (
-        <Link href={`/immeuble/${pkImmeuble}/logements/${pkLogement}/anomalies`}>
+        <Link href={`/occupant/anomalies`}>
           <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
             <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
               <StatusIconsAnomalie size={24} className={anomaliesColor} color="currentColor" />
@@ -245,7 +245,7 @@ export const OccupantMetrics = ({ occupantData }: { occupantData: OccupantLogeme
                   Anomalies de consommation
                 </span>
                 <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                  {formatNumber(metrics.anomalies)}
+                  {formatNumber(Math.max(metrics.anomalies, 0))}
                 </h4>
               </div>
             </div>
@@ -263,7 +263,7 @@ export const OccupantMetrics = ({ occupantData }: { occupantData: OccupantLogeme
                 Anomalies de consommation
               </span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {formatNumber(metrics.anomalies)}
+                {formatNumber(Math.max(metrics.anomalies, 0))}
               </h4>
             </div>
           </div>
@@ -273,7 +273,7 @@ export const OccupantMetrics = ({ occupantData }: { occupantData: OccupantLogeme
 
       {/* Depannages - Metric Item Start */}
       {pkImmeuble && pkLogement ? (
-        <Link href={`/immeuble/${pkImmeuble}/logements/${pkLogement}/interventions`}>
+        <Link href={`/occupant/interventions?statut=ouvert`}>
           <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
             <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
               <StatusIconsAlerte size={24} className={depannagesColor} color="currentColor" />
@@ -284,7 +284,7 @@ export const OccupantMetrics = ({ occupantData }: { occupantData: OccupantLogeme
                   Depannages en cours
                 </span>
                 <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                  {formatNumber(metrics.depannages)}
+                  {formatNumber(Math.max(metrics.depannages, 0))}
                 </h4>
               </div>
             </div>
@@ -301,7 +301,7 @@ export const OccupantMetrics = ({ occupantData }: { occupantData: OccupantLogeme
                 Depannages en cours
               </span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {formatNumber(metrics.depannages)}
+                {formatNumber(Math.max(metrics.depannages, 0))}
               </h4>
             </div>
           </div>
