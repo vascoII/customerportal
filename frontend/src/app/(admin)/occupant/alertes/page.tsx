@@ -1,14 +1,17 @@
 import { Metadata } from "next";
+import ListAlertes from "@/components/techem/occupant/ListAlertes";
 
 export const metadata: Metadata = {
   title: "Alertes | TECHEM - Espace client",
-  description: "Alerts",
+  description: "Paramètres d'alertes de consommation occupant",
 };
 
 export default function AlertesPage() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold">Hello</h1>
+    <div className="grid grid-cols-12 gap-4 md:gap-6">
+      <div className="col-span-12">
+        <ListAlertes />
+      </div>
     </div>
   );
 }

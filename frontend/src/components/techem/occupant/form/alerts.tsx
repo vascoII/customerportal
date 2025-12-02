@@ -8,9 +8,10 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useOccupant } from "@/lib/hooks/useOccupant";
 import { handleApiError } from "@/lib/api/client";
 import Loader from "@/components/ui/loader/Loader";
+import { useFkUser } from "@/lib/hooks/useFkUser";
+import { useAlertes } from "@/lib/hooks/useAlertes";
 
 /**
  * Schéma de validation pour le formulaire de paramètres d'alerte
@@ -47,6 +48,7 @@ type AlertsFormData = z.infer<typeof alertsSchema>;
 
 export default function AlertsSettingsForm() {
   const [isSuccess, setIsSuccess] = useState(false);
+  const fkUser = useFkUser();
 
   const {
     register,
@@ -72,7 +74,7 @@ export default function AlertsSettingsForm() {
     isUpdatingAlertes,
     updateAlertesError,
     getAlertesQuery,
-  } = useOccupant();
+  } = useAlertes(fkUser);
 
   const {
     data: alertesData,
@@ -145,7 +147,7 @@ export default function AlertsSettingsForm() {
   const isLoading = isSubmitting || isUpdatingAlertes || isAlertesLoading;
   const displayError = updateAlertesError || alertesLoadingError || errors.root?.message;
 
-  if (isAlertesLoading) {
+  if (!fkUser || isAlertesLoading) {
     return <Loader />;
   }
 
