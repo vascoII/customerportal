@@ -1,106 +1,31 @@
 version: "3.9"
 
 services:
-  nginx:
-    image: nginx:stable-alpine
-    container_name: nginx_local
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./backend:/var/www/backend:ro
-      - ./storage/documents:/var/www/storage/documents:ro
-    depends_on:
-      - backend
-    networks:
-      - app-network
-
   backend:
-    image: php:8.4-fpm
-    container_name: backend_local
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: backend_sandbox
     working_dir: /var/www/backend
     volumes:
       - ./backend:/var/www/backend
-      - ./backend/vendor:/var/www/backend/vendor
-      - ./storage/documents:/var/www/storage/documents
-    depends_on:
-      - redis
-    build:
-      context: .
-      dockerfile: ./backend/Dockerfile
     environment:
-      DATABASE_URL: "pgsql://postgres:postgres@db:5432/poc_db"
-      REDIS_URL: "redis://redis:6379"
-      JWT_SECRET: "your-super-secret-jwt-key-change-this-in-production"
-      JWT_EXPIRATION: "3600"
-      SOAP_WSDL_URL: "http://techn5292.eu.techem.corp:8083/Main.asmx?wsdl"
-      CALLBACK_URL_BASE: "http://techn5274:83"
-      DOCUMENT_STORAGE_PATH: "/var/www/storage/documents"
-      DOCUMENT_URL_PREFIX: "/documents"
+      - APP_ENV=dev
     ports:
-      - "8000:8000"
-    command: php -S 0.0.0.0:8000 -t public
-    networks:
-      - app-network
+      - "${BACKEND_PORT:-8000}:8000"   # si tu utilises symfony cli/http server ou un nginx interne
 
   frontend:
-    image: node:20
-    container_name: frontend_local
-    working_dir: /var/www/frontend
-    volumes:
-      - ./frontend:/var/www/frontend
     build:
       context: .
-      dockerfile: ./frontend/Dockerfile
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-    ports:
-      - "3000:3000"
-    command: sh -c "CHOKIDAR_USEPOLLING=true yarn install && CHOKIDAR_USEPOLLING=true yarn dev"
-    networks:
-      - app-network
-
-  redis:
-    image: redis:7
-    container_name: redis_local
-    ports:
-      - "6379:6379"
-    networks:
-      - app-network
-  mercure:
-    image: dunglas/mercure
-    container_name: mercure
-    ports:
-      - "9090:80"
-    environment:
-      SERVER_NAME: ":80"
-      MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
-      MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!'
-      MERCURE_EXTRA_DIRECTIVES: |
-        metrics
-        cors_origins http://localhost:3000
-        anonymous
-    networks:
-      - app-network
-
-  grafana:
-    image: grafana/grafana
-    container_name: grafana_local
-    ports:
-      - "3001:3000"
+      dockerfile: frontend/Dockerfile
+    container_name: frontend_sandbox
+    working_dir: /usr/src/frontend
     volumes:
-      - grafana-storage:/var/lib/grafana
+      - ./frontend:/usr/src/frontend
+      - /usr/src/frontend/node_modules
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_BASE_URL:-http://backend:8000/api}
     depends_on:
-      - prometheus
-    networks:
-      - app-network
-
-volumes:
-  portainer_data:
-  grafana-storage:
-
-networks:
-  app-network:
-    driver: bridge
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
