@@ -13,7 +13,7 @@ cd customerportal
 
 ---
 
-## 2. Lancer la sandbox Docker (recommandé pour la branche `sandbox`)
+## 2. Lancer la sandbox Docker (recommandé pour la branche `sandbox` et la branche `local`)
 
 Depuis la racine du projet :
 
