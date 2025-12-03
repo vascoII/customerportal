@@ -7,20 +7,36 @@ echo "=== TECHEM Portail Client - Sandbox bootstrap ==="
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$PROJECT_ROOT"
 
-ENV_FILE=".env"
-ENV_EXAMPLE="./.env.sandbox.example"
+# Backend env
+ENV_BACKEND="./backend/.env"
+ENV_BACKEND_EXAMPLE="./backend/.env.sandbox.example"
 
-if [ ! -f "$ENV_EXAMPLE" ]; then
-  echo "Erreur: fichier $ENV_EXAMPLE introuvable."
-  echo "Veuillez créer un fichier env.sandbox.example à la racine du projet."
+if [ ! -f "$ENV_BACKEND_EXAMPLE" ]; then
+  echo "Erreur: fichier $ENV_BACKEND_EXAMPLE introuvable."
+  echo "Veuillez créer un fichier backend/.env.sandbox.example."
   exit 1
 fi
 
-if [ -f "$ENV_FILE" ]; then
-  echo "Fichier .env déjà présent, aucune copie depuis env.sandbox.example."
+if [ -f "$ENV_BACKEND" ]; then
+  echo "Backend: fichier .env déjà présent, aucune copie depuis .env.sandbox.example."
 else
-  echo "Copie de $ENV_EXAMPLE vers $ENV_FILE..."
-  cp "$ENV_EXAMPLE" "$ENV_FILE"
+  echo "Backend: copie de $ENV_BACKEND_EXAMPLE vers $ENV_BACKEND..."
+  cp "$ENV_BACKEND_EXAMPLE" "$ENV_BACKEND"
+fi
+
+# Frontend env
+ENV_FRONTEND="./frontend/.env.local"
+ENV_FRONTEND_EXAMPLE="./frontend/.env.local.sandbox.example"
+
+if [ -f "$ENV_FRONTEND" ]; then
+  echo "Frontend: fichier .env.local déjà présent, aucune copie depuis .env.local.sandbox.example."
+else
+  if [ -f "$ENV_FRONTEND_EXAMPLE" ]; then
+    echo "Frontend: copie de $ENV_FRONTEND_EXAMPLE vers $ENV_FRONTEND..."
+    cp "$ENV_FRONTEND_EXAMPLE" "$ENV_FRONTEND"
+  else
+    echo "Frontend: fichier $ENV_FRONTEND_EXAMPLE introuvable, copie ignorée."
+  fi
 fi
 
 echo "Construction des conteneurs Docker (sans cache)..."
